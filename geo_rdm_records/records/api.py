@@ -201,7 +201,7 @@ class GEODraft(CommonFieldsMixin, Draft):
 class GEOFileRecord(FileRecord):
     """Record File abstraction class."""
 
-    model_cls = rdm_models.RDMFileDraftMetadata
+    model_cls = rdm_models.RDMFileRecordMetadata
     records_cls = None
 
 
