@@ -157,6 +157,9 @@
                 "properties": {
                   "type": {
                     "type": "keyword"
+                  },
+                  "acronym": {
+                    "type": "keyword"
                   }
                 }
               }
