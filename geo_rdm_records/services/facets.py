@@ -24,7 +24,7 @@ geo_work_programme_activity = TermsFacet(
 #
 target_audience = TermsFacet(
     field="metadata.target_audiences.id",
-    label=_("Targer Audience"),
+    label=_("Target Audience"),
     value_labels=VocabularyLabels("targetaudiencestypes"),
 )
 
