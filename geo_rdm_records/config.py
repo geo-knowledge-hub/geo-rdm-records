@@ -7,93 +7,81 @@
 
 """GEO Knowledge Hub records module"""
 
-from geo_rdm_records.records.api import (
-    GEORecord,
-    GEODraft,
-)
-
-from geo_rdm_records.services.schemas import GEORecordSchema
-
-from geo_rdm_records.services import facets as geo_facets
 from invenio_rdm_records.services import facets as rdm_facets
 
-#
-# RDM Record class
-#
-RDM_RECORD_CLS = GEORecord
+from geo_rdm_records.services import facets as geo_facets
+from geo_rdm_records.services import config as geo_service_config
+
 
 #
-# RDM Draft class
+# Services configuration
 #
-RDM_DRAFT_CLS = GEODraft
 
-#
-# RDM Record (Record and Draft) schema
-#
-RDM_RECORD_SCHEMA_CLS = GEORecordSchema
+# Record service (Record and Draft)
+RDM_RECORD_SERVICE_CFG = geo_service_config.GEORecordServiceConfig
+
+# File service (Record)
+RDM_FILE_SERVICE_CFG = geo_service_config.GEOFileRecordServiceConfig
+
+# File service (Draft)
+RDM_FILE_DRAFT_SERVICE_CFG = geo_service_config.GEOFileDraftServiceConfig
 
 #
 # Search configuration
 #
 RDM_FACETS = {
-    'access_status': {
-        'facet': rdm_facets.access_status,
-        'ui': {
-            'field': 'access.status',
-        }
+    "access_status": {
+        "facet": rdm_facets.access_status,
+        "ui": {
+            "field": "access.status",
+        },
     },
-    'is_published': {
-        'facet': rdm_facets.is_published,
-        'ui': {
-            'field': 'is_published',
-        }
+    "is_published": {
+        "facet": rdm_facets.is_published,
+        "ui": {
+            "field": "is_published",
+        },
     },
-    'language': {
-        'facet': rdm_facets.language,
-        'ui': {
-            'field': 'languages',
-        }
+    "language": {
+        "facet": rdm_facets.language,
+        "ui": {
+            "field": "languages",
+        },
     },
-    'resource_type': {
-        'facet': rdm_facets.resource_type,
-        'ui': {
-            'field': 'resource_type.type',
-            'childAgg': {
-                'field': 'resource_type.subtype',
-            }
-        }
+    "resource_type": {
+        "facet": rdm_facets.resource_type,
+        "ui": {
+            "field": "resource_type.type",
+            "childAgg": {
+                "field": "resource_type.subtype",
+            },
+        },
     },
-    'subject': {
-        'facet': rdm_facets.subject,
-        'ui': {
-            'field': 'subjects.subject',
-        }
+    "subject": {
+        "facet": rdm_facets.subject,
+        "ui": {
+            "field": "subjects.subject",
+        },
     },
-    'subject_nested': {
-        'facet': rdm_facets.subject_nested,
-        'ui': {
-            'field': 'subjects.scheme',
-            'childAgg': {
-                'field': 'subjects.subject',
-            }
-        }
+    "subject_nested": {
+        "facet": rdm_facets.subject_nested,
+        "ui": {
+            "field": "subjects.scheme",
+            "childAgg": {
+                "field": "subjects.subject",
+            },
+        },
     },
-     'engagement_priority': {
-        'facet': geo_facets.engagement_priority,
-        'ui': {
-            'field': 'engagement_priorities.type'
-        }
+    "engagement_priority": {
+        "facet": geo_facets.engagement_priority,
+        "ui": {"field": "engagement_priorities.type"},
     },
-    'target_audience': {
-        'facet': geo_facets.target_audience,
-        'ui': {
-            'field': 'target_audiences.type'
-        }
+    "target_audience": {
+        "facet": geo_facets.target_audience,
+        "ui": {"field": "target_audiences.type"},
     },
-    'geo_work_programme_activity': {
-        'facet': geo_facets.geo_work_programme_activity,
-        'ui': {
-            'field': 'geo_work_programme_activity.type'
-        }
+    "geo_work_programme_activity": {
+        "facet": geo_facets.geo_work_programme_activity,
+        "ui": {"field": "geo_work_programme_activity.type"},
     },
 }

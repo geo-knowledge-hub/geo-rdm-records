@@ -26,14 +26,13 @@ class GEORDMRecords(object):
 
     def init_config(self, app):
         """Initialize configuration."""
+
+        # Invenio RDM Records configuration
         supported_configurations = [
-            "RDM_RECORD_CLS",
-            "RDM_DRAFT_CLS",
-            "RDM_RECORD_SCHEMA_CLS",
-            "RDM_RECORD_PARENT_SCHEMA_CLS",
-            "RDM_RECORD_SECRET_LINK_CLS",
-            "RDM_PERMISSION_POLICY",
-            "RDM_FACETS"
+            "RDM_FACETS",
+            "RDM_RECORD_SERVICE_CFG",
+            "RDM_FILE_SERVICE_CFG",
+            "RDM_FILE_DRAFT_SERVICE_CFG"
         ]
         for k in dir(config):
             if k in supported_configurations or k.startswith("GEO_RDM_"):
