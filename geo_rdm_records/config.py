@@ -5,13 +5,12 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""GEO Knowledge Hub records module"""
+"""GEO RDM Records module configurations."""
 
 from invenio_rdm_records.services import facets as rdm_facets
 
-from geo_rdm_records.services import facets as geo_facets
 from geo_rdm_records.services import config as geo_service_config
-
+from geo_rdm_records.services import facets as geo_facets
 
 #
 # Services configuration

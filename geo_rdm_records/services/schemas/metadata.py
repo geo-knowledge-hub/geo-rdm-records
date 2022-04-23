@@ -5,10 +5,11 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-from marshmallow import fields
+"""GEO RDM Records Metadata schema definition."""
 
 from invenio_rdm_records.services.schemas import MetadataSchema as BaseMetadataSchema
 from invenio_rdm_records.services.schemas.metadata import VocabularySchema
+from marshmallow import fields
 
 
 class MetadataSchema(BaseMetadataSchema):

@@ -5,16 +5,15 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-from marshmallow import fields
+"""GEO RDM Records Resouces serializers schemas."""
 
-from invenio_rdm_records.resources.serializers.ui.schema import VocabularyL10Schema
 from invenio_rdm_records.resources.serializers.ui import (
     UIObjectSchema as UIObjectSchemaBase,
 )
+from invenio_rdm_records.resources.serializers.ui.schema import VocabularyL10Schema
+from marshmallow import fields
 
-#
-# Schema
-#
+
 class UIObjectSchema(UIObjectSchemaBase):
     """Schema for dumping extra information for the UI."""
 

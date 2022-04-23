@@ -5,29 +5,24 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-from invenio_records.systemfields import RelationsField
+"""GEO RDM Records Records API."""
 
-from invenio_records.systemfields import ConstantField
-
+import invenio_rdm_records.records.models as rdm_models
 from invenio_drafts_resources.records import Draft, Record
-
+from invenio_rdm_records.records.api import CommonFieldsMixin as BaseCommonFieldsMixin
+from invenio_rdm_records.records.systemfields import HasDraftCheckField
+from invenio_records.systemfields import ConstantField, RelationsField
 from invenio_records_resources.records.api import FileRecord
 from invenio_records_resources.records.systemfields import (
     FilesField,
     IndexField,
-    PIDRelation,
     PIDListRelation,
     PIDNestedListRelation,
+    PIDRelation,
 )
-
 from invenio_vocabularies.contrib.affiliations.api import Affiliation
-from invenio_vocabularies.records.api import Vocabulary
-
 from invenio_vocabularies.contrib.subjects.api import Subject
-
-import invenio_rdm_records.records.models as rdm_models
-from invenio_rdm_records.records.api import CommonFieldsMixin as BaseCommonFieldsMixin
-from invenio_rdm_records.records.systemfields import HasDraftCheckField
+from invenio_vocabularies.records.api import Vocabulary
 
 
 class CommonFieldsMixin(BaseCommonFieldsMixin):
@@ -43,13 +38,13 @@ class CommonFieldsMixin(BaseCommonFieldsMixin):
             "metadata.target_audiences",
             attrs=["id", "title", "props.type"],
             pid_field=Vocabulary.pid.with_type_ctx("targetaudiencestypes"),
-            cache_key="target_audiences"
+            cache_key="target_audiences",
         ),
         geo_work_programme_activity=PIDRelation(
             "metadata.geo_work_programme_activity",
             attrs=["id", "title", "props.type"],
             pid_field=Vocabulary.pid.with_type_ctx("geowptypes"),
-            cache_key="geo_work_programme_activity"
+            cache_key="geo_work_programme_activity",
         ),
         engagement_priorities=PIDListRelation(
             "metadata.engagement_priorities",
@@ -57,7 +52,6 @@ class CommonFieldsMixin(BaseCommonFieldsMixin):
             pid_field=Vocabulary.pid.with_type_ctx("engagementprioritiestypes"),
             cache_key="engagement_priorities",
         ),
-
         #
         # InvenioRDM DataCite Relations
         #
@@ -194,6 +188,7 @@ class GEODraft(CommonFieldsMixin, Draft):
     )
 
     has_draft = HasDraftCheckField()
+
 
 #
 # Record API

@@ -5,8 +5,9 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-from invenio_drafts_resources.services.records.config import SearchOptions
+"""GEO RDM Records Services configuration."""
 
+from invenio_drafts_resources.services.records.config import SearchOptions
 from invenio_rdm_records.services import config as rdm_config
 from invenio_rdm_records.services.customizations import FromConfigSearchOptions
 
