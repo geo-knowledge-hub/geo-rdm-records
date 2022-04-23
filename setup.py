@@ -14,49 +14,51 @@ from setuptools import find_packages, setup
 readme = open("README.rst").read()
 history = open("CHANGES.rst").read()
 
-invenio_version = "~=3.5.0a4"
-invenio_search_version = ">=1.4.2,<1.5.0"
-invenio_db_version = ">=1.0.11,<1.1.0"
+# Should follow inveniosoftware/invenio versions
+invenio_db_version = ">=1.0.11,<2.0.0"
+invenio_search_version = ">=1.4.0,<2.0.0"
 
 tests_require = [
-    "pytest-invenio~=1.4.2",
-]
-
-setup_requires = [
-    "Babel>=2.8,<3",
+    "pytest-mock>=1.6.0",
+    "pytest-invenio>=1.4.0",
+    "invenio-app>=1.3.1,<2.0.0",
 ]
 
 extras_require = {
-    # Invenio-Search
-    "elasticsearch6": [f"invenio-search[elasticsearch6]{invenio_search_version}"],
-    # Invenio-DB
-    "mysql": [f"invenio-db[mysql,versioning]{invenio_db_version}"],
-    "postgresql": [f"invenio-db[postgresql,versioning]{invenio_db_version}"],
-    "sqlite": [f"invenio-db[versioning]{invenio_db_version}"],
-    # Extras
-    "docs": [
-        "Sphinx==4.2.0",
+    "docs": ["sphinx>=4.2.0,<5"],
+    # Elasticsearch version
+    "elasticsearch7": [
+        "invenio-search[elasticsearch7]{}".format(invenio_search_version),
+    ],
+    # Databases
+    "mysql": [
+        "invenio-db[mysql,versioning]{}".format(invenio_db_version),
+    ],
+    "postgresql": [
+        "invenio-db[postgresql,versioning]{}".format(invenio_db_version),
+    ],
+    "sqlite": [
+        "invenio-db[versioning]{}".format(invenio_db_version),
     ],
     "tests": tests_require,
 }
 
 extras_require["all"] = []
 for name, reqs in extras_require.items():
-    if name[0] == ":" or name in (
-        "elasticsearch6",
-        "elasticsearch7",
-        "mysql",
-        "postgresql",
-        "sqlite",
-    ):
+    if name[0] == ":" or name in ("elasticsearch7", "mysql", "postgresql", "sqlite"):
         continue
     extras_require["all"].extend(reqs)
 
-install_requires = [
-    "invenio-rdm-records>=0.34.5,<0.35.0",
-    f"invenio[base,auth,metadata,files]{invenio_version}",
+
+setup_requires = [
+    "Babel>=2.8",
+    "pytest-runner>=3.0.0,<5",
 ]
 
+install_requires = [
+    "invenio-i18n>=1.2.0",
+    "invenio-rdm-records @ git+https://github.com/geo-knowledge-hub/invenio-rdm-records@b-1.0",
+]
 packages = find_packages()
 
 
