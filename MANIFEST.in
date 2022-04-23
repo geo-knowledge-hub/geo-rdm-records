@@ -23,10 +23,9 @@ recursive-include docs *.bat
 recursive-include docs *.py
 recursive-include docs *.rst
 recursive-include docs Makefile
-recursive-include geo_rdm_records *.po *.pot *.mo
+recursive-include geo_rdm_records/translations *.po *.pot *.mo
 recursive-include geo_rdm_records *.yaml
 recursive-include tests *.py *.csv *.json *.yaml
 
 # added by check-manifest
-recursive-include geo_rdm_records *.py
-
+recursive-include geo_rdm_records *.py *.json
