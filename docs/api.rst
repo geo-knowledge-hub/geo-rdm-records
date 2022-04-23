@@ -10,9 +10,3 @@ API Docs
 
 .. automodule:: geo_rdm_records.ext
    :members:
-
-Views
------
-
-.. automodule:: geo_rdm_records.views
-   :members:
