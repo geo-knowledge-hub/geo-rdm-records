@@ -7,6 +7,14 @@
 Changes
 =======
 
-Version 0.1.0 (released TBD)
+Version 0.2.0 (2022-04-24)
+--------------------------
 
-- Initial public release.
+- Initial public release
+- Custom fields for the Record (Draft and Record) data model. In this version, the following new fields are supported on Record objects:
+
+  - Target Audiences
+  - GEO Work Programme Activities
+  - Engagement Priorities
+- Faceted search support for the new Record fields;
+- Custom Resource Serializer (based on `Invenio RDM Records <https://github.com/inveniosoftware/invenio-rdm-records>`_) to handle the custom fields.
