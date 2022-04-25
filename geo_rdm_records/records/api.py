@@ -24,10 +24,25 @@ from invenio_vocabularies.contrib.affiliations.api import Affiliation
 from invenio_vocabularies.contrib.subjects.api import Subject
 from invenio_vocabularies.records.api import Vocabulary
 
+from invenio_rdm_records.records.api import RDMParent as BaseParentRecord
+
+from geo_rdm_records.records.systemfields.knowledge_packages.field import (
+    ParentKnowledgePackageField,
+)
+
+
+class GEOParent(BaseParentRecord):
+    """Parent record."""
+
+    knowledge_packages = ParentKnowledgePackageField()
+
+    schema = ConstantField("$schema", "local://records/geo-parent-v2.0.0.json")
+
 
 class CommonFieldsMixin(BaseCommonFieldsMixin):
     """Common system fields between records and drafts."""
 
+    parent_record_cls = GEOParent
     schema = ConstantField("$schema", "local://records/geo-record-v4.0.0.json")
 
     relations = RelationsField(

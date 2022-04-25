@@ -16,5 +16,12 @@
         "$ref": "local://definitions-v1.0.0.json#/identifier"
       }
     }
+  },
+  "knowledge_packages": {
+    "type": "array",
+    "items": {
+      "type": "string"
+    },
+    "uniqueItems": true
   }
 }
