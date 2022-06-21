@@ -35,8 +35,6 @@ def validate_bounding_box(value):
     See:
         https://datatracker.ietf.org/doc/html/rfc7946#section-5
     """
-    value = value.split(",")
-
     if len(value) != 4:
         raise QuerystringValidationError("A bounding box must be defined "
                                          "by 2 Point (TopLeft, BottomRight). "
@@ -46,7 +44,7 @@ def validate_bounding_box(value):
     # validating the bounding box points
     list(
         map(lambda x: _validate_point_coordinates(x), [
-            Point(*value[0:2]), Point(*value[2:])
+            Point(value[0:2]), Point(value[2:])
         ]))
 
 
@@ -70,19 +68,25 @@ class BoundingBoxParam(ParamInterpreter):
             # validating the `bbox` object
             bbox = bbox.split(',') or []
 
-            validate_bounding_box(bbox)
-
             # creating the bbox search filter
             bbox = list(map(float, bbox))
 
-            bbox = {
-                "top_left": bbox[0:2],
-                "bottom_right": bbox[2:]
-            }
+            validate_bounding_box(bbox)
 
-            search = search.filter("geo_bounding_box", **{
-                "geo_bounding_box": {
-                    self.field_name: bbox
+            # the elasticsearch documentation describes the `bounding box` search
+            # as a way to find `geo_shape` and `geo_point` object. In practice
+            # only `geo_point` is accepted. So, to avoid errors, we are using
+            # the `geo_shape` query. For this case, we are basically creating
+            # the bounding box and using it with the `intersects` operator.
+            search = search.filter("geo_shape", **{
+                self.field_name: {
+                    "shape": {
+                        "type": "envelope",
+                        "coordinates": [
+                            bbox[0:2], bbox[2:]
+                        ]
+                    },
+                    "relation": "intersects"
                 }
             })
         return search
