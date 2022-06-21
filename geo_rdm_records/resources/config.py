@@ -7,7 +7,9 @@
 
 """Resources configuration."""
 
-from invenio_rdm_records.resources.config import RDMRecordResourceConfig as BaseRecordResourceConfig
+from invenio_rdm_records.resources.config import (
+    RDMRecordResourceConfig as BaseRecordResourceConfig,
+)
 
 from .args import GEOSearchRequestArgsSchema
 

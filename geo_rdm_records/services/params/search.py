@@ -9,12 +9,49 @@
 
 from functools import partial
 
-from invenio_records_resources.services.records.params.base import \
-    ParamInterpreter
+from geojson import Point
+from invenio_records_resources.services.errors import QuerystringValidationError
+from invenio_records_resources.services.records.params.base import ParamInterpreter
 
 
-class LocationParam(ParamInterpreter):
-    """Evaluates the 'location' parameter."""
+def _validate_point_coordinates(point):
+    """Validate the coordinates from a point."""
+    lon, lat = point.coordinates
+
+    if not point.is_valid:
+        raise QuerystringValidationError('Point used to created the bounding box is not valid', point.errors())
+
+    # ToDo: Check 180th meridian cases
+    if (lat < -90.0) or (lat > 90.0):
+        raise QuerystringValidationError('latitude is out-of range [-90, 90]')
+
+    if (lon < -180.0) or (lon > 180.0):
+        raise QuerystringValidationError('longitude is out-of range [-180, 180]')
+
+
+def validate_bounding_box(value):
+    """Validate the bbox object.
+
+    See:
+        https://datatracker.ietf.org/doc/html/rfc7946#section-5
+    """
+    value = value.split(",")
+
+    if len(value) != 4:
+        raise QuerystringValidationError("A bounding box must be defined "
+                                         "by 2 Point (TopLeft, BottomRight). "
+                                         "This is represented by a array with "
+                                         "four elements: [lon, lat, lon, lat]")
+
+    # validating the bounding box points
+    list(
+        map(lambda x: _validate_point_coordinates(x), [
+            Point(*value[0:2]), Point(*value[2:])
+        ]))
+
+
+class BoundingBoxParam(ParamInterpreter):
+    """Evaluates the 'bbox' parameter."""
 
     def __init__(self, field_name, config):
         """Construct."""
@@ -27,27 +64,25 @@ class LocationParam(ParamInterpreter):
         return partial(cls, field)
 
     def apply(self, identity, search, params):
-        """Evaluate the allversions parameter on the search."""
-        location = params.get('location')
-        if location:
-            # preparing the location object
-            type_, args_ = location.split(':')
+        """Evaluate the `bbox` parameter on the query string."""
+        bbox = params.get('bbox')
+        if bbox:
+            # validating the `bbox` object
+            bbox = bbox.split(',') or []
 
-            if args_:
-                # todo: handle possible errors.
-                args_ = list(map(lambda x: float(x), args_.split(',') or []))
-                assert len(args_) == 4
+            validate_bounding_box(bbox)
 
-            if type_ == 'bbox':
-                coordinates = [args_[0:2], args_[2:]]
+            # creating the bbox search filter
+            bbox = list(map(float, bbox))
 
-                search = search.filter('geo_shape', **{
-                    self.field_name: {
-                        'shape': {
-                            'type': 'envelope',
-                            'coordinates': coordinates
-                        },
-                        'relation': 'intersects'
-                    }
-                })
+            bbox = {
+                "top_left": bbox[0:2],
+                "bottom_right": bbox[2:]
+            }
+
+            search = search.filter("geo_bounding_box", **{
+                "geo_bounding_box": {
+                    self.field_name: bbox
+                }
+            })
         return search

@@ -12,8 +12,8 @@ from marshmallow import fields
 
 
 class GEOSearchRequestArgsSchema(SearchRequestArgsSchema):
-    """Extend schema with CSL and Location fields."""
+    """Extend schema with `CSL` and `Bounding box` fields."""
 
     style = fields.Str()
     locale = fields.Str()
-    location = fields.Str()
+    bbox = fields.Str()
