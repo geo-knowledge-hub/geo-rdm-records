@@ -12,7 +12,7 @@ from invenio_rdm_records.resources.serializers.ui import (
     UIJSONSerializer as UIJSONSerializerBase,
 )
 
-from geo_rdm_records.resources.serializers.ui.schema import UIObjectSchema
+from geo_rdm_records.resources.serializers.ui.schema import UIRecordSchema
 
 
 #
@@ -21,4 +21,4 @@ from geo_rdm_records.resources.serializers.ui.schema import UIObjectSchema
 class UIJSONSerializer(UIJSONSerializerBase):
     """UI JSON Serializer."""
 
-    object_schema_cls = UIObjectSchema
+    object_schema_cls = UIRecordSchema
