@@ -33,6 +33,7 @@ class GEORDMRecords(object):
             "RDM_RECORD_SERVICE_CFG",
             "RDM_FILE_SERVICE_CFG",
             "RDM_FILE_DRAFT_SERVICE_CFG",
+            "RDM_RECORD_RESOURCE_CFG"
         ]
         for k in dir(config):
             if k in supported_configurations or k.startswith("GEO_RDM_"):

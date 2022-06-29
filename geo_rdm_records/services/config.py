@@ -13,6 +13,7 @@ from invenio_rdm_records.services.customizations import FromConfigSearchOptions
 
 from geo_rdm_records.records.api import GEODraft, GEORecord
 from geo_rdm_records.services.params.facets import FacetsParam
+from geo_rdm_records.services.params.search import BoundingBoxParam
 from geo_rdm_records.services.schemas import GEORecordSchema
 
 
@@ -26,7 +27,7 @@ class GEOSearchOptionsMixin:
             lambda x: FacetsParam
             if getattr(x, "__name__", None) and x.__name__ == "FacetsParam"
             else x,
-            SearchOptions.params_interpreters_cls,
+            [*SearchOptions.params_interpreters_cls, BoundingBoxParam.factory('metadata.locations.features.geometry')],
         )
     )
 
