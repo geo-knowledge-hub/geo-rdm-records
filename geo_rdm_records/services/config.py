@@ -27,7 +27,10 @@ class GEOSearchOptionsMixin:
             lambda x: FacetsParam
             if getattr(x, "__name__", None) and x.__name__ == "FacetsParam"
             else x,
-            [*SearchOptions.params_interpreters_cls, BoundingBoxParam.factory('metadata.locations.features.geometry')],
+            [
+                *SearchOptions.params_interpreters_cls,
+                BoundingBoxParam.factory("metadata.locations.features.geometry"),
+            ],
         )
     )
 

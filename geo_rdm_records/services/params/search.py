@@ -19,37 +19,80 @@ def _validate_point_coordinates(point):
     lon, lat = point.coordinates
 
     if not point.is_valid:
-        raise QuerystringValidationError('Point used to created the bounding box is not valid', point.errors())
+        raise QuerystringValidationError(
+            "Point used to created the bounding box is not valid", point.errors()
+        )
 
     # ToDo: Check 180th meridian cases
     if (lat < -90.0) or (lat > 90.0):
-        raise QuerystringValidationError('latitude is out-of range [-90, 90]')
+        raise QuerystringValidationError("latitude is out-of range [-90, 90]")
 
     if (lon < -180.0) or (lon > 180.0):
-        raise QuerystringValidationError('longitude is out-of range [-180, 180]')
+        raise QuerystringValidationError("longitude is out-of range [-180, 180]")
 
 
-def validate_bounding_box(value):
-    """Validate the bbox object.
+def generate_bounding_box(value: str):
+    """Generate and validate a Bounding Box object from a string.
 
-    See:
-        https://datatracker.ietf.org/doc/html/rfc7946#section-5
+    Args:
+        value (str): Query string value to be transformed in a bounding box object.
+                     This string must have be defined with 2 points:
+
+                        (Top Left Point, Bottom Right Point)
+
+                     The definition of these points must be done in an array with the following structure:
+
+                        (Longitude, Latitude, Longitude, Latitude)
+
+    Returns:
+        List[Tuple]: Bounding box object.
+
+    Example:
+        >>> my_bbox_string = '-80.4638671875,19.601194161263145,-73.7841796875,15.11455287'
+        >>> generate_bounding_box(my_bbox_string) # [[-80.4638671875,19.601194161263145], [-73.7841796875,15.11455287]]
     """
-    if len(value) != 4:
-        raise QuerystringValidationError("A bounding box must be defined "
-                                         "by 2 Point (TopLeft, BottomRight). "
-                                         "This is represented by a array with "
-                                         "four elements: [lon, lat, lon, lat]")
+    try:
+        # try parsing the `value` in a list
+        bbox = value.split(",") or []
+
+        # transforming the values in float
+        bbox = list(map(float, bbox))
+    except ValueError:
+        raise QuerystringValidationError(
+            "You must define the bounding box parameter using only numeric values."
+        )
+    except BaseException:
+        raise QuerystringValidationError("Invalid bounding box definition.")
+
+    if len(bbox) != 4:
+        raise QuerystringValidationError(
+            "A bounding box must be defined "
+            "by 2 Point (TopLeft, BottomRight). "
+            "This is represented by a array with "
+            "four elements: [lon, lat, lon, lat]"
+        )
 
     # validating the bounding box points
     list(
-        map(lambda x: _validate_point_coordinates(x), [
-            Point(value[0:2]), Point(value[2:])
-        ]))
+        map(
+            lambda x: _validate_point_coordinates(x),
+            [Point(bbox[0:2]), Point(bbox[2:])],
+        )
+    )
+
+    return bbox
 
 
 class BoundingBoxParam(ParamInterpreter):
-    """Evaluates the 'bbox' parameter."""
+    """Evaluates the 'filters.bbox' parameter.
+
+    Note:
+        The `BoundingBoxParam` interpreter is an initial (and probably temporary)
+        solution to allow users to perform spatial queries using the bounding box.
+
+        In the future, we will implement specific spatial operators, which will be
+        provided in a specific API.
+    """
 
     def __init__(self, field_name, config):
         """Construct."""
@@ -63,30 +106,27 @@ class BoundingBoxParam(ParamInterpreter):
 
     def apply(self, identity, search, params):
         """Evaluate the `bbox` parameter on the query string."""
-        bbox = params.get('bbox')
+
+        # getting the filters available
+        filters = params.get("filters") or {}
+
+        # checking if the bbox filter is used
+        bbox = filters.get("bbox")
+
         if bbox:
-            # validating the `bbox` object
-            bbox = bbox.split(',') or []
+            bbox = generate_bounding_box(bbox)
 
-            # creating the bbox search filter
-            bbox = list(map(float, bbox))
-
-            validate_bounding_box(bbox)
-
-            # the elasticsearch documentation describes the `bounding box` search
-            # as a way to find `geo_shape` and `geo_point` object. In practice
-            # only `geo_point` is accepted. So, to avoid errors, we are using
-            # the `geo_shape` query. For this case, we are basically creating
-            # the bounding box and using it with the `intersects` operator.
-            search = search.filter("geo_shape", **{
-                self.field_name: {
-                    "shape": {
-                        "type": "envelope",
-                        "coordinates": [
-                            bbox[0:2], bbox[2:]
-                        ]
-                    },
-                    "relation": "intersects"
+            # creating the filter.
+            search = search.filter(
+                "geo_shape",
+                **{
+                    self.field_name: {
+                        "shape": {
+                            "type": "envelope",
+                            "coordinates": [bbox[0:2], bbox[2:]],
+                        },
+                        "relation": "intersects",
+                    }
                 }
-            })
+            )
         return search
