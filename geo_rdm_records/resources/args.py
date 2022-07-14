@@ -8,7 +8,7 @@
 """Schemas for parameter parsing."""
 
 from invenio_drafts_resources.resources.records.args import SearchRequestArgsSchema
-from marshmallow import fields
+from marshmallow import fields, post_load
 
 
 class GEOSearchRequestArgsSchema(SearchRequestArgsSchema):
@@ -16,4 +16,23 @@ class GEOSearchRequestArgsSchema(SearchRequestArgsSchema):
 
     style = fields.Str()
     locale = fields.Str()
-    bbox = fields.Str()
+
+    filters = ["bbox"]
+    """Filters."""
+
+    @post_load(pass_original=True)
+    def facets(self, data, original_data=None, **kwargs):
+        """Collect all unknown values into a facets (and filters) key.
+
+        ToDo:
+            Review the approach used to define the `filters` items.
+        """
+        data["facets"] = {}
+        data["filters"] = {}
+        for k in set(original_data.keys()) - set(data.keys()):
+
+            if k in self.filters:
+                data["filters"][k] = original_data.get(k)
+            else:
+                data["facets"][k] = original_data.getlist(k)
+        return data
