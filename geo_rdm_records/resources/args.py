@@ -22,7 +22,7 @@ class GEOSearchRequestArgsSchema(SearchRequestArgsSchema):
 
     @post_load(pass_original=True)
     def facets(self, data, original_data=None, **kwargs):
-        """Collect all unknown values into a facets (and filters) key.
+        """Post Load method to create facets and filters.
 
         ToDo:
             Review the approach used to define the `filters` items.
