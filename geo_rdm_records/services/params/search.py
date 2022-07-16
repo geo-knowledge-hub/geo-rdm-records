@@ -45,11 +45,12 @@ def generate_bounding_box(value: str):
                         (Longitude, Latitude, Longitude, Latitude)
 
     Returns:
-        List[Tuple]: Bounding box object.
+        List[Float]: Bounding box object.
 
     Example:
         >>> my_bbox_string = '-80.4638671875,19.601194161263145,-73.7841796875,15.11455287'
-        >>> generate_bounding_box(my_bbox_string) # [[-80.4638671875,19.601194161263145], [-73.7841796875,15.11455287]]
+        >>> generate_bounding_box(my_bbox_string)
+        [-80.4638671875, 19.601194161263145, -73.7841796875, 15.11455287]
     """
     try:
         # try parsing the `value` in a list
@@ -106,7 +107,6 @@ class BoundingBoxParam(ParamInterpreter):
 
     def apply(self, identity, search, params):
         """Evaluate the `bbox` parameter on the query string."""
-
         # getting the filters available
         filters = params.get("filters") or {}
 
