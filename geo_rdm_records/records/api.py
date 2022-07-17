@@ -30,7 +30,7 @@ from invenio_vocabularies.records.api import Vocabulary
 class CommonFieldsMixin(BaseCommonFieldsMixin):
     """Common system fields between records and drafts."""
 
-    schema = ConstantField("$schema", "local://records/geo-record-v4.0.0.json")
+    schema = ConstantField("$schema", "local://records/geo-record-v5.0.0.json")
 
     relations = RelationsField(
         #
@@ -38,19 +38,19 @@ class CommonFieldsMixin(BaseCommonFieldsMixin):
         #
         target_audiences=PIDListRelation(
             "metadata.target_audiences",
-            attrs=["id", "title", "props.type"],
+            keys=["id", "title", "props.type"],
             pid_field=Vocabulary.pid.with_type_ctx("targetaudiencestypes"),
             cache_key="target_audiences",
         ),
         geo_work_programme_activity=PIDRelation(
             "metadata.geo_work_programme_activity",
-            attrs=["id", "title", "props.type"],
+            keys=["id", "title", "props.type"],
             pid_field=Vocabulary.pid.with_type_ctx("geowptypes"),
             cache_key="geo_work_programme_activity",
         ),
         engagement_priorities=PIDListRelation(
             "metadata.engagement_priorities",
-            attrs=["id", "title", "props.type", "props.subtype"],
+            keys=["id", "title", "props.type", "props.subtype"],
             pid_field=Vocabulary.pid.with_type_ctx("engagementprioritiestypes"),
             cache_key="engagement_priorities",
         ),
