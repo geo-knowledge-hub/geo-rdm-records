@@ -57,7 +57,6 @@ setup_requires = [
 
 install_requires = [
     "invenio-i18n>=1.2.0",
-    "geo-config @ git+https://github.com/geo-knowledge-hub/geo-config@v0.3.0",
     "invenio-rdm-records @ git+https://github.com/geo-knowledge-hub/invenio-rdm-records@v0.34.7-geo",
     "invenio-geographic-identifiers @ git+https://github.com/geo-knowledge-hub/invenio-geographic-identifiers@v0.1.0",
 ]
