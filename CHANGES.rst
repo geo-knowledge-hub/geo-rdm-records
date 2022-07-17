@@ -22,6 +22,8 @@ Version 0.3.0 (2022-07-17)
     - `LineString <https://tools.ietf.org/html/rfc7946#section-3.1.4>`_ (New feature);
     - `MultiLineString <https://tools.ietf.org/html/rfc7946#section-3.1.5>`_ (New feature);
     - `GeometryCollection <https://tools.ietf.org/html/rfc7946#section-3.1.8>`_ (New feature).
+    
+  - Added Geographic Identifiers vocabularies via integration with the `Invenio Geographic Identifiers <https://github.com/geo-knowledge-hub/invenio-geographic-identifiers>`_ module.
 
 Version 0.2.0 (2022-04-24)
 --------------------------
