@@ -7,6 +7,11 @@
 Changes
 =======
 
+Version 0.3.1 (2022-07-19)
+--------------------------
+
+- Updated `Invenio Geographic Identifiers <https://github.com/geo-knowledge-hub/invenio-geographic-identifiers>`_ to version `v0.1.1 <https://github.com/geo-knowledge-hub/invenio-geographic-identifiers/releases/tag/v0.1.1>`_.
+
 Version 0.3.0 (2022-07-17)
 --------------------------
 
