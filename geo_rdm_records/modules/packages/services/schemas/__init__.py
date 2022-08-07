@@ -7,9 +7,8 @@
 
 """GEO RDM Records Packages API Schemas."""
 
-from marshmallow_utils.fields import NestedAttribute
-
 from invenio_rdm_records.services.schemas import RDMRecordSchema as BaseRecordSchema
+from marshmallow_utils.fields import NestedAttribute
 
 from .relationship import RelationshipSchema
 

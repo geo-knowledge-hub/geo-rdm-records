@@ -77,17 +77,6 @@
                 "type": "keyword"
               }
             }
-          },
-          "relationship": {
-            "properties": {
-              "resources": {
-                "properties": {
-                  "id": {
-                    "type": "keyword"
-                  }
-                }
-              }
-            }
           }
         }
       },

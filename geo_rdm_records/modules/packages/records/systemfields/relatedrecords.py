@@ -5,6 +5,8 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
+"""Package Related Records system field."""
+
 from invenio_records.dictutils import dict_lookup, parse_lookup_key
 from invenio_records.systemfields import SystemField
 
@@ -12,8 +14,13 @@ from invenio_records.systemfields import SystemField
 class AttrProxy:
     """Attribute proxy.
 
-    The main purpose of this proxy, is to use data stored on the current record
-    if available, instead of quering the database for the related record.
+    Note:
+        This class was implemented based on ``AttrProxy`` from Invenio Requests.
+
+    Note:
+        (From Invenio Requests) The main purpose of this proxy, is to use data
+        stored on the current record if available, instead of quering the database
+        for the related record.
     """
 
     def __init__(self, record_cls, record, data):
@@ -47,6 +54,12 @@ class AttrProxy:
 
 
 class RelatedRecordsField(SystemField):
+    """Related records field.
+
+    Note:
+        This class was implemented based on ``RelatedRecord`` from Invenio Requests.
+    """
+
     def __init__(self, record_cls, *args, keys=None, attrs=None, **kwargs):
         """Field initializer."""
         self._record_cls = record_cls

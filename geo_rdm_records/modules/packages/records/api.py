@@ -8,22 +8,23 @@
 """GEO RDM Records Packages API."""
 
 from invenio_drafts_resources.records import Draft, Record
-
+from invenio_rdm_records.records.api import RDMParent as BaseRecordParent
 from invenio_rdm_records.records.systemfields import HasDraftCheckField
 from invenio_records.systemfields import ConstantField
 from invenio_records_resources.records.api import FileRecord
-from invenio_records_resources.records.systemfields import (
-    FilesField,
-    IndexField,
-)
-
-from invenio_rdm_records.records.api import RDMParent as BaseRecordParent
+from invenio_records_resources.records.systemfields import FilesField, IndexField
 
 from geo_rdm_records.records.api import CommonFieldsMixin as BaseCommonFieldsMixin
 from geo_rdm_records.records.api import GEODraft, GEORecord
 
-import models as geo_models
-
+from .models import (
+    GEOPackageDraftMetadata,
+    GEOPackageFileDraftMetadata,
+    GEOPackageFileRecordMetadata,
+    GEOPackageParentMetadata,
+    GEOPackageRecordMetadata,
+    GEOPackageVersionsState,
+)
 from .systemfields.access import PackageAccessField
 from .systemfields.relatedrecords import RelatedRecordsField
 
@@ -35,7 +36,7 @@ class GEOPackageParent(BaseRecordParent):
     """Parent record."""
 
     # Configuration
-    model_cls = geo_models.GEOPackageParentMetadata
+    model_cls = GEOPackageParentMetadata
 
 
 #
@@ -44,7 +45,7 @@ class GEOPackageParent(BaseRecordParent):
 class CommonFieldsMixin(BaseCommonFieldsMixin):
     """Common system fields between published and draft packages."""
 
-    versions_model_cls = geo_models.GEOPackageVersionsState
+    versions_model_cls = GEOPackageVersionsState
     parent_record_cls = GEOPackageParent
 
     access = PackageAccessField()
@@ -57,14 +58,14 @@ class CommonFieldsMixin(BaseCommonFieldsMixin):
 class GEOPackageFileDraft(FileRecord):
     """Record (Draft) File abstraction class."""
 
-    model_cls = geo_models.GEOPackageFileDraftMetadata
+    model_cls = GEOPackageFileDraftMetadata
     records_cls = None
 
 
 class GEOPackageDraft(CommonFieldsMixin, Draft):
     """Record (Draft) Metadata manipulation class API."""
 
-    model_cls = geo_models.GEOPackageDraftMetadata
+    model_cls = GEOPackageDraftMetadata
 
     index = IndexField(
         "geordmpackages-drafts-draft-v1.0.0", search_alias="geordmpackages"
@@ -89,14 +90,14 @@ class GEOPackageDraft(CommonFieldsMixin, Draft):
 class GEOPackageFileRecord(FileRecord):
     """Record File abstraction class."""
 
-    model_cls = geo_models.GEOPackageFileRecordMetadata
+    model_cls = GEOPackageFileRecordMetadata
     records_cls = None
 
 
 class GEOPackageRecord(CommonFieldsMixin, Record):
     """Record Metadata manipulation class API."""
 
-    model_cls = geo_models.GEOPackageRecordMetadata
+    model_cls = GEOPackageRecordMetadata
 
     index = IndexField(
         "geordmpackages-records-record-v1.0.0", search_alias="geordmpackages-records"

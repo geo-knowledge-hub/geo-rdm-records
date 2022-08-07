@@ -15,13 +15,16 @@ readme = open("README.rst").read()
 history = open("CHANGES.rst").read()
 
 # Should follow inveniosoftware/invenio versions
-invenio_db_version = ">=1.0.11,<2.0.0"
-invenio_search_version = ">=1.4.0,<2.0.0"
+invenio_db_version = ">=1.0.14,<2.0"
+invenio_search_version = ">=1.4.2,<2.0"
 
 tests_require = [
+    "pytest-black>=0.3.0,<0.3.10",
+    "invenio-app>=1.3.4",
+    "pytest-invenio>=1.4.7",
     "pytest-mock>=1.6.0",
-    "pytest-invenio>=1.4.0",
-    "invenio-app>=1.3.1,<2.0.0",
+    "sphinx>=4.2.0,<5",
+    "tripoli~=2.0.0",
 ]
 
 extras_require = {
@@ -56,7 +59,7 @@ setup_requires = [
 ]
 
 install_requires = [
-    "invenio-i18n>=1.2.0"
+    "invenio-i18n>=1.2.0",
     "invenio-rdm-records @ git+https://github.com/geo-knowledge-hub/invenio-rdm-records@v0.34.7-geo",
     "invenio-geographic-identifiers @ git+https://github.com/geo-knowledge-hub/invenio-geographic-identifiers@v0.1.1",
 ]
@@ -100,11 +103,11 @@ setup(
         ],
         "invenio_jsonschemas.schemas": [
             "geo_rdm_records = geo_rdm_records.records.jsonschemas",
-            "geo_rdm_records_packages = geo_rdm_records.modules.packages.records.jsonschemas"
+            "geo_rdm_records_packages = geo_rdm_records.modules.packages.records.jsonschemas",
         ],
         "invenio_db.models": [
             "geo_rdm_records_packages = geo_rdm_records.modules.packages.records.models",
-            "geo_rdm_records_members = geo_rdm_records.modules.members.records.models"
+            "geo_rdm_records_members = geo_rdm_records.modules.members.records.models",
         ]
         # TODO: Edit these entry points to fit your needs.
         # 'invenio_access.actions': [],

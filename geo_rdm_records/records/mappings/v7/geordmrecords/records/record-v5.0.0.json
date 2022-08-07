@@ -77,17 +77,6 @@
                 "type": "keyword"
               }
             }
-          },
-          "relationship": {
-            "properties": {
-              "resources": {
-                "properties": {
-                  "id": {
-                    "type": "keyword"
-                  }
-                }
-              }
-            }
           }
         }
       },
@@ -627,7 +616,7 @@
                 "type" : "keyword"
               },
               "subject" : {
-                "type": "text",
+                "type" : "text",
                 "fields": {
                   "keyword": {
                     "type": "keyword"
@@ -669,7 +658,7 @@
                   "suggest_title"
                 ]
               },
-              "type" : {
+              "type": {
                 "type": "object",
                 "properties": {
                   "@v": {

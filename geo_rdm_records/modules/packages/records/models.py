@@ -31,6 +31,7 @@ class GEOPackageParentMetadata(db.Model, RecordMetadataBase):
 
 
 class GEOPackageParentCommunity(db.Model, CommunityRelationMixin):
+    """Metadata store for the package's parent community relation."""
 
     __tablename__ = "geo_package_parents_community"
     __record_model__ = GEOPackageParentMetadata
@@ -58,12 +59,14 @@ class GEOPackageFileRecordMetadata(db.Model, RecordMetadataBase, FileRecordModel
 # Drafts
 #
 class GEOPackageDraftMetadata(db.Model, DraftMetadataBase, ParentRecordMixin):
+    """Package Draft class."""
 
     __tablename__ = "geo_package_drafts_metadata"
     __parent_record_model__ = GEOPackageParentMetadata
 
 
 class GEOPackageFileDraftMetadata(db.Model, RecordMetadataBase, FileRecordModelMixin):
+    """Package Draft file class."""
 
     __record_model_cls__ = GEOPackageDraftMetadata
 
@@ -74,6 +77,7 @@ class GEOPackageFileDraftMetadata(db.Model, RecordMetadataBase, FileRecordModelM
 # Versions state
 #
 class GEOPackageVersionsState(db.Model, ParentRecordStateMixin):
+    """Package version state class."""
 
     __tablename__ = "geo_package_versions_state"
 

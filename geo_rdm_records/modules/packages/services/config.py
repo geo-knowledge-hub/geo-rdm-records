@@ -7,16 +7,15 @@
 
 """GEO RDM Records Packages API Service configuration."""
 
-from geo_rdm_records.services.config import (
-    GEORecordServiceConfig as BaseRecordServiceConfig,
-)
+from invenio_rdm_records.services import config as rdm_config
+from invenio_rdm_records.services.customizations import FromConfig
 
-from ..records.api import GEOPackageRecord, GEOPackageDraft
-
+from ..records.api import GEOPackageDraft, GEOPackageRecord
+from .permissions import GEOPackageRecordPermissionPolicy
 from .schemas import GEOPackageRecordSchema
 
 
-class GEOPackageRecordServiceConfig(BaseRecordServiceConfig):
+class GEOPackageRecordServiceConfig(rdm_config.RDMRecordServiceConfig):
     """GEO Package record draft service config."""
 
     # Record and draft classes
@@ -25,3 +24,39 @@ class GEOPackageRecordServiceConfig(BaseRecordServiceConfig):
 
     # Schemas
     schema = GEOPackageRecordSchema
+
+    # Permission policy
+    permission_policy_cls = FromConfig(
+        "GEO_RDM_PACKAGE_PERMISSION_POLICY",
+        default=GEOPackageRecordPermissionPolicy,
+        import_string=True,
+    )
+
+
+class GEOPackageFileRecordServiceConfig(rdm_config.RDMFileRecordServiceConfig):
+    """Configuration for package files."""
+
+    # Record class
+    record_cls = GEOPackageRecord
+
+    # Permission policy
+    permission_policy_cls = FromConfig(
+        "GEO_RDM_PACKAGE_PERMISSION_POLICY",
+        default=GEOPackageRecordPermissionPolicy,
+        import_string=True,
+    )
+
+
+class GEOPackageDraftServiceConfig(rdm_config.RDMFileDraftServiceConfig):
+    """Configuration for draft files."""
+
+    # Record class
+    record_cls = GEOPackageRecord
+
+    # Permission policy
+    permission_action_prefix = "draft_"
+    permission_policy_cls = FromConfig(
+        "GEO_RDM_PACKAGE_PERMISSION_POLICY",
+        default=GEOPackageRecordPermissionPolicy,
+        import_string=True,
+    )

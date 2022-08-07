@@ -7,14 +7,6 @@
 
 """Permissions for GEO RDM Records (Packages API)."""
 
-from invenio_records_permissions.generators import (
-    AnyUser,
-    AuthenticatedUser,
-    Disable,
-    SystemProcess,
-)
-from invenio_records_permissions.policies.records import RecordPermissionPolicy
-
 from invenio_rdm_records.services.generators import (
     CommunityAction,
     IfRestricted,
@@ -22,6 +14,13 @@ from invenio_rdm_records.services.generators import (
     SecretLinks,
     SubmissionReviewer,
 )
+from invenio_records_permissions.generators import (
+    AnyUser,
+    AuthenticatedUser,
+    Disable,
+    SystemProcess,
+)
+from invenio_records_permissions.policies.records import RecordPermissionPolicy
 
 
 class GEOPackageRecordPermissionPolicy(RecordPermissionPolicy):
