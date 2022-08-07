@@ -57,7 +57,7 @@ setup_requires = [
 
 install_requires = [
     "invenio-i18n>=1.2.0",
-    "invenio-rdm-records @ git+https://github.com/geo-knowledge-hub/invenio-rdm-records@v0.34.7-geo",
+    # "invenio-rdm-records @ git+https://github.com/geo-knowledge-hub/invenio-rdm-records@v0.34.7-geo",
     "invenio-geographic-identifiers @ git+https://github.com/geo-knowledge-hub/invenio-geographic-identifiers@v0.1.1",
 ]
 packages = find_packages()
@@ -93,9 +93,16 @@ setup(
         "invenio_i18n.translations": [
             "messages = geo_rdm_records",
         ],
-        "invenio_search.mappings": ["geordmrecords = geo_rdm_records.records.mappings"],
+        "invenio_search.mappings": [
+            "geordmrecords = geo_rdm_records.records.mappings",
+            "geordmpackages = geo_rdm_records.modules.packages.records.mappings",
+        ],
         "invenio_jsonschemas.schemas": [
-            "geo_rdm_records = geo_rdm_records.records.jsonschemas"
+            "geo_rdm_records = geo_rdm_records.records.jsonschemas",
+            "geo_rdm_records_packages = geo_rdm_records.modules.packages.records.jsonschemas",
+        ],
+        "invenio_db.models": [
+            "geo_rdm_records_packages = geo_rdm_records.modules.packages.records.models"
         ]
         # TODO: Edit these entry points to fit your needs.
         # 'invenio_access.actions': [],
