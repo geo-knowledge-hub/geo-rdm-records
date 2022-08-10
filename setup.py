@@ -60,8 +60,8 @@ setup_requires = [
 
 install_requires = [
     "invenio-i18n>=1.2.0",
-    "invenio-rdm-records @ git+https://github.com/geo-knowledge-hub/invenio-rdm-records@v0.34.7-geo",
-    "invenio-geographic-identifiers @ git+https://github.com/geo-knowledge-hub/invenio-geographic-identifiers@v0.1.1",
+    "invenio-rdm-records @ git+https://github.com/geo-knowledge-hub/invenio-rdm-records@v0.35.21",
+    "invenio-geographic-identifiers @ git+https://github.com/geo-knowledge-hub/invenio-geographic-identifiers@v0.2.0",
 ]
 packages = find_packages()
 
@@ -92,6 +92,15 @@ setup(
         ],
         "invenio_base.api_apps": [
             "geo_rdm_records = geo_rdm_records:GEORDMRecords",
+        ],
+        "invenio_base.api_blueprints": [
+            "geo_rdm_records_packages = geo_rdm_records.views:create_packages_api_blueprint",
+            "geo_rdm_records_packages_files = geo_rdm_records.views:create_packages_files_api_blueprint",
+            "geo_rdm_records_draft_files = geo_rdm_records.views:create_draft_files_api_blueprint",
+            "geo_rdm_records_parent_links = geo_rdm_records.views:create_parent_links_api_blueprint",
+        ],
+        "invenio_base.blueprints": [
+            "geo_rdm_records_packages_ext = geo_rdm_records.views:blueprint",
         ],
         "invenio_i18n.translations": [
             "messages = geo_rdm_records",
