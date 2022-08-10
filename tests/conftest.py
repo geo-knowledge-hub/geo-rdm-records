@@ -22,8 +22,9 @@ from flask_security.utils import hash_password
 from invenio_access.models import ActionRoles
 from invenio_access.permissions import superuser_access, system_identity
 from invenio_accounts.models import Role
+from invenio_accounts.testutils import login_user_via_session
 from invenio_admin.permissions import action_admin_access
-from invenio_app.factory import create_app as _create_app
+from invenio_app.factory import create_api as _create_api
 from invenio_communities.communities.records.api import Community
 from invenio_rdm_records.services.pids import providers
 from invenio_records_resources.proxies import current_service_registry
@@ -145,7 +146,7 @@ def app_config(app_config):
 @pytest.fixture(scope="module")
 def create_app(instance_path):
     """Application factory fixture."""
-    return _create_app
+    return _create_api
 
 
 def _es_create_indexes(current_search, current_search_client):
@@ -198,9 +199,7 @@ def full_record(users):
             },
         },
         "metadata": {
-            "target_audiences": [
-                {"id": "tu-geo-eoanalyst"}
-            ],
+            "target_audiences": [{"id": "tu-geo-eoanalyst"}],
             "engagement_priorities": [
                 {
                     "id": "convention-on-biological-diversity",
@@ -373,11 +372,7 @@ def minimal_record():
             "enabled": False,  # Most tests don't care about files
         },
         "metadata": {
-            "target_audiences": [
-                {
-                    "id": "tu-geo-eoanalyst"
-                }
-            ],
+            "target_audiences": [{"id": "tu-geo-eoanalyst"}],
             "engagement_priorities": [
                 {
                     "id": "convention-on-biological-diversity",
@@ -405,6 +400,15 @@ def minimal_record():
             ],
             "title": "A Romans story",
         },
+    }
+
+
+@pytest.fixture(scope="session")
+def headers():
+    """Default headers for making requests."""
+    return {
+        "content-type": "application/json",
+        "accept": "application/json",
     }
 
 
@@ -1141,7 +1145,7 @@ def target_users_v(app, target_users):
                 "description_short": "A person who makes Earth Observation Analysis",
                 "icon": "",
                 "subtype": "",
-                "type": "target-audience"
+                "type": "target-audience",
             },
             "title": {"en": "Earth Observation Analyst"},
             "type": "targetaudiencestypes",
@@ -1218,3 +1222,32 @@ def engagement_priorities_v(app, engagement_priorities):
     Vocabulary.index.refresh()
 
     return vocab
+
+
+@pytest.fixture()
+def users(app, db):
+    """Create example user."""
+    with db.session.begin_nested():
+        datastore = app.extensions["security"].datastore
+        user1 = datastore.create_user(
+            email="info@inveniosoftware.org",
+            password=hash_password("password"),
+            active=True,
+        )
+        user2 = datastore.create_user(
+            email="ser-testalot@inveniosoftware.org",
+            password=hash_password("beetlesmasher"),
+            active=True,
+        )
+
+    db.session.commit()
+    return [user1, user2]
+
+
+@pytest.fixture()
+def client_with_login(client, users):
+    """Log in a user to the client."""
+    user = users[0]
+    login_user(user)
+    login_user_via_session(client, email=user.email)
+    return client

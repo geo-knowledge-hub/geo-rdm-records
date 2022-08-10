@@ -68,6 +68,12 @@
                     "type": "keyword"
                   }
                 }
+              },
+              "member_policy": {
+                "type": "keyword"
+              },
+              "record_policy": {
+                "type": "keyword"
               }
             }
           },

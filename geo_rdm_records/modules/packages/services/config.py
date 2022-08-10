@@ -11,12 +11,16 @@ from invenio_rdm_records.services import config as rdm_config
 from invenio_rdm_records.services.customizations import FromConfig
 
 from ..records.api import GEOPackageDraft, GEOPackageRecord
+from .components.relationship import RelationshipComponent
 from .permissions import GEOPackageRecordPermissionPolicy
 from .schemas import GEOPackageRecordSchema
 
 
 class GEOPackageRecordServiceConfig(rdm_config.RDMRecordServiceConfig):
     """GEO Package record draft service config."""
+
+    # Configurations
+    service_id = "records_package"
 
     # Record and draft classes
     record_cls = GEOPackageRecord
@@ -32,9 +36,15 @@ class GEOPackageRecordServiceConfig(rdm_config.RDMRecordServiceConfig):
         import_string=True,
     )
 
+    # Service components
+    components = [RelationshipComponent] + rdm_config.RDMRecordServiceConfig.components
+
 
 class GEOPackageFileRecordServiceConfig(rdm_config.RDMFileRecordServiceConfig):
     """Configuration for package files."""
+
+    # Configurations
+    service_id = "files_package"
 
     # Record class
     record_cls = GEOPackageRecord
@@ -49,6 +59,9 @@ class GEOPackageFileRecordServiceConfig(rdm_config.RDMFileRecordServiceConfig):
 
 class GEOPackageDraftServiceConfig(rdm_config.RDMFileDraftServiceConfig):
     """Configuration for draft files."""
+
+    # Configurations
+    service_id = "files_package_draft"
 
     # Record class
     record_cls = GEOPackageRecord

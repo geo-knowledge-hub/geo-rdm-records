@@ -85,7 +85,7 @@ class GEORDMRecords(object):
         service_configs = self.service_configs(app)
 
         # Services
-        self.packages_service = GEOPackageRecordService(
+        self.service = GEOPackageRecordService(
             service_configs.record,
             files_service=FileService(service_configs.file),
             draft_files_service=FileService(service_configs.file_draft),
@@ -98,25 +98,25 @@ class GEORDMRecords(object):
 
     def init_resource(self, app):
         """Initialize resources."""
-        self.records_resource = GEOPackageRecordResource(
+        self.package_records_resource = GEOPackageRecordResource(
             GEOPackageRecordResourceConfig,
-            self.packages_service,
+            self.service,
         )
 
         # Record files resource
-        self.record_files_resource = FileResource(
-            service=self.packages_service.files,
+        self.package_record_files_resource = FileResource(
+            service=self.service.files,
             config=GEOPackageRecordFilesResourceConfig,
         )
 
         # Draft files resource
-        self.draft_files_resource = FileResource(
-            service=self.packages_service.draft_files,
+        self.package_draft_files_resource = FileResource(
+            service=self.service.draft_files,
             config=GEOPackageDraftFilesResourceConfig,
         )
 
         # Parent Records
-        self.parent_record_links_resource = GEOPackageParentRecordLinksResource(
-            service=self.packages_service,
+        self.package_parent_record_links_resource = GEOPackageParentRecordLinksResource(
+            service=self.service,
             config=GEOPackageParentRecordLinksResourceConfig,
         )

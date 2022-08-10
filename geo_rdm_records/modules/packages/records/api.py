@@ -9,13 +9,15 @@
 
 from invenio_drafts_resources.records import Draft, Record
 from invenio_rdm_records.records.api import RDMParent as BaseRecordParent
-from invenio_rdm_records.records.systemfields import HasDraftCheckField
+from invenio_rdm_records.records.systemfields import (
+    HasDraftCheckField,
+    RecordAccessField,
+)
 from invenio_records.systemfields import ConstantField
 from invenio_records_resources.records.api import FileRecord
 from invenio_records_resources.records.systemfields import FilesField, IndexField
 
 from geo_rdm_records.records.api import CommonFieldsMixin as BaseCommonFieldsMixin
-from geo_rdm_records.records.api import GEODraft, GEORecord
 
 from .models import (
     GEOPackageDraftMetadata,
@@ -25,8 +27,8 @@ from .models import (
     GEOPackageRecordMetadata,
     GEOPackageVersionsState,
 )
-from .systemfields.access import PackageAccessField
-from .systemfields.relatedrecords import RelatedRecordsField
+from .systemfields.access import ParentRecordAccessField
+from .systemfields.relationship import RelationshipField
 
 
 #
@@ -38,6 +40,9 @@ class GEOPackageParent(BaseRecordParent):
     # Configuration
     model_cls = GEOPackageParentMetadata
 
+    access = ParentRecordAccessField()
+    schema = ConstantField("$schema", "local://packages/geo-parent-package-v1.0.0.json")
+
 
 #
 # Record and Draft APIs.
@@ -48,7 +53,7 @@ class CommonFieldsMixin(BaseCommonFieldsMixin):
     versions_model_cls = GEOPackageVersionsState
     parent_record_cls = GEOPackageParent
 
-    access = PackageAccessField()
+    access = RecordAccessField()
     schema = ConstantField("$schema", "local://packages/geo-package-v1.0.0.json")
 
 
@@ -80,8 +85,7 @@ class GEOPackageDraft(CommonFieldsMixin, Draft):
 
     has_draft = HasDraftCheckField()
 
-    # draft packages can be only related with Draft Records.
-    resources = RelatedRecordsField(GEODraft)
+    relationship = RelationshipField(key="relationship")
 
 
 #
@@ -114,8 +118,7 @@ class GEOPackageRecord(CommonFieldsMixin, Record):
 
     has_draft = HasDraftCheckField(GEOPackageDraft)
 
-    # draft packages can be only related with Records.
-    resources = RelatedRecordsField(GEORecord, key="relationship.resources")
+    relationship = RelationshipField(key="relationship")
 
 
 GEOPackageFileDraft.record_cls = GEOPackageDraft
