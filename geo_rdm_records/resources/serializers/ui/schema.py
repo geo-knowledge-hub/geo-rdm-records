@@ -7,14 +7,14 @@
 
 """GEO RDM Records Resouces serializers schemas."""
 
-from invenio_rdm_records.resources.serializers.ui import (
-    UIObjectSchema as UIObjectSchemaBase,
+from invenio_rdm_records.resources.serializers.ui.schema import (
+    UIRecordSchema as UIRecordSchemaBase,
 )
 from invenio_rdm_records.resources.serializers.ui.schema import VocabularyL10Schema
 from marshmallow import fields
 
 
-class UIObjectSchema(UIObjectSchemaBase):
+class UIRecordSchema(UIRecordSchemaBase):
     """Schema for dumping extra information for the UI."""
 
     geo_work_programme_activity = fields.Nested(

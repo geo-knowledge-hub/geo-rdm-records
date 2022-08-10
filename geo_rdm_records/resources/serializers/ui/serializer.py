@@ -5,20 +5,25 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""GEO RDM Records Resouces serializers."""
+"""GEO RDM Records Resources serializers."""
 
+from flask_resources import BaseListSchema, MarshmallowSerializer
+from flask_resources.serializers import JSONSerializer
 
-from invenio_rdm_records.resources.serializers.ui import (
-    UIJSONSerializer as UIJSONSerializerBase,
-)
-
-from geo_rdm_records.resources.serializers.ui.schema import UIObjectSchema
+from .schema import UIRecordSchema
 
 
 #
 # Serializer
 #
-class UIJSONSerializer(UIJSONSerializerBase):
-    """UI JSON Serializer."""
+class UIJSONSerializer(MarshmallowSerializer):
+    """UI JSON serializer."""
 
-    object_schema_cls = UIObjectSchema
+    def __init__(self):
+        """Initialise Serializer."""
+        super().__init__(
+            format_serializer_cls=JSONSerializer,
+            object_schema_cls=UIRecordSchema,
+            list_schema_cls=BaseListSchema,
+            schema_context={"object_key": "ui"},
+        )

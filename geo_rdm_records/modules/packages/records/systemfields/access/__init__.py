@@ -5,11 +5,8 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""Module tests."""
+"""GEO RDM Records Packages Relationship System Fields."""
 
+from .field import ParentRecordAccessField
 
-def test_version():
-    """Test version import."""
-    from geo_rdm_records import __version__
-
-    assert __version__
+__all__ = ("ParentRecordAccessField",)
