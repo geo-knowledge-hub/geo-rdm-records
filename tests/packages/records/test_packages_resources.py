@@ -32,7 +32,9 @@ def test_package_integration_with_resources(db, running_app, minimal_record):
 
     # Linking the resource with the package
     package_draft.relationship.managed_resources.add(resource_record)
-    package_draft.relationship.managed_resources.add(resource_record)  # only one must be added.
+    package_draft.relationship.managed_resources.add(
+        resource_record
+    )  # only one must be added.
 
     package_draft.relationship.related_resources.add(resource_record)
 
