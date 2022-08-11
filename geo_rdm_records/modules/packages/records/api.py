@@ -8,6 +8,7 @@
 """GEO RDM Records Packages API."""
 
 from invenio_drafts_resources.records import Draft, Record
+from invenio_rdm_records.records.api import CommonFieldsMixin as BaseCommonFieldsMixin
 from invenio_rdm_records.records.api import RDMParent as BaseRecordParent
 from invenio_rdm_records.records.systemfields import (
     HasDraftCheckField,
@@ -17,7 +18,7 @@ from invenio_records.systemfields import ConstantField
 from invenio_records_resources.records.api import FileRecord
 from invenio_records_resources.records.systemfields import FilesField, IndexField
 
-from geo_rdm_records.records.api import CommonFieldsMixin as BaseCommonFieldsMixin
+from geo_rdm_records.base.records.systemfields.common import BaseGEORecordsFieldsMixin
 
 from .models import (
     GEOPackageDraftMetadata,
@@ -28,7 +29,7 @@ from .models import (
     GEOPackageVersionsState,
 )
 from .systemfields.access import ParentRecordAccessField
-from .systemfields.relationship import RelationshipField
+from .systemfields.relationship import PackageRelationshipField
 
 
 #
@@ -47,7 +48,7 @@ class GEOPackageParent(BaseRecordParent):
 #
 # Record and Draft APIs.
 #
-class CommonFieldsMixin(BaseCommonFieldsMixin):
+class CommonFieldsMixin(BaseCommonFieldsMixin, BaseGEORecordsFieldsMixin):
     """Common system fields between published and draft packages."""
 
     versions_model_cls = GEOPackageVersionsState
@@ -85,7 +86,7 @@ class GEOPackageDraft(CommonFieldsMixin, Draft):
 
     has_draft = HasDraftCheckField()
 
-    relationship = RelationshipField(key="relationship")
+    relationship = PackageRelationshipField(key="relationship")
 
 
 #
@@ -118,7 +119,7 @@ class GEOPackageRecord(CommonFieldsMixin, Record):
 
     has_draft = HasDraftCheckField(GEOPackageDraft)
 
-    relationship = RelationshipField(key="relationship")
+    relationship = PackageRelationshipField(key="relationship")
 
 
 GEOPackageFileDraft.record_cls = GEOPackageDraft

@@ -9,9 +9,9 @@
 
 from invenio_rdm_records.services import facets as rdm_facets
 
-from geo_rdm_records.resources import config as geo_resource_config
-from geo_rdm_records.services import config as geo_service_config
-from geo_rdm_records.services import facets as geo_facets
+from geo_rdm_records.modules.resources.resources import config as geo_resource_config
+from geo_rdm_records.modules.resources.services import config as geo_service_config
+from geo_rdm_records.modules.resources.services import facets as geo_facets
 
 #
 # Resources configuration

@@ -11,7 +11,7 @@ from invenio_rdm_records.services.schemas import MetadataSchema as BaseMetadataS
 from invenio_rdm_records.services.schemas.metadata import VocabularySchema
 from marshmallow import fields
 
-from geo_rdm_records.services.schemas.location import FeatureSchema
+from geo_rdm_records.modules.resources.services.schemas.location import FeatureSchema
 
 
 class MetadataSchema(BaseMetadataSchema):

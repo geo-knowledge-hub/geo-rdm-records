@@ -7,12 +7,31 @@
 
 """Package Relationship System Field."""
 
-from invenio_records.systemfields import SystemField
+from geo_rdm_records.base.records.systemfields.proxy import (
+    BaseRecordProxy,
+    BaseRecordsProxy,
+)
+from geo_rdm_records.base.records.systemfields.relationship import BaseRelationshipField
 
-from .record_proxy import RecordsProxy
+
+class RecordProxy(BaseRecordProxy):
+    """Class to proxy record access from the database."""
+
+    record_cls = "GEORecord"
+    """Record API class."""
+
+    draft_cls = "GEODraft"
+    """Draft Record API class."""
 
 
-class Relationship:
+class RecordsProxy(BaseRecordsProxy):
+    """A list of records."""
+
+    record_proxy_cls = RecordProxy
+    """Class used to proxy the records from the database."""
+
+
+class PackageRelationship:
     """Related record management for specific versions of a record."""
 
     linked_resources_cls = RecordsProxy
@@ -22,7 +41,9 @@ class Relationship:
         self, managed_resources=None, related_resources=None, linked_resources_cls=None
     ):
         """Create a new related record object for a record."""
-        linked_resources_cls = linked_resources_cls or Relationship.linked_resources_cls
+        linked_resources_cls = (
+            linked_resources_cls or PackageRelationship.linked_resources_cls
+        )
 
         # In the GEO Knowledge Hub, the relation is always
         # between packages and resources. So, if not specified,
@@ -109,56 +130,9 @@ class Relationship:
         )
 
 
-class RelationshipField(SystemField):
+class PackageRelationshipField(BaseRelationshipField):
     """System field for managing record relationship."""
 
-    def __init__(self, key="relationship", relationship_obj_cls=Relationship):
+    def __init__(self, key="relationship", relationship_obj_cls=PackageRelationship):
         """Initializer."""
-        self._relationship_obj_cls = relationship_obj_cls
-        super().__init__(key=key)
-
-    def obj(self, instance):
-        """Get the relationship object."""
-        obj = self._get_cache(instance)
-        if obj is not None:
-            return obj
-
-        data = self.get_dictkey(instance)
-        if data:
-            obj = self._relationship_obj_cls.from_dict(data)
-        else:
-            obj = self._relationship_obj_cls()
-
-        self._set_cache(instance, obj)
-        return obj
-
-    def set_obj(self, record, obj):
-        """Set the relationship object."""
-        # We accept both dicts and relationship class objects.
-        if isinstance(obj, dict):
-            obj = self._relationship_obj_cls.from_dict(obj)
-
-        assert isinstance(obj, self._relationship_obj_cls)
-
-        # We do not dump the object until the pre_commit hook
-        # I.e. record.relationship != record['relationship']
-        self._set_cache(record, obj)
-
-    def __get__(self, record, owner=None):
-        """Get the record relationship object."""
-        if record is None:
-            # access by class
-            return self
-
-        # access by object
-        return self.obj(record)
-
-    def __set__(self, record, obj):
-        """Set the records relationship object."""
-        self.set_obj(record, obj)
-
-    def pre_commit(self, record):
-        """Dump the configured values before the record is committed."""
-        obj = self.obj(record)
-        if obj is not None:
-            record[self.key] = obj.dump()
+        super().__init__(key=key, relationship_obj_cls=relationship_obj_cls)

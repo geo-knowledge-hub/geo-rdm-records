@@ -10,7 +10,7 @@
 from invenio_rdm_records.services.schemas import RDMRecordSchema
 from marshmallow_utils.fields import NestedAttribute
 
-from geo_rdm_records.services.schemas.metadata import MetadataSchema
+from geo_rdm_records.modules.resources.services.schemas.metadata import MetadataSchema
 
 
 class GEORecordSchema(RDMRecordSchema):

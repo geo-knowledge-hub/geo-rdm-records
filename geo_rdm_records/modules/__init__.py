@@ -6,3 +6,18 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 """GEO RDM Records Modules."""
+
+from importlib import import_module
+
+from .class_factory import ClassFactory
+
+MODULES = [
+    "geo_rdm_records.modules.resources",
+    "geo_rdm_records.modules.packages",
+    # "geo_rdm_records.modules.members",
+]
+
+# initializing models
+for module in MODULES:
+    mod = import_module(module)
+    mod.init_class(ClassFactory)
