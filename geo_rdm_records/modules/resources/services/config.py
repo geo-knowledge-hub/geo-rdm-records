@@ -11,10 +11,10 @@ from invenio_drafts_resources.services.records.config import SearchOptions
 from invenio_rdm_records.services import config as rdm_config
 from invenio_rdm_records.services.customizations import FromConfigSearchOptions
 
-from geo_rdm_records.records.api import GEODraft, GEORecord
-from geo_rdm_records.services.params.facets import FacetsParam
-from geo_rdm_records.services.params.search import BoundingBoxParam
-from geo_rdm_records.services.schemas import GEORecordSchema
+from geo_rdm_records.modules.resources.records.api import GEODraft, GEORecord
+from geo_rdm_records.modules.resources.services.params.facets import FacetsParam
+from geo_rdm_records.modules.resources.services.params.search import BoundingBoxParam
+from geo_rdm_records.modules.resources.services.schemas import GEORecordSchema
 
 
 class GEOSearchOptionsMixin:

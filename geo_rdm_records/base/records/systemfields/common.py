@@ -5,17 +5,10 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""GEO RDM Records Records API."""
+"""GEO RDM Records System fields common."""
 
-import invenio_rdm_records.records.models as rdm_models
-from invenio_drafts_resources.records import Draft, Record
-from invenio_rdm_records.records.api import CommonFieldsMixin as BaseCommonFieldsMixin
-from invenio_rdm_records.records.systemfields import HasDraftCheckField
-from invenio_records.systemfields import ConstantField, RelationsField
-from invenio_records_resources.records.api import FileRecord
+from invenio_records.systemfields import RelationsField
 from invenio_records_resources.records.systemfields import (
-    FilesField,
-    IndexField,
     PIDListRelation,
     PIDNestedListRelation,
     PIDRelation,
@@ -27,10 +20,8 @@ from invenio_vocabularies.contrib.subjects.api import Subject
 from invenio_vocabularies.records.api import Vocabulary
 
 
-class CommonFieldsMixin(BaseCommonFieldsMixin):
+class BaseGEORecordsFieldsMixin:
     """Common system fields between records and drafts."""
-
-    schema = ConstantField("$schema", "local://records/geo-record-v5.0.0.json")
 
     relations = RelationsField(
         #
@@ -175,67 +166,3 @@ class CommonFieldsMixin(BaseCommonFieldsMixin):
             relation_field="relation_type",
         ),
     )
-
-
-#
-# Draft API
-#
-class GEOFileDraft(FileRecord):
-    """Record (Draft) File abstraction class."""
-
-    model_cls = rdm_models.RDMFileDraftMetadata
-    records_cls = None
-
-
-class GEODraft(CommonFieldsMixin, Draft):
-    """Record (Draft) Metadata manipulation class API."""
-
-    model_cls = rdm_models.RDMDraftMetadata
-
-    index = IndexField(
-        "geordmrecords-drafts-draft-v5.0.0", search_alias="geordmrecords"
-    )
-
-    files = FilesField(
-        store=False,
-        file_cls=GEOFileDraft,
-        # Don't delete, we'll manage in the service
-        delete=False,
-    )
-
-    has_draft = HasDraftCheckField()
-
-
-#
-# Record API
-#
-class GEOFileRecord(FileRecord):
-    """Record File abstraction class."""
-
-    model_cls = rdm_models.RDMFileRecordMetadata
-    records_cls = None
-
-
-class GEORecord(CommonFieldsMixin, Record):
-    """Record Metadata manipulation class API."""
-
-    model_cls = rdm_models.RDMRecordMetadata
-
-    index = IndexField(
-        "geordmrecords-records-record-v5.0.0", search_alias="geordmrecords-records"
-    )
-
-    files = FilesField(
-        store=False,
-        file_cls=GEOFileRecord,
-        # Don't create
-        create=False,
-        # Don't delete, we'll manage in the service
-        delete=False,
-    )
-
-    has_draft = HasDraftCheckField(GEODraft)
-
-
-GEOFileDraft.record_cls = GEODraft
-GEOFileRecord.record_cls = GEORecord

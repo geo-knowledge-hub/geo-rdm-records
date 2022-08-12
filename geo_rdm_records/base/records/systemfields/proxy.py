@@ -5,20 +5,20 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""Resource type for the Related Records SystemField."""
+"""Record proxy for system fields."""
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from geo_rdm_records.records.api import GEODraft, GEORecord
+from geo_rdm_records.modules.class_factory import ClassFactory
 
 
-class RecordProxy:
+class BaseRecordProxy:
     """Class to proxy record access from the database."""
 
-    record_cls = GEORecord
+    record_cls = None
     """Record API class."""
 
-    draft_cls = GEODraft
+    draft_cls = None
     """Draft Record API class."""
 
     def __init__(self, record, record_cls=None, draft_cls=None, allow_drafts=True):
@@ -38,10 +38,24 @@ class RecordProxy:
         self.record_id = None
         self.allow_drafts = allow_drafts
 
-        self.record_cls = record_cls or RecordProxy.record_cls
-        self.draft_cls = draft_cls or RecordProxy.draft_cls
+        # we are using the instance bellow to get the ``record_cls`` and
+        # the ``draft_cls`` to allow subclassing.
+        self.draft_cls = draft_cls or self.draft_cls
+        self.record_cls = record_cls or self.record_cls
 
-        if isinstance(record, self.record_cls):
+        # updating the classes
+        self.record_cls = self._use_factory(self.record_cls)
+        self.draft_cls = self._use_factory(self.draft_cls)
+
+        # storing the record in the class instance
+        self._store_record(record)
+
+    #
+    # Auxiliary methods
+    #
+    def _store_record(self, record):
+        """Store the record values in the class."""
+        if isinstance(record, (self.record_cls, self.draft_cls)):
             self._entity = record
             self.record_id = record.pid.pid_value
 
@@ -53,25 +67,21 @@ class RecordProxy:
         ):  # record id into a dict (e.g., { 'id': '0pfec-m8509' })
             self.record_id = record["id"]
 
-        else:
-            raise TypeError("Invalid record definition.")
+    def _use_factory(self, value):
+        """Load defined classes from the ``ClassFactory``."""
+        return ClassFactory.resolve(value) if type(value) == str else value
 
-    def dump(self):
-        """Dump the record as a dictionary."""
-        return {"id": self.record_id}
-
+    #
+    # Data handling interface
+    #
     def resolve(self):
-        """Resolve the record entity (e.g., RDMRecord) via a database query."""
-        if self._entity is None:
-
+        """Resolve the record entity (e.g., RDMRecord)."""
+        if self._entity is None and self.record_id is not None:
             try:
-
                 self._entity = self.record_cls.pid.resolve(
                     self.record_id, registered_only=False
                 )
-
             except NoResultFound:
-
                 if self.allow_drafts:
                     self._entity = self.draft_cls.pid.resolve(
                         self.record_id, registered_only=False
@@ -79,6 +89,18 @@ class RecordProxy:
 
         return self._entity
 
+    def dump(self):
+        """Dump the record as a dictionary."""
+        res = {}
+
+        if self.record_id:
+            res = {"id": self.record_id}
+
+        return res
+
+    #
+    # Dunder methods
+    #
     def __hash__(self):
         """Return hash(self)."""
         return self.record_id
@@ -100,15 +122,15 @@ class RecordProxy:
         return repr(self.resolve())
 
 
-class RecordsProxy(list):
+class BaseRecordsProxy(list):
     """A list of records."""
 
-    record_proxy_cls = RecordProxy
+    record_proxy_cls = BaseRecordProxy
     """Class used to proxy the records from the database."""
 
     def __init__(self, records=None, record_proxy_cls=None):
         """Initializer."""
-        self.record_proxy_cls = record_proxy_cls or RecordsProxy.record_proxy_cls
+        self.record_proxy_cls = record_proxy_cls or self.record_proxy_cls
 
         for record in records or []:
             self.add(record)
@@ -131,7 +153,12 @@ class RecordsProxy(list):
 
     def remove(self, record):
         """Remove the specified record from the list of records."""
-        super().remove(record)
+        record_proxy = record
+
+        if type(record) != self.record_proxy_cls:
+            record_proxy = self.record_proxy_cls(record)
+
+        super().remove(record_proxy)
 
     def dump(self):
         """Dump the records."""

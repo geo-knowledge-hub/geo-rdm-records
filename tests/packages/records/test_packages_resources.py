@@ -8,7 +8,7 @@
 """Test Package API integration."""
 
 from geo_rdm_records.modules.packages.records.api import GEOPackageDraft
-from geo_rdm_records.records.api import GEODraft, GEORecord
+from geo_rdm_records.modules.resources.records.api import GEODraft, GEORecord
 
 
 def test_package_integration_with_resources(db, running_app, minimal_record):
@@ -41,6 +41,22 @@ def test_package_integration_with_resources(db, running_app, minimal_record):
     package_draft.commit()
     db.session.commit()
 
-    # Checking the relationship
+    # Linking the package with the resource
+    resource_record.parent.relationship.managed_by = package_draft
+
+    # Checking the package relationship
     assert len(package_draft.relationship.managed_resources) == 1
     assert len(package_draft.relationship.related_resources) == 1
+
+    # Checking the record relationship
+    assert resource_record.parent.relationship.dump() == dict(
+        managed_by={"id": package_draft.pid.pid_value}
+    )
+
+    # Removing and checking again
+    package_draft.relationship.managed_resources.remove(resource_record)
+
+    assert len(package_draft.relationship.managed_resources) == 0
+    assert (
+        len(package_draft.relationship.related_resources) == 1
+    )  # the second object must not change

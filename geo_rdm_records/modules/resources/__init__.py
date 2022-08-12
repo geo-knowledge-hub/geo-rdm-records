@@ -5,26 +5,17 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""GEO RDM Records Packages API."""
+"""GEO RDM Records Packages Resources API."""
 
 from ..class_factory import init_class_factory
-from .records.api import (
-    GEOPackageDraft,
-    GEOPackageFileDraft,
-    GEOPackageFileRecord,
-    GEOPackageParent,
-    GEOPackageRecord,
-)
+from .records.api import GEODraft, GEORecord
 
 
 def init_class(factory):
-    """Register the classes in the Class Factory."""
+    """Register the models in the Class Factory."""
     factory_classes = [
-        GEOPackageParent,
-        GEOPackageFileDraft,
-        GEOPackageDraft,
-        GEOPackageFileRecord,
-        GEOPackageRecord,
+        GEODraft,
+        GEORecord,
     ]
 
     init_class_factory(factory, factory_classes)
