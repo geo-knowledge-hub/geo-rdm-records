@@ -46,13 +46,9 @@ class GEOPackageRecordService(BaseRDMRecordService):
         return ServiceSchemaWrapper(self, schema=ResourcesSchema)
 
     #
-    # Add a resource
+    # Internal methods
     #
-    @unit_of_work()
-    def resource_add(
-        self, identity, id_, data, revision_id=None, uow=None, expand=False
-    ):
-        """Add a resource."""
+    def _handle_resources(self, identity, id_, data, revision_id, action, uow, expand):
         # reproducibility/consistency requirement: users can only add/remove
         # resources from draft packages.
         draft = self.draft_cls.pid.resolve(id_, registered_only=False)
@@ -98,7 +94,7 @@ class GEOPackageRecordService(BaseRDMRecordService):
 
             # running the components to link the package and resources
             self.run_components(
-                "add_package_resource",
+                action,
                 identity,
                 record=draft,
                 resource=resource_obj,
@@ -131,4 +127,37 @@ class GEOPackageRecordService(BaseRDMRecordService):
             errors=errors,
             expandable_fields=self.expandable_fields,
             expand=expand,
+        )
+
+    #
+    # Resources handling
+    #
+    @unit_of_work()
+    def resource_add(
+        self, identity, id_, data, revision_id=None, uow=None, expand=False
+    ):
+        """Bulk add resources in a package."""
+        action = "package_add_resource"
+        return self._handle_resources(
+            identity, id_, data, revision_id, action, uow, expand
+        )
+
+    @unit_of_work()
+    def resource_delete(
+        self, identity, id_, data, revision_id=None, uow=None, expand=False
+    ):
+        """Bulk delete resources from a package."""
+        action = "package_delete_resource"
+        return self._handle_resources(
+            identity, id_, data, revision_id, action, uow, expand
+        )
+
+    @unit_of_work()
+    def resource_update(
+        self, identity, id_, data, revision_id=None, uow=None, expand=False
+    ):
+        """Bulk update resources from a package."""
+        action = "package_update_resource"
+        return self._handle_resources(
+            identity, id_, data, revision_id, action, uow, expand
         )

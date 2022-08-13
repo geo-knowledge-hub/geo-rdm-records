@@ -71,8 +71,8 @@ class PackageRelationship:
     def dump(self):
         """Dump the field values as dictionary."""
         relationship = {
-            "managed_resources": self.related_resources.dump(),
-            "related_resources": self.managed_resources.dump(),
+            "managed_resources": self.managed_resources.dump(),
+            "related_resources": self.related_resources.dump(),
         }
 
         return relationship
@@ -99,18 +99,14 @@ class PackageRelationship:
             # Related resources
             for related_resource in relationship_dict.get("related_resources", []):
                 try:
-                    related_resources.add(
-                        related_resources.record_proxy_cls(related_resource)
-                    )
+                    related_resources.add(related_resource)
                 except Exception as e:
                     errors.append(e)
 
             # Managed resources
             for managed_resource in relationship_dict.get("managed_resources", []):
                 try:
-                    managed_resources.add(
-                        managed_resources.record_proxy_cls(managed_resource)
-                    )
+                    managed_resources.add(managed_resource)
                 except Exception as e:
                     errors.append(e)
 
