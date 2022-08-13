@@ -73,15 +73,6 @@
             "open",
             "closed"
           ]
-        },
-
-        "record_policy": {
-          "description": "Package record policy.",
-          "enum": [
-            "open",
-            "closed",
-            "restricted"
-          ]
         }
 
       }

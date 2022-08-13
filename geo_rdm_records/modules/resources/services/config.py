@@ -12,6 +12,9 @@ from invenio_rdm_records.services import config as rdm_config
 from invenio_rdm_records.services.customizations import FromConfigSearchOptions
 
 from geo_rdm_records.modules.resources.records.api import GEODraft, GEORecord
+from geo_rdm_records.modules.resources.services.components.relationship import (
+    ResourceRelationshipComponent,
+)
 from geo_rdm_records.modules.resources.services.params.facets import FacetsParam
 from geo_rdm_records.modules.resources.services.params.search import BoundingBoxParam
 from geo_rdm_records.modules.resources.services.schemas import GEORecordSchema
@@ -67,6 +70,11 @@ class GEORecordServiceConfig(rdm_config.RDMRecordServiceConfig):
     search_versions = FromConfigSearchOptions(
         "RDM_SEARCH_VERSIONING", search_option_cls=GEOSearchVersionsOptions
     )
+
+    # Components - order matters!
+    components = [
+        ResourceRelationshipComponent
+    ] + rdm_config.RDMRecordServiceConfig.components
 
 
 class GEOFileRecordServiceConfig(rdm_config.RDMFileRecordServiceConfig):

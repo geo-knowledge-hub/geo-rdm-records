@@ -5,32 +5,42 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""GEO RDM Records Packages API Relationship component."""
+"""GEO RDM Records Relationship component."""
 
 from copy import copy
 
 from invenio_drafts_resources.services.records.components import ServiceComponent
 
 
-class PackageRelationshipComponent(ServiceComponent):
+class ResourceRelationshipComponent(ServiceComponent):
     """Service component for the ``relationship`` field."""
 
+    #
+    # Auxiliary methods
+    #
+    def _read_relationship(self, data):
+        """Read relationship from the data dictionary."""
+        return data.get("parent", {}).get("relationship", {}) if data else {}
+
+    #
+    # Component methods
+    #
     def create(self, identity, data=None, record=None, **kwargs):
         """Inject parsed relationship to the record."""
-        record.relationship = data.get("relationship", {})
+        record.parent.relationship = self._read_relationship(data)
 
     def update_draft(self, identity, data=None, record=None, **kwargs):
         """Inject parsed relationship to the record."""
-        record.relationship = data.get("relationship", {})
+        record.parent.relationship = self._read_relationship(data)
 
     def publish(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
-        record.relationship = draft.get("relationship", {})
+        record.parent.relationship = self._read_relationship(draft)
 
     def edit(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
-        draft.relationship = record.get("relationship", {})
+        record.parent.relationship = self._read_relationship(record)
 
     def new_version(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
-        draft.relationship = copy(record.get("relationship", {}))
+        draft.parent.relationship = copy(self._read_relationship(record))

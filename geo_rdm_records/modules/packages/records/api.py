@@ -7,6 +7,9 @@
 
 """GEO RDM Records Packages API."""
 
+import enum
+
+from invenio_communities.records.records.systemfields import CommunitiesField
 from invenio_drafts_resources.records import Draft, Record
 from invenio_rdm_records.records.api import CommonFieldsMixin as BaseCommonFieldsMixin
 from invenio_rdm_records.records.api import RDMParent as BaseRecordParent
@@ -24,12 +27,26 @@ from .models import (
     GEOPackageDraftMetadata,
     GEOPackageFileDraftMetadata,
     GEOPackageFileRecordMetadata,
+    GEOPackageParentCommunity,
     GEOPackageParentMetadata,
     GEOPackageRecordMetadata,
     GEOPackageVersionsState,
 )
 from .systemfields.access import ParentRecordAccessField
 from .systemfields.relationship import PackageRelationshipField
+
+
+#
+# Enum
+#
+class PackageRelationship(enum.Enum):
+    """Package relationship types."""
+
+    RELATED = "related"
+    """Related relationship."""
+
+    MANAGED = "managed"
+    """Managed relationship."""
 
 
 #
@@ -43,6 +60,8 @@ class GEOPackageParent(BaseRecordParent):
 
     access = ParentRecordAccessField()
     schema = ConstantField("$schema", "local://packages/geo-parent-package-v1.0.0.json")
+
+    communities = CommunitiesField(GEOPackageParentCommunity)
 
 
 #
