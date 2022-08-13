@@ -10,3 +10,11 @@
 
 class PackageError(Exception):
     """Base Package error class."""
+
+
+class InvalidPackageResourceError(PackageError):
+    """Resource package invalid error."""
+
+
+class InvalidRelationshipError(PackageError):
+    """Relationship is not valid for the package/resource defined."""

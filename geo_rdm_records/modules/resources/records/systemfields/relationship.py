@@ -103,7 +103,7 @@ class RecordRelationship:
     def __repr__(self):
         """Return repr(self)."""
         return ("<{} (is_managed: {})>").format(
-            type(self).__name__, True if self._record_manager else False
+            type(self).__name__, True if self._record_manager.dump() else False
         )
 
 

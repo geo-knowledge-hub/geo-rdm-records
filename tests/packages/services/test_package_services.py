@@ -7,6 +7,7 @@
 
 """Test Package API Services."""
 
+from geo_rdm_records.modules.packages import GEOPackageDraft
 from geo_rdm_records.proxies import current_geo_packages_service
 
 
@@ -40,3 +41,25 @@ def test_draft_w_languages_creation(running_app, es_clear, minimal_record):
     assert record_dict["metadata"]["languages"] == [
         {"id": "eng", "title": {"en": "English", "da": "Engelsk"}}
     ]
+
+
+def test_package_resource_integration_service(
+    running_app, db, draft_record, published_record, minimal_record
+):
+    """Basic smoke test for the package integration service."""
+    superuser_identity = running_app.superuser_identity
+
+    # creating the package
+    package_draft = GEOPackageDraft.create(minimal_record)
+
+    resources = dict(
+        resources=[
+            {"id": draft_record.pid.pid_value, "type": "managed"},
+            {"id": published_record.pid.pid_value, "type": "related"},
+        ]
+    )
+
+    # running the basic integration
+    current_geo_packages_service.resource_add(
+        superuser_identity, package_draft.pid.pid_value, resources
+    )

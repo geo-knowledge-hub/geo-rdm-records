@@ -46,6 +46,12 @@ class GEOPackageRecordMetadata(db.Model, RecordMetadataBase, ParentRecordMixin):
     __tablename__ = "geo_package_records_metadata"
     __parent_record_model__ = GEOPackageParentMetadata
 
+    # Enable versioning
+    __versioned__ = {}
+
+    bucket_id = db.Column(UUIDType, db.ForeignKey(Bucket.id))
+    bucket = db.relationship(Bucket)
+
 
 class GEOPackageFileRecordMetadata(db.Model, RecordMetadataBase, FileRecordModelMixin):
     """File associated with a record (Package version)."""
@@ -63,6 +69,9 @@ class GEOPackageDraftMetadata(db.Model, DraftMetadataBase, ParentRecordMixin):
 
     __tablename__ = "geo_package_drafts_metadata"
     __parent_record_model__ = GEOPackageParentMetadata
+
+    bucket_id = db.Column(UUIDType, db.ForeignKey(Bucket.id))
+    bucket = db.relationship(Bucket)
 
 
 class GEOPackageFileDraftMetadata(db.Model, RecordMetadataBase, FileRecordModelMixin):
