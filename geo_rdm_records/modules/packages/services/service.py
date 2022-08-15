@@ -53,7 +53,7 @@ class GEOPackageRecordService(BaseRDMRecordService):
         # resources from draft packages.
         draft = self.draft_cls.pid.resolve(id_, registered_only=False)
 
-        # concurrency control
+        # concurrency control (not used to create a record)
         self.check_revision_id(draft, revision_id)
 
         # permissions
