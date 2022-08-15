@@ -67,6 +67,9 @@ class BaseRecordProxy:
         ):  # record id into a dict (e.g., { 'id': '0pfec-m8509' })
             self.record_id = record["id"]
 
+        elif isinstance(record, BaseRecordProxy):
+            self.record_id = record.record_id
+
     def _use_factory(self, value):
         """Load defined classes from the ``ClassFactory``."""
         return ClassFactory.resolve(value) if type(value) == str else value
@@ -107,7 +110,7 @@ class BaseRecordProxy:
 
     def __eq__(self, other):
         """Return self == other."""
-        return self.record_id == other
+        return self.record_id == other.record_id
 
     def __ne__(self, other):
         """Return self != other."""
