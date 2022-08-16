@@ -18,3 +18,9 @@ class GEORecordResourceConfig(BaseRecordResourceConfig):
     """Record resource configuration."""
 
     request_search_args = GEOSearchRequestArgsSchema
+
+    routes = {
+        **BaseRecordResourceConfig.routes,
+        "item-resources": "/<pid_value>/resources",
+        "item-draft-resources": "/<pid_value>/draft/resources",
+    }

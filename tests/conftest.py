@@ -142,14 +142,25 @@ def app_config(app_config):
 
     # GEO RDM Records Configurations
     app_config[
+        "RDM_RECORD_RESOURCE"
+    ] = "geo_rdm_records.modules.resources.resources.resource.GEORDMRecordResource"
+
+    app_config[
         "RDM_RECORD_RESOURCE_CFG"
     ] = "geo_rdm_records.modules.resources.resources.config.GEORecordResourceConfig"
+
+    app_config[
+        "RDM_RECORD_SERVICE"
+    ] = "geo_rdm_records.modules.resources.services.service.GEORDMRecordService"
+
     app_config[
         "RDM_RECORD_SERVICE_CFG"
     ] = "geo_rdm_records.modules.resources.services.config.GEORecordServiceConfig"
+
     app_config[
         "RDM_FILE_SERVICE_CFG"
     ] = "geo_rdm_records.modules.resources.services.config.GEOFileRecordServiceConfig"
+
     app_config[
         "RDM_FILE_DRAFT_SERVICE_CFG"
     ] = "geo_rdm_records.modules.resources.services.config.GEOFileDraftServiceConfig"
@@ -256,6 +267,18 @@ def es_clear(es):
     yield es
     _es_delete_indexes(current_search)
     _es_create_indexes(current_search, current_search_client)
+
+
+#
+# Requests
+#
+@pytest.fixture(scope="session")
+def headers():
+    """Default headers for making requests."""
+    return {
+        "content-type": "application/json",
+        "accept": "application/json",
+    }
 
 
 #
