@@ -214,18 +214,6 @@ def create_app(instance_path):
 
 
 #
-# Requests
-#
-@pytest.fixture(scope="session")
-def headers():
-    """Default headers for making requests."""
-    return {
-        "content-type": "application/json",
-        "accept": "application/json",
-    }
-
-
-#
 # Elasticsearch configurations and fixtures
 #
 def _es_create_indexes(current_search, current_search_client):

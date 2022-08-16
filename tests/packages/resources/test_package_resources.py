@@ -55,8 +55,10 @@ def _validate_access(response, original):
         assert embargo.get("active") == orig_embargo.get("active")
 
 
-def test_simple_flow(running_app, client_with_login, minimal_record, headers, es_clear):
-    """Test a simple REST API flow."""
+def test_package_deposit_flow(
+    running_app, client_with_login, minimal_record, headers, es_clear
+):
+    """Simple Package REST API deposit flow."""
     base_url = "/packages"
     client = client_with_login
 
@@ -110,3 +112,39 @@ def test_simple_flow(running_app, client_with_login, minimal_record, headers, es
 
     assert data["metadata"]["title"] == "New title"
     _validate_access(data, minimal_record)
+
+
+def test_package_resource_integration_flow(
+    running_app,
+    client_with_login,
+    minimal_record,
+    draft_record,
+    published_record,
+    headers,
+):
+    """Test Packages and resources integration flow."""
+    base_url = "/packages"
+    client = client_with_login
+
+    # 1. Creating a package
+    created_draft = client.post(
+        base_url, headers=headers, data=json.dumps(minimal_record)
+    )
+    created_draft_id = created_draft.json["id"]
+
+    # 2. Linking the resources in the package.
+    resources_url = f"{base_url}/{created_draft_id}/draft/resources"
+
+    resources = dict(
+        resources=[
+            {"id": draft_record, "type": "managed"},
+            {"id": published_record, "type": "related"},
+        ]
+    )
+
+    response = client.post(resources_url, headers=headers, data=json.dumps(resources))
+    assert response.status_code == 204
+
+    # 3. Removing resources from the package.
+    response = client.delete(resources_url, headers=headers, data=json.dumps(resources))
+    assert response.status_code == 204

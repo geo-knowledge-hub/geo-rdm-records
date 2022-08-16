@@ -7,8 +7,11 @@
 
 """GEO RDM Records Packages API Service configuration."""
 
+from invenio_drafts_resources.services.records.config import is_record
 from invenio_rdm_records.services import config as rdm_config
 from invenio_rdm_records.services.customizations import FromConfig
+from invenio_records_resources.services import ConditionalLink
+from invenio_records_resources.services.records.links import RecordLink
 
 from ...resources import GEODraft, GEORecord
 from ..records.api import GEOPackageDraft, GEOPackageRecord
@@ -51,6 +54,16 @@ class GEOPackageRecordServiceConfig(rdm_config.RDMRecordServiceConfig):
         PackageResourceIntegrationComponent,
         PackageResourceAccessComponent,
     ] + rdm_config.RDMRecordServiceConfig.components
+
+    # Links
+    links_item = {
+        **rdm_config.RDMRecordServiceConfig.links_item,
+        "resources": ConditionalLink(
+            cond=is_record,
+            if_=RecordLink("{+api}/packages/{id}/resources"),
+            else_=RecordLink("{+api}/packages/{id}/draft/resources"),
+        ),
+    }
 
 
 class GEOPackageFileRecordServiceConfig(rdm_config.RDMFileRecordServiceConfig):
