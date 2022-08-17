@@ -7,4 +7,4 @@
 #
 
 -e git+https://github.com/geo-knowledge-hub/invenio-rdm-records@b-1.4#egg=invenio-rdm-records
--e git+https://github.com/geo-knowledge-hub/invenio-geographic-identifiers@v0.1.1#egg=invenio-geographic-identifiers
+-e git+https://github.com/geo-knowledge-hub/invenio-geographic-identifiers@v0.2.0#egg=invenio-geographic-identifiers
