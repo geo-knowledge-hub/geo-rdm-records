@@ -6,5 +6,5 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 
--e git+https://github.com/geo-knowledge-hub/invenio-rdm-records@v0.34.7-geo#egg=invenio-rdm-records
+-e git+https://github.com/geo-knowledge-hub/invenio-rdm-records@b-1.4#egg=invenio-rdm-records
 -e git+https://github.com/geo-knowledge-hub/invenio-geographic-identifiers@v0.1.1#egg=invenio-geographic-identifiers
