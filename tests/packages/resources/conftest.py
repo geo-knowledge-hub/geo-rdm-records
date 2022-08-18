@@ -12,15 +12,6 @@ import json
 import pytest
 
 
-@pytest.fixture(scope="session")
-def headers():
-    """Default headers for making requests."""
-    return {
-        "content-type": "application/json",
-        "accept": "application/json",
-    }
-
-
 @pytest.fixture(scope="function")
 def draft_record(running_app, client_with_login, minimal_record, headers):
     """Draft record using the ``Records API`` resources."""

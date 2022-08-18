@@ -77,6 +77,19 @@
                 "type": "keyword"
               }
             }
+          },
+          "relationship": {
+            "type": "object",
+            "properties": {
+              "managed_by": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
           }
         }
       },

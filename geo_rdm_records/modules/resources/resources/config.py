@@ -18,3 +18,14 @@ class GEORecordResourceConfig(BaseRecordResourceConfig):
     """Record resource configuration."""
 
     request_search_args = GEOSearchRequestArgsSchema
+
+    # Resource routes
+    routes = BaseRecordResourceConfig.routes
+
+    # Packages API Routes
+
+    # Package resources endpoint
+    routes["item-resources"] = "/packages/<pid_value>/resources"
+
+    # Draft Packages resources endpoint
+    routes["item-draft-resources"] = "/packages/<pid_value>/draft/resources"

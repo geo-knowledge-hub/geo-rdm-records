@@ -83,7 +83,14 @@
           },
           "relationship": {
             "properties": {
-              "resources": {
+              "managed_resources": {
+                "properties": {
+                  "id": {
+                    "type": "keyword"
+                  }
+                }
+              },
+              "related_resources": {
                 "properties": {
                   "id": {
                     "type": "keyword"

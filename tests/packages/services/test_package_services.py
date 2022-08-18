@@ -7,105 +7,114 @@
 
 """Test Package API Services."""
 
-from contextlib import nullcontext as does_not_raise
-
 from geo_rdm_records.modules.packages import GEOPackageDraft
 from geo_rdm_records.proxies import current_geo_packages_service
 
 
-def test_minimal_draft_creation(running_app, es_clear, minimal_record):
+def test_package_draft_creation(running_app, db, minimal_record, es_clear):
+    """Test the creation of a package draft."""
     superuser_identity = running_app.superuser_identity
 
+    # 1. Testing the draft creation.
     record_item = current_geo_packages_service.create(
         superuser_identity, minimal_record
     )
-    record_dict = record_item.to_dict()
 
-    assert record_dict["metadata"]["resource_type"] == {
-        "id": "image-photo",
-        "title": {"en": "Photo"},
-    }
+    # 2. Checking the generated package.
+    record_item_dict = record_item.to_dict()
+
+    assert record_item_dict.get("id") is not None
 
 
-def test_draft_w_languages_creation(running_app, es_clear, minimal_record):
+def test_package_record_creation(running_app, db, minimal_record, es_clear):
+    """Test the creation of a package record (Published)."""
     superuser_identity = running_app.superuser_identity
-    minimal_record["metadata"]["languages"] = [
-        {
-            "id": "eng",
-        }
-    ]
 
+    # 1. Creating the draft.
     record_item = current_geo_packages_service.create(
         superuser_identity, minimal_record
     )
-    record_dict = record_item.to_dict()
 
-    assert record_dict["metadata"]["languages"] == [
-        {"id": "eng", "title": {"en": "English", "da": "Engelsk"}}
-    ]
+    # 2. Testing the draft publication.
+    package_pid = record_item["id"]
+
+    record_item_published = current_geo_packages_service.publish(
+        superuser_identity, package_pid
+    )
+
+    # 3. Checking the generated package.
+    record_item_published_dict = record_item_published.to_dict()
+
+    assert record_item_published_dict.get("id") is not None
 
 
 def test_package_resource_integration_service(
-    running_app, db, draft_record, published_record, minimal_record
+    running_app, db, draft_resource_record, published_resource_record, minimal_record
 ):
     """Basic smoke test for the package integration service."""
     superuser_identity = running_app.superuser_identity
 
-    # creating the package
+    # 1. Creating a package draft
     package_draft = GEOPackageDraft.create(minimal_record)
+    package_draft.commit()
+
+    db.session.commit()
+    GEOPackageDraft.index.refresh()
+
     package_pid = package_draft.pid.pid_value
 
     resources = dict(
         resources=[
-            {"id": draft_record.pid.pid_value, "type": "managed"},
-            {"id": published_record.pid.pid_value, "type": "related"},
+            {"id": draft_resource_record.pid.pid_value, "type": "managed"},
+            {"id": published_resource_record.pid.pid_value, "type": "related"},
         ]
     )
 
-    # 1. Testing the ``add`` operation.
-    with does_not_raise():
-        current_geo_packages_service.resource_add(
-            superuser_identity, package_pid, resources
-        )
+    # 2. Testing the ``add resource`` operation.
+    current_geo_packages_service.resource_add(
+        superuser_identity, package_pid, resources
+    )
 
     # loading the package updated
-    package_draft = GEOPackageDraft.pid.resolve(package_pid, registered_only=False)
+    package_draft = current_geo_packages_service.read_draft(
+        superuser_identity, package_pid
+    )
 
-    assert len(package_draft.relationship.managed) == 1
-    assert len(package_draft.relationship.related) == 1
+    package_draft_relationship = package_draft["relationship"]
 
-    # 2. Testing the ``delete`` operation.
+    # verifying the basic structure of the ``relationship``
+    assert package_draft_relationship is not None
+    assert len(package_draft_relationship.keys()) == 2
+    assert len(package_draft_relationship["managed_resources"]) == 1
+    assert len(package_draft_relationship["related_resources"]) == 1
+
+    # checking the ``relationship`` content
+    managed_resources = [
+        i for i in package_draft_relationship["managed_resources"] if i
+    ]
+    related_resources = [
+        i for i in package_draft_relationship["related_resources"] if i
+    ]
+
+    assert len(managed_resources) == 1
+    assert len(related_resources) == 1
+
+    # 3. Testing the ``delete resource`` operation.
     resources_to_be_deleted = dict(
-        resources=[{"id": draft_record.pid.pid_value, "type": "managed"}]
+        resources=[{"id": draft_resource_record.pid.pid_value, "type": "managed"}]
     )
 
-    with does_not_raise():
-        current_geo_packages_service.resource_delete(
-            superuser_identity, package_pid, resources_to_be_deleted
-        )
-
-    # loading the package updated
-    package_draft = GEOPackageDraft.pid.resolve(package_pid, registered_only=False)
-
-    assert len(package_draft.relationship.managed) == 0
-    assert len(package_draft.relationship.related) == 1
-
-    # 3. Testing the ``update`` operation.
-    resources_to_be_updated = dict(
-        resources=[
-            {"id": published_record.pid.pid_value, "type": "related"},
-        ]
+    current_geo_packages_service.resource_delete(
+        superuser_identity, package_pid, resources_to_be_deleted
     )
 
-    with does_not_raise():
-        # ToDo: if the base rules continue with the current approach,
-        #       the updated method will not be required anymore.
-        current_geo_packages_service.resource_update(
-            superuser_identity, package_pid, resources_to_be_updated
-        )
-
     # loading the package updated
-    package_draft = GEOPackageDraft.pid.resolve(package_pid, registered_only=False)
+    package_draft = current_geo_packages_service.read_draft(
+        superuser_identity, package_pid
+    )
 
-    assert len(package_draft.relationship.managed) == 0
-    assert len(package_draft.relationship.related) == 1
+    package_draft_relationship = package_draft["relationship"]
+
+    assert len(package_draft_relationship.keys()) == 2
+    assert len(package_draft_relationship["managed_resources"]) == 0
+    assert len(package_draft_relationship["related_resources"]) == 1

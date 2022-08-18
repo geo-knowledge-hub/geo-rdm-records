@@ -62,4 +62,4 @@ class BaseRelationshipField(SystemField):
         """Dump the configured values before the record is committed."""
         obj = self.obj(record)
         if obj is not None:
-            record[self.key] = obj.dump()
+            self.set_dictkey(record, obj.dump(), create_if_missing=True)

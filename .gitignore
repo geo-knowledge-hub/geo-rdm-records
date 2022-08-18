@@ -76,3 +76,12 @@ pip-wheel-metadata/
 
 # pyenv
 .python-version
+
+# Vagrant and Boostrap environment scripts
+
+# Development environment specific
+Vagrantfile
+.vagrant/
+*.box
+
+bootstrap*.sh

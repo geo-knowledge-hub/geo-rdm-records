@@ -12,27 +12,37 @@ from invenio_rdm_records.services import facets as rdm_facets
 from geo_rdm_records.modules.resources.services import facets as geo_facets
 
 #
-# Resources configuration
+# Resource
 #
+
+# Rest Resource
+RDM_RECORD_RESOURCE = (
+    "geo_rdm_records.modules.resources.resources.resource.GEORDMRecordResource"
+)
+
+# Configuration
 RDM_RECORD_RESOURCE_CFG = (
     "geo_rdm_records.modules.resources.resources.config.GEORecordResourceConfig"
 )
 
 #
-# Services configuration
+# Service
 #
 
-# Record service (Record and Draft)
+# Services
+RDM_RECORD_SERVICE = (
+    "geo_rdm_records.modules.resources.services.service.GEORDMRecordService"
+)
+
+# Configuration
 RDM_RECORD_SERVICE_CFG = (
     "geo_rdm_records.modules.resources.services.config.GEORecordServiceConfig"
 )
 
-# File service (Record)
 RDM_FILE_SERVICE_CFG = (
     "geo_rdm_records.modules.resources.services.config.GEOFileRecordServiceConfig"
 )
 
-# File service (Draft)
 RDM_FILE_DRAFT_SERVICE_CFG = (
     "geo_rdm_records.modules.resources.services.config.GEOFileDraftServiceConfig"
 )

@@ -17,8 +17,6 @@
 
     "pid": {"$ref": "local://records/definitions-v1.0.0.json#/internal-pid"},
 
-
-
     "access": {
       "type": "object",
       "description": "Access control and ownership for all versions of a record.",
@@ -89,6 +87,5 @@
         }
       }
     }
-
   }
 }

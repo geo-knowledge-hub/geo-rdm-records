@@ -13,3 +13,4 @@ docker-compose.yml
 docker-compose-dev.yml
 
 Procfile*
+bootstrap*.sh

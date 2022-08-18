@@ -8,7 +8,7 @@
 """GEO RDM Records Packages API Schemas."""
 
 from invenio_rdm_records.services.schemas import RDMRecordSchema as BaseRecordSchema
-from marshmallow_utils.fields import NestedAttribute
+from marshmallow import fields
 
 from .relationship import RelationshipSchema
 
@@ -16,4 +16,4 @@ from .relationship import RelationshipSchema
 class GEOPackageRecordSchema(BaseRecordSchema):
     """Record schema."""
 
-    relationship = NestedAttribute(RelationshipSchema)
+    relationship = fields.Nested(RelationshipSchema, dump_only=True)
