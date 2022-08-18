@@ -7,6 +7,8 @@
 
 """GEO RDM Records Packages API Services."""
 
+import enum
+
 from invenio_rdm_records.proxies import current_rdm_records_service
 from invenio_rdm_records.services.services import (
     RDMRecordService as BaseRDMRecordService,
@@ -24,6 +26,25 @@ from ..records.api import PackageRelationship
 from .schemas.resources import ResourcesSchema
 
 
+#
+# Enum
+#
+class PackageServiceAction(enum.Enum):
+    """Package relationship types."""
+
+    CREATE = "package_add_resource"
+    """Create action."""
+
+    UPDATE = "package_update_resource"
+    """Update action."""
+
+    DELETE = "package_delete_resource"
+    """Delete action."""
+
+
+#
+# Service class
+#
 class GEOPackageRecordService(BaseRDMRecordService):
     """GEO Package record service."""
 
@@ -49,6 +70,14 @@ class GEOPackageRecordService(BaseRDMRecordService):
     # Internal methods
     #
     def _handle_resources(self, identity, id_, data, revision_id, action, uow, expand):
+        """Handle Package resources."""
+        # defining auxiliary function
+        def uow_storage_record(record):
+            uow.register(RecordCommitOp(record.parent))
+            uow.register(
+                RecordIndexOp(record, indexer=current_rdm_records_service.indexer)
+            )
+
         # reproducibility/consistency requirement: users can only add/remove
         # resources from draft packages.
         draft = self.draft_cls.pid.resolve(id_, registered_only=False)
@@ -104,17 +133,24 @@ class GEOPackageRecordService(BaseRDMRecordService):
             # Commit and index (only in bidirectional connections) where
             # modifications are made in the resource.
             if relationship_type == PackageRelationship.MANAGED.value:
-                for r in draft.relationship.managed:
-                    record_resource = r.resolve()  # cached
 
-                    # assuming that the package/resource integration
-                    # only uses the ``parent``.
-                    uow.register(RecordCommitOp(record_resource.parent))
-                    uow.register(
-                        RecordIndexOp(
-                            record_resource, indexer=current_rdm_records_service.indexer
-                        )
-                    )
+                # in both `create/update` and `delete` actions is
+                # assumed that the package/resource integration only
+                # uses the ``parent``.
+                if action in (
+                    PackageServiceAction.CREATE.value,
+                    PackageServiceAction.UPDATE.value,
+                ):
+
+                    for r in draft.relationship.managed:
+                        # verification to avoid unnecessary operations
+                        if r.record_id == resource_obj.pid.pid_value:
+                            record_resource = r.resolve()  # cached
+                            uow_storage_record(record_resource)
+
+                elif action == PackageServiceAction.DELETE.value:
+
+                    uow_storage_record(resource_obj)
 
         # Commit and index
         uow.register(RecordCommitOp(draft, self.indexer))
@@ -137,7 +173,7 @@ class GEOPackageRecordService(BaseRDMRecordService):
         self, identity, id_, data, revision_id=None, uow=None, expand=False
     ):
         """Bulk add resources in a package."""
-        action = "package_add_resource"
+        action = PackageServiceAction.CREATE.value
         return self._handle_resources(
             identity, id_, data, revision_id, action, uow, expand
         )
@@ -147,7 +183,7 @@ class GEOPackageRecordService(BaseRDMRecordService):
         self, identity, id_, data, revision_id=None, uow=None, expand=False
     ):
         """Bulk delete resources from a package."""
-        action = "package_delete_resource"
+        action = PackageServiceAction.DELETE.value
         return self._handle_resources(
             identity, id_, data, revision_id, action, uow, expand
         )
@@ -157,7 +193,7 @@ class GEOPackageRecordService(BaseRDMRecordService):
         self, identity, id_, data, revision_id=None, uow=None, expand=False
     ):
         """Bulk update resources from a package."""
-        action = "package_update_resource"
+        action = PackageServiceAction.UPDATE.value
         return self._handle_resources(
             identity, id_, data, revision_id, action, uow, expand
         )

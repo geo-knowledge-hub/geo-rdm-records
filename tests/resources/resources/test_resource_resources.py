@@ -26,7 +26,7 @@ def package(running_app, client_with_login, minimal_record, headers):
 
 
 def test_search_package_records(
-    running_app, client_with_login, minimal_record, headers, package
+    running_app, client_with_login, minimal_record, headers, package, es_clear
 ):
     """Test searching for records in a package."""
     base_records_url = "/records"
@@ -54,11 +54,11 @@ def test_search_package_records(
     assert res.status_code == 200
 
     # Searching an empty package.
-    res = client.get(f"{base_records_url}/{package}/draft/resources", headers=headers)
+    res = client.get(f"{base_package_url}/{package}/draft/resources", headers=headers)
     assert res.json["hits"]["total"] == 0
 
     _create_and_include_in_package()
 
     # Searching for a filled packaged.
-    res = client.get(f"{base_records_url}/{package}/draft/resources", headers=headers)
+    res = client.get(f"{base_package_url}/{package}/draft/resources", headers=headers)
     assert res.json["hits"]["total"] == 1

@@ -22,16 +22,12 @@ class GEORDMRecordResource(BaseRecordResource):
 
     def create_url_rules(self):
         """Create the URL rules for the record resource."""
-
-        def p(route):
-            """Prefix a route with the URL prefix."""
-            return f"{self.config.url_prefix}{route}"
-
         routes = self.config.routes
         url_rules = super().create_url_rules()
         url_rules += [
-            route("GET", p(routes["item-resources"]), self.search_package_records),
-            route("GET", p(routes["item-draft-resources"]), self.search_package_drafts),
+            # Packages API (with prefix included).
+            route("GET", routes["item-resources"], self.search_package_records),
+            route("GET", routes["item-draft-resources"], self.search_package_drafts),
         ]
 
         return url_rules

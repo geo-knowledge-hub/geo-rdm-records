@@ -48,7 +48,7 @@ class RecordRelationship:
     @property
     def managed_by(self):
         """Return the manager of the record."""
-        return self._record_manager.resolve() if self._record_manager else None
+        return self._record_manager.resolve() if self._record_manager else {}
 
     @managed_by.setter
     def managed_by(self, obj):
@@ -95,7 +95,10 @@ class RecordRelationship:
 
     def dump(self):
         """Dump the field values as dictionary."""
-        return {"managed_by": self._record_manager.dump()}
+        if self._record_manager:
+            return dict(managed_by=self._record_manager.dump())
+
+        return {}
 
     #
     # Dunder methods
@@ -103,7 +106,7 @@ class RecordRelationship:
     def __repr__(self):
         """Return repr(self)."""
         return ("<{} (is_managed: {})>").format(
-            type(self).__name__, True if self._record_manager.dump() else False
+            type(self).__name__, True if self._record_manager else False
         )
 
 

@@ -8,16 +8,16 @@
 """Pytest configuration for the package services."""
 
 import pytest
-from flask_principal import Identity, UserNeed
-from invenio_access.permissions import any_user, authenticated_user
+from flask_principal import Identity
+from invenio_access.permissions import any_user
 from invenio_rdm_records.proxies import current_rdm_records_service
 
 from geo_rdm_records.modules.resources import GEODraft, GEORecord
 
 
 @pytest.fixture(scope="function")
-def draft_record(running_app, minimal_record):
-    """Draft record."""
+def draft_resource_record(running_app, minimal_record):
+    """Resource Record (Draft) fixture."""
     superuser_identity = running_app.superuser_identity
 
     record_item = current_rdm_records_service.create(superuser_identity, minimal_record)
@@ -29,8 +29,8 @@ def draft_record(running_app, minimal_record):
 
 
 @pytest.fixture(scope="function")
-def published_record(running_app, minimal_record):
-    """Record published."""
+def published_resource_record(running_app, minimal_record):
+    """Resource Record (Published) fixture."""
     superuser_identity = running_app.superuser_identity
 
     record_item = current_rdm_records_service.create(superuser_identity, minimal_record)

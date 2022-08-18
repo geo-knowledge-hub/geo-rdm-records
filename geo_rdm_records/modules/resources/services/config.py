@@ -16,7 +16,10 @@ from geo_rdm_records.modules.resources.services.components.relationship import (
     ResourceRelationshipComponent,
 )
 from geo_rdm_records.modules.resources.services.params.search import BoundingBoxParam
-from geo_rdm_records.modules.resources.services.schemas import GEORecordSchema
+from geo_rdm_records.modules.resources.services.schemas import (
+    GEOParentSchema,
+    GEORecordSchema,
+)
 
 
 class GEOSearchOptions(rdm_config.RDMSearchOptions):
@@ -48,12 +51,13 @@ class GEOSearchVersionsOptions(rdm_config.RDMSearchVersionsOptions):
 class GEORecordServiceConfig(rdm_config.RDMRecordServiceConfig):
     """GEO record draft service config."""
 
-    # Reord and draft classes
+    # Record and draft classes
     record_cls = GEORecord
     draft_cls = GEODraft
 
     # Schemas
     schema = GEORecordSchema
+    schema_parent = GEOParentSchema
 
     # Search configuration
     search = FromConfigSearchOptions("RDM_SEARCH", search_option_cls=GEOSearchOptions)
