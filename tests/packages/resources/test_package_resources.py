@@ -125,7 +125,7 @@ def test_package_resource_integration_flow(
     draft_record,
     published_record,
     headers,
-    es_clear
+    es_clear,
 ):
     """Test Packages and resources integration flow."""
     package_base_url = "/packages"

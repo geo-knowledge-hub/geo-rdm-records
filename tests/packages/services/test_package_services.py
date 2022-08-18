@@ -31,14 +31,12 @@ def test_package_record_creation(running_app, db, minimal_record, es_clear):
     superuser_identity = running_app.superuser_identity
 
     # 1. Creating the draft.
-    package_draft = GEOPackageDraft.create(minimal_record)
-    package_draft.commit()
-
-    db.session.commit()
-    GEOPackageDraft.index.refresh()
+    record_item = current_geo_packages_service.create(
+        superuser_identity, minimal_record
+    )
 
     # 2. Testing the draft publication.
-    package_pid = package_draft.pid.pid_value
+    package_pid = record_item["id"]
 
     record_item_published = current_geo_packages_service.publish(
         superuser_identity, package_pid

@@ -9,8 +9,6 @@
 
 from invenio_rdm_records.proxies import current_rdm_records_service
 
-from geo_rdm_records.modules.resources import GEODraft
-
 
 def test_resource_draft_creation(running_app, db, minimal_record, es_clear):
     """Test the creation of a package draft."""
@@ -29,15 +27,11 @@ def test_resource_record_creation(running_app, db, minimal_record, es_clear):
     """Test the creation of a package record (Published)."""
     superuser_identity = running_app.superuser_identity
 
-    # 1. Creating the draft.
-    package_draft = GEODraft.create(minimal_record)
-    package_draft.commit()
-
-    db.session.commit()
-    GEODraft.index.refresh()
+    # 1. Creating a draft.
+    record_item = current_rdm_records_service.create(superuser_identity, minimal_record)
 
     # 2. Testing the draft publication.
-    package_pid = package_draft.pid.pid_value
+    package_pid = record_item["id"]
 
     record_item_published = current_rdm_records_service.publish(
         superuser_identity, package_pid
