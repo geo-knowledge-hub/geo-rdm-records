@@ -32,6 +32,10 @@ def test_package_record_creation(running_app, db, minimal_record, es_clear):
 
     # 1. Creating the draft.
     package_draft = GEOPackageDraft.create(minimal_record)
+    package_draft.commit()
+
+    db.session.commit()
+    GEOPackageDraft.index.refresh()
 
     # 2. Testing the draft publication.
     package_pid = package_draft.pid.pid_value
@@ -54,6 +58,11 @@ def test_package_resource_integration_service(
 
     # 1. Creating a package draft
     package_draft = GEOPackageDraft.create(minimal_record)
+    package_draft.commit()
+
+    db.session.commit()
+    GEOPackageDraft.index.refresh()
+
     package_pid = package_draft.pid.pid_value
 
     resources = dict(

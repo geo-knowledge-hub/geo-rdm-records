@@ -11,6 +11,8 @@ import json
 
 import pytest
 
+from geo_rdm_records.modules.resources.records.api import GEODraft, GEORecord
+
 
 @pytest.fixture()
 def package(running_app, client_with_login, minimal_record, headers):
@@ -48,6 +50,10 @@ def test_search_package_records(
         # Publishing.
         resources_url = f"{base_package_url}/{package}/draft/resources"
         client.post(resources_url, headers=headers, data=json.dumps(resources))
+
+        # Refreshing the index.
+        GEODraft.index.refresh()
+        GEORecord.index.refresh()
 
     # Base record api test.
     res = client.get(base_records_url)

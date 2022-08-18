@@ -31,6 +31,10 @@ def test_resource_record_creation(running_app, db, minimal_record, es_clear):
 
     # 1. Creating the draft.
     package_draft = GEODraft.create(minimal_record)
+    package_draft.commit()
+
+    db.session.commit()
+    GEODraft.index.refresh()
 
     # 2. Testing the draft publication.
     package_pid = package_draft.pid.pid_value
