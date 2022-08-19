@@ -35,12 +35,12 @@ class ResourceRelationshipComponent(ServiceComponent):
 
     def publish(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
-        record.parent.relationship = self._read_relationship(draft)
+        record.parent.relationship = draft.parent.relationship
 
     def edit(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
-        record.parent.relationship = self._read_relationship(record)
+        record.parent.relationship = draft.parent.relationship
 
     def new_version(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
-        draft.parent.relationship = copy(self._read_relationship(record))
+        record.parent.relationship = draft.parent.relationship

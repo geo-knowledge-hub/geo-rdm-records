@@ -16,6 +16,7 @@ from invenio_rdm_records.services.services import (
 from invenio_records_resources.services import ServiceSchemaWrapper
 from invenio_records_resources.services.uow import (
     RecordCommitOp,
+    RecordDeleteOp,
     RecordIndexOp,
     unit_of_work,
 )
@@ -165,8 +166,68 @@ class GEOPackageRecordService(BaseRDMRecordService):
             expand=expand,
         )
 
+    def _validate_draft_package(self, identity, package_draft):
+        """Validate a package draft."""
+
+        # 1. Checking if the package can be published
+        self._validate_draft(identity, package_draft)
+
+        # 2. Checking all resources can be published
+        # We validate only the ``Managed`` resource once we
+        # need to publish them with the package itself.
+        package_resources = package_draft.relationship.managed
+
+        for package_resource in package_resources:
+            # Checking the resource
+            # here, we are using an internal method from the `record service`.
+            # This maybe is not a good approach. Is the future, we can return
+            # to this implementation and evaluate if this is the best solution.
+
+            # ToDo: Check a way to return errors (e.g., Use a list of errors).
+            current_rdm_records_service._validate_draft(
+                identity, package_resource.resolve()
+            )
+
+    def _publish_package(self, identity, package_draft, uow, expand):
+        """Publish a package."""
+        # Create the record from the draft
+        latest_id = package_draft.versions.latest_id
+        record = self.record_cls.publish(package_draft)
+
+        # Run components
+        self.run_components(
+            "publish", identity, draft=package_draft, record=record, uow=uow
+        )
+
+        # Commit and index
+        uow.register(RecordCommitOp(record, indexer=self.indexer))
+        uow.register(RecordDeleteOp(package_draft, force=False, indexer=self.indexer))
+
+        if latest_id:
+            self._reindex_latest(latest_id, uow=uow)
+
+        return self.result_item(
+            self,
+            identity,
+            record,
+            links_tpl=self.links_item_tpl,
+            expandable_fields=self.expandable_fields,
+            expand=expand,
+        )
+
+    def _publish_resource(self, identity, resource_draft, uow, expand):
+        """Publish a package resource."""
+        # ToDo: Should we use another service in this way ? We are in
+        #       the same 'architecture level', but, maybe, this can be confusing
+        #       to maintain. Also, the service is not injected in a 'direct' way.
+        resource_pid = resource_draft.pid.pid_value
+
+        return current_rdm_records_service.publish(
+            identity, resource_pid, uow=uow, expand=expand
+        )
+
     #
-    # Resources handling
+    # High-level Resources API.
     #
     @unit_of_work()
     def resource_add(
@@ -197,3 +258,30 @@ class GEOPackageRecordService(BaseRDMRecordService):
         return self._handle_resources(
             identity, id_, data, revision_id, action, uow, expand
         )
+
+    #
+    # High-level Packages API.
+    #
+    @unit_of_work()
+    def publish(self, identity, id_, uow=None, expand=False):
+        """Publish a draft."""
+        # Get the package draft
+        draft = self.draft_cls.pid.resolve(id_, registered_only=False)
+        self.require_permission(identity, "publish", record=draft)
+
+        # Package publishing workflow
+
+        # 1. Publishing the package and its resources
+        self._validate_draft_package(identity, draft)
+
+        # 2. Publishing the package
+        published_package = self._publish_package(identity, draft, uow, expand)
+
+        # 3. Publish the resources
+        package_resources = draft.relationship.managed
+
+        for package_resource in package_resources:
+            self._publish_resource(identity, package_resource.resolve(), uow, expand)
+
+        # 4. Returning the projection of the published record.
+        return published_package

@@ -19,10 +19,12 @@ from .parent import ParentRelationshipSchema
 class GEOParentSchema(BaseParentSchema):
     """GEO Knowledge Hub Parent schema."""
 
-    relationship = fields.Nested(ParentRelationshipSchema)
+    relationship = fields.Nested(ParentRelationshipSchema, dump_only=True)
 
 
 class GEORecordSchema(BaseRecordSchema):
     """GEO Knowledge Hub Record Schema."""
 
     metadata = NestedAttribute(MetadataSchema)
+
+    parent = NestedAttribute(GEOParentSchema)
