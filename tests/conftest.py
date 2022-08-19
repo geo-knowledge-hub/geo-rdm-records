@@ -272,6 +272,7 @@ def es_clear(es):
 @pytest.fixture()
 def refresh_index():
     """Refresh elasticsearch indices."""
+
     def _wrapper():
         GEOPackageDraft.index.refresh()
         GEODraft.index.refresh()
