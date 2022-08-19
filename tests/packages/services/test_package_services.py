@@ -7,10 +7,10 @@
 
 """Test Package API Services."""
 
+from invenio_rdm_records.proxies import current_rdm_records_service
+
 from geo_rdm_records.modules.packages import GEOPackageDraft
 from geo_rdm_records.proxies import current_geo_packages_service
-
-from invenio_rdm_records.proxies import current_rdm_records_service
 
 
 def test_package_draft_creation(running_app, db, minimal_record, es_clear):
@@ -123,7 +123,13 @@ def test_package_resource_integration_service(
 
 
 def test_package_publishing_workflow(
-    running_app, db, draft_resource_record, published_resource_record, minimal_record
+    running_app,
+    db,
+    draft_resource_record,
+    published_resource_record,
+    minimal_record,
+    refresh_index,
+    es_clear,
 ):
     """Basic smoke test for the package publishing workflow."""
     superuser_identity = running_app.superuser_identity
@@ -147,6 +153,9 @@ def test_package_publishing_workflow(
         superuser_identity, package_pid, resources
     )
 
+    # refreshing the index
+    refresh_index()
+
     # 3. Searching for published resource records
     package_records = current_rdm_records_service.search_package_records(
         superuser_identity, package_pid
@@ -162,6 +171,9 @@ def test_package_publishing_workflow(
 
     # 5. Checking the generated package.
     assert record_item_published["id"] is not None
+
+    # refreshing the index
+    refresh_index()
 
     # 6. Searching for published resource records
     package_records = current_rdm_records_service.search_package_records(

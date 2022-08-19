@@ -269,6 +269,17 @@ def es_clear(es):
     _es_create_indexes(current_search, current_search_client)
 
 
+@pytest.fixture()
+def refresh_index():
+    """Refresh elasticsearch indices."""
+    def _wrapper():
+        GEOPackageDraft.index.refresh()
+        GEODraft.index.refresh()
+        GEORecord.index.refresh()
+
+    return _wrapper
+
+
 #
 # Requests
 #

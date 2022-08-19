@@ -168,7 +168,6 @@ class GEOPackageRecordService(BaseRDMRecordService):
 
     def _validate_draft_package(self, identity, package_draft):
         """Validate a package draft."""
-
         # 1. Checking if the package can be published
         self._validate_draft(identity, package_draft)
 

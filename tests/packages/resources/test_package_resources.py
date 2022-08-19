@@ -126,17 +126,12 @@ def test_package_resource_integration_flow(
     published_record,
     headers,
     es_clear,
+    refresh_index,
 ):
     """Test Packages and resources integration flow."""
     package_base_url = "/packages"
 
     client = client_with_login
-
-    # Auxiliary functions
-    def _refresh_index():
-        GEOPackageDraft.index.refresh()
-        GEODraft.index.refresh()
-        GEORecord.index.refresh()
 
     # 1. Creating a package
     created_draft = client.post(
@@ -161,7 +156,7 @@ def test_package_resource_integration_flow(
     assert response.status_code == 204
 
     # Refreshing indices
-    _refresh_index()
+    refresh_index()
 
     # 3. Checking if the `Managed` record are associated with the package
     response = client.get(package_resources_url, headers=headers)
@@ -200,7 +195,7 @@ def test_package_resource_integration_flow(
     assert response.status_code == 204
 
     # Refreshing indices
-    _refresh_index()
+    refresh_index()
 
     # 5.1.2. Checking if the record was removed using the package document
     response = client.get(package_url, headers=headers)
@@ -229,7 +224,7 @@ def test_package_resource_integration_flow(
     assert response.status_code == 204
 
     # Refreshing indices
-    _refresh_index()
+    refresh_index()
 
     # 5.2.2. Checking if the record was removed using the package document
     response = client.get(package_url, headers=headers)
