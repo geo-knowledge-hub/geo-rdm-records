@@ -226,7 +226,7 @@ class GEOPackageRecordService(BaseRDMRecordService):
         )
 
     #
-    # High-level Resources API.
+    # High-level Packages API.
     #
     @unit_of_work()
     def resource_add(
@@ -258,9 +258,6 @@ class GEOPackageRecordService(BaseRDMRecordService):
             identity, id_, data, revision_id, action, uow, expand
         )
 
-    #
-    # High-level Packages API.
-    #
     @unit_of_work()
     def publish(self, identity, id_, uow=None, expand=False):
         """Publish a draft."""

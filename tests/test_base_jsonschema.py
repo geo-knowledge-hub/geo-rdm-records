@@ -18,7 +18,7 @@ from geo_rdm_records.modules.resources.records.api import GEORecord as Record
 #
 def validates(data):
     """Assertion function used to validate according to the schema."""
-    data["$schema"] = "local://records/geo-record-v5.0.0.json"
+    data["$schema"] = "local://records/geo-record-v1.0.0.json"
     Record(data).validate()
     return True
 

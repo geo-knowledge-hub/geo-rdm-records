@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "local://packages/geo-parent-package-v1.0.0.json",
-  "title": "GEO RDM Package Parent Record Schema v1.0.0 (Based on InvenioRDM parent schema v2.0.0)",
+  "title": "GEO Knowledge Package Parent Schema v1.0.0 (Based on InvenioRDM parent schema v2.0.0)",
   "type": "object",
   "additionalProperties": false,
   "properties": {
