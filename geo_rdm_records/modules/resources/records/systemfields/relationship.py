@@ -58,7 +58,7 @@ class RecordRelationship:
     @managed_by.deleter
     def managed_by(self):
         """Delete the record manager."""
-        self._record_manager = None
+        self._record_manager = {}
 
     #
     # Auxiliary methods
@@ -84,6 +84,9 @@ class RecordRelationship:
 
         if relationship_dict:
             try:
+                if "managed_by" in relationship_dict:
+                    relationship_dict = relationship_dict.get("managed_by")
+
                 managed_by = linked_resource_cls(relationship_dict)
             except Exception as e:
                 errors.append(e)
@@ -106,7 +109,7 @@ class RecordRelationship:
     def __repr__(self):
         """Return repr(self)."""
         return ("<{} (is_managed: {})>").format(
-            type(self).__name__, True if self._record_manager else False
+            type(self).__name__, self._record_manager is None
         )
 
 

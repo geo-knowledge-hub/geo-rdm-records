@@ -15,14 +15,26 @@ from invenio_rdm_records.proxies import current_rdm_records_service
 from geo_rdm_records.modules.resources import GEODraft, GEORecord
 
 
+#
+# Access fixtures
+#
+@pytest.fixture(scope="function")
+def anyuser_identity():
+    """System identity."""
+    identity = Identity(1)
+    identity.provides.add(any_user)
+    return identity
+
+
+#
+# Record fixtures
+#
 @pytest.fixture(scope="function")
 def draft_resource_record(running_app, minimal_record):
     """Resource Record (Draft) fixture."""
     superuser_identity = running_app.superuser_identity
 
     record_item = current_rdm_records_service.create(superuser_identity, minimal_record)
-
-    record_item = record_item.to_dict()
     record_pid = record_item["id"]
 
     return GEODraft.pid.resolve(record_pid, registered_only=False)
@@ -36,15 +48,7 @@ def published_resource_record(running_app, minimal_record):
     record_item = current_rdm_records_service.create(superuser_identity, minimal_record)
 
     record_item = current_rdm_records_service.publish(
-        superuser_identity, record_item.to_dict()["id"]
+        superuser_identity, record_item["id"]
     )
 
-    return GEORecord.pid.resolve(record_item.to_dict()["id"])
-
-
-@pytest.fixture(scope="function")
-def anyuser_identity():
-    """System identity."""
-    identity = Identity(1)
-    identity.provides.add(any_user)
-    return identity
+    return GEORecord.pid.resolve(record_item["id"])

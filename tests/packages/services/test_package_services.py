@@ -7,6 +7,8 @@
 
 """Test Package API Services."""
 
+from invenio_rdm_records.proxies import current_rdm_records_service
+
 from geo_rdm_records.modules.packages import GEOPackageDraft
 from geo_rdm_records.proxies import current_geo_packages_service
 
@@ -118,3 +120,67 @@ def test_package_resource_integration_service(
     assert len(package_draft_relationship.keys()) == 2
     assert len(package_draft_relationship["managed_resources"]) == 0
     assert len(package_draft_relationship["related_resources"]) == 1
+
+
+def test_package_publishing_workflow(
+    running_app,
+    db,
+    draft_resource_record,
+    published_resource_record,
+    minimal_record,
+    refresh_index,
+    es_clear,
+):
+    """Basic smoke test for the package publishing workflow."""
+    superuser_identity = running_app.superuser_identity
+
+    # 1. Creating a package draft
+    record_item = current_geo_packages_service.create(
+        superuser_identity, minimal_record
+    )
+
+    package_pid = record_item["id"]
+
+    # 2. Add resources to the package.
+    resources = dict(
+        resources=[
+            {"id": draft_resource_record.pid.pid_value, "type": "managed"},
+            {"id": published_resource_record.pid.pid_value, "type": "related"},
+        ]
+    )
+
+    current_geo_packages_service.resource_add(
+        superuser_identity, package_pid, resources
+    )
+
+    # refreshing the index
+    refresh_index()
+
+    # 3. Searching for published resource records
+    package_records = current_rdm_records_service.search_package_records(
+        superuser_identity, package_pid
+    )
+    package_records = package_records.to_dict()
+
+    assert package_records["hits"]["total"] == 0
+
+    # 4. Publishing the package updated
+    record_item_published = current_geo_packages_service.publish(
+        superuser_identity, package_pid
+    )
+
+    # 5. Checking the generated package.
+    assert record_item_published["id"] is not None
+
+    # refreshing the index
+    refresh_index()
+
+    # 6. Searching for published resource records
+    package_records = current_rdm_records_service.search_package_records(
+        superuser_identity, package_pid
+    )
+    package_records = package_records.to_dict()
+
+    assert (
+        package_records["hits"]["total"] == 1
+    )  # we are able to search for published records.
