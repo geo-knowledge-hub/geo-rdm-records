@@ -184,3 +184,72 @@ def test_package_publishing_workflow(
     assert (
         package_records["hits"]["total"] == 1
     )  # we are able to search for published records.
+
+
+def test_package_import_resources(
+    running_app,
+    db,
+    draft_resource_record,
+    published_resource_record,
+    minimal_record,
+    refresh_index,
+    es_clear,
+):
+    """Test the ``import_resource`` operation from the Package service."""
+    superuser_identity = running_app.superuser_identity
+
+    # 1. Creating a package draft
+    record_item = current_geo_packages_service.create(
+        superuser_identity, minimal_record
+    )
+
+    package_pid = record_item["id"]
+
+    # 2. Add resources to the package.
+    resources = dict(
+        resources=[
+            {"id": draft_resource_record.pid.pid_value, "type": "managed"},
+            {"id": published_resource_record.pid.pid_value, "type": "related"},
+        ]
+    )
+
+    current_geo_packages_service.resource_add(
+        superuser_identity, package_pid, resources
+    )
+
+    # 3. Publishing the package updated
+    current_geo_packages_service.publish(superuser_identity, package_pid)
+
+    # refreshing the index
+    refresh_index()
+
+    # 4. Creating a new package version.
+    package_new_version = current_geo_packages_service.new_version(
+        superuser_identity, package_pid
+    )
+    package_new_version = package_new_version.to_dict()
+
+    package_new_pid = package_new_version["id"]
+
+    # 5. Checking the resources
+    package_new_relationship = package_new_version.get("relationship")
+
+    assert len(package_new_relationship.get("related_resources", [])) == 0
+    assert len(package_new_relationship.get("managed_resources", [])) == 0
+
+    # 6. Importing resources from the previous version
+    current_geo_packages_service.import_resources(superuser_identity, package_new_pid)
+
+    # refreshing the index
+    refresh_index()
+
+    # 7. Checking for resources
+    package_new_version = current_geo_packages_service.read_draft(
+        superuser_identity, package_new_pid
+    )
+    package_new_version = package_new_version.to_dict()
+
+    package_new_relationship = package_new_version.get("relationship")
+
+    assert len(package_new_relationship.get("related_resources", [])) == 1
+    assert len(package_new_relationship.get("managed_resources", [])) == 1

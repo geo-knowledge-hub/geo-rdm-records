@@ -31,6 +31,6 @@ class PackageRelationshipComponent(ServiceComponent):
         """Update draft relationship."""
         draft.relationship = record.get("relationship", {})
 
-    def new_version(self, identity, draft=None, record=None, **kwargs):
+    def import_resources(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
         draft.relationship = copy(record.get("relationship", {}))

@@ -284,3 +284,30 @@ class GEOPackageRecordService(BaseRDMRecordService):
 
         # 4. Returning the projection of the published record.
         return published_package
+
+    @unit_of_work()
+    def import_resources(self, identity, id_, uow=None):
+        """Import files from previous record version."""
+        # Read draft
+        draft = self.draft_cls.pid.resolve(id_, registered_only=False)
+        self.require_permission(identity, "update_draft", record=draft)
+
+        # Retrieve latest record
+        record = self.record_cls.get_record(draft.versions.latest_id)
+        self.require_permission(identity, "read", record=record)
+
+        # Run components
+        self.run_components(
+            "import_resources", identity, draft=draft, record=record, uow=uow
+        )
+
+        # Commit and index
+        uow.register(RecordCommitOp(draft, indexer=self.indexer))
+
+        return self.result_item(
+            self,
+            identity,
+            draft,
+            links_tpl=self.links_item_tpl,
+            expandable_fields=self.expandable_fields,
+        )
