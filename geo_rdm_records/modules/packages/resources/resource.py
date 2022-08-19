@@ -39,16 +39,18 @@ class GEOPackageRecordResource(BaseRecordResource):
         url_rules = super().create_url_rules()
         url_rules += [
             # Packages Resources (Draft operations)
-            route("POST", p(routes["item-draft-resources"]), self.add_package_resource),
+            route("POST", p(routes["item-draft-resources"]), self.package_add_resource),
             route(
                 "DELETE",
                 p(routes["item-draft-resources"]),
-                self.delete_package_resource,
+                self.package_delete_resource,
             ),
-            # route("GET", p(routes["item-draft-resources"]), self.search_package_drafts),
-            # route("PUT", p(routes["item-draft-resources"]), self.resource_update_draft),
-            # Packages Resources (Record operations)
-            # route("GET", p(routes["item-resources"]), self.search_package_records),
+            route(
+                "POST",
+                p(routes["item-resources-import"]),
+                self.package_import_resources,
+            )
+            # route("PUT", p(routes["item-draft-resources"]), self.resource_update_draft)
         ]
 
         return url_rules
@@ -57,8 +59,17 @@ class GEOPackageRecordResource(BaseRecordResource):
     # Resources (Draft)
     #
     @request_view_args
+    def package_import_resources(self):
+        """Import resources from previous package version."""
+        self.service.import_resources(
+            g.identity, resource_requestctx.view_args["pid_value"]
+        )
+
+        return "", 204
+
+    @request_view_args
     @request_data
-    def add_package_resource(self):
+    def package_add_resource(self):
         """Add resources to a package."""
         self.service.resource_add(
             g.identity,
@@ -69,7 +80,7 @@ class GEOPackageRecordResource(BaseRecordResource):
 
     @request_view_args
     @request_data
-    def delete_package_resource(self):
+    def package_delete_resource(self):
         """Add resources to a package."""
         self.service.resource_delete(
             g.identity,

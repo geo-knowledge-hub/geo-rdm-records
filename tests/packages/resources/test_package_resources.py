@@ -11,11 +11,7 @@ import json
 
 import arrow
 
-from geo_rdm_records.modules.packages.records.api import (
-    GEOPackageDraft,
-    GEOPackageRecord,
-)
-from geo_rdm_records.modules.resources.records.api import GEODraft, GEORecord
+from geo_rdm_records.modules.packages.records.api import GEOPackageRecord
 
 
 #
@@ -50,6 +46,25 @@ def _validate_access(response, original):
             assert embargo.get("reason") == orig_embargo.get("reason")
 
         assert embargo.get("active") == orig_embargo.get("active")
+
+
+def _validate_relationship(
+    response, expected_managed=1, expected_related=1, to_be_empty=False
+):
+    """Validate the relationship object."""
+    expected_managed = expected_managed if not to_be_empty else 0
+    expected_related = expected_related if not to_be_empty else 0
+
+    package_version_relationships = response.json["relationship"]
+    package_version_relationships_managed = package_version_relationships.get(
+        "managed_resources", []
+    )
+    package_version_relationships_related = package_version_relationships.get(
+        "related_resources", []
+    )
+
+    assert len(package_version_relationships_managed) == expected_managed
+    assert len(package_version_relationships_related) == expected_related
 
 
 #
@@ -231,3 +246,84 @@ def test_package_resource_integration_flow(
 
     assert response.status_code == 200
     assert len(response.json["relationship"]["related_resources"]) == 0
+
+
+def test_package_versioning_flow(
+    running_app,
+    client_with_login,
+    minimal_record,
+    draft_record,
+    published_record,
+    headers,
+    es_clear,
+    refresh_index,
+):
+    """Test Package versioning workflow."""
+    package_base_url = "/packages"
+    client = client_with_login
+
+    # 1. Creating a package
+    created_draft = client.post(package_base_url, headers=headers, json=minimal_record)
+
+    # 2. Linking resources in the package
+    created_draft_id = created_draft.json["id"]
+
+    package_resources_url = f"{package_base_url}/{created_draft_id}/draft/resources"
+    resources = dict(
+        resources=[
+            {"id": draft_record, "type": "managed"},
+            {"id": published_record, "type": "related"},
+        ]
+    )
+
+    client.post(package_resources_url, headers=headers, json=resources)
+
+    # Refreshing indices
+    refresh_index()
+
+    # 3. Publishing the package
+    response = client.post(
+        f"{package_base_url}/{created_draft_id}/draft/actions/publish", headers=headers
+    )
+
+    assert response.status_code == 202
+
+    # 4. Checking the published version
+    response = client.get(f"{package_base_url}/{created_draft_id}", headers=headers)
+
+    assert response.status_code == 200
+    assert response.json["is_published"]
+    assert not response.json["is_draft"]
+
+    _validate_relationship(response)
+
+    # 5. Creating a new version
+    response = client.post(
+        f"{package_base_url}/{created_draft_id}/versions", headers=headers
+    )
+
+    # 5.1. Basic validations
+    assert response.status_code == 201
+    assert response.json["id"] != created_draft_id
+    assert response.json["is_draft"]
+    assert not response.json["is_published"]
+
+    # 5.2. Relationships validations
+    _validate_relationship(response, to_be_empty=True)
+
+    # 6. Importing resources from the previous package version
+    package_new_version_id = response.json["id"]
+
+    response = client.post(
+        f"{package_base_url}/{package_new_version_id}/draft/actions/resources-import"
+    )
+
+    assert response.status_code == 204
+
+    # Refreshing indices
+    refresh_index()
+
+    # 7. Checking the imported resources
+    response = client.get(f"{package_base_url}/{package_new_version_id}/draft")
+
+    _validate_relationship(response)
