@@ -59,7 +59,7 @@ class GEOPackageParent(BaseRecordParent):
     model_cls = GEOPackageParentMetadata
 
     access = ParentRecordAccessField()
-    schema = ConstantField("$schema", "local://packages/geo-parent-package-v1.0.0.json")
+    schema = ConstantField("$schema", "local://packages/geo-parent-v1.0.0.json")
 
     communities = CommunitiesField(GEOPackageParentCommunity)
 

@@ -39,7 +39,7 @@ class CommonFieldsMixin(BaseCommonFieldsMixin, BaseGEORecordsFieldsMixin):
     """Common system fields between records and drafts."""
 
     parent_record_cls = GEOParent
-    schema = ConstantField("$schema", "local://records/geo-record-v5.0.0.json")
+    schema = ConstantField("$schema", "local://records/geo-record-v1.0.0.json")
 
 
 #
@@ -58,7 +58,7 @@ class GEODraft(CommonFieldsMixin, Draft):
     model_cls = rdm_models.RDMDraftMetadata
 
     index = IndexField(
-        "geordmrecords-drafts-draft-v5.0.0", search_alias="geordmrecords"
+        "geordmrecords-drafts-draft-v1.0.0", search_alias="geordmrecords"
     )
 
     files = FilesField(
@@ -87,7 +87,7 @@ class GEORecord(CommonFieldsMixin, Record):
     model_cls = rdm_models.RDMRecordMetadata
 
     index = IndexField(
-        "geordmrecords-records-record-v5.0.0", search_alias="geordmrecords-records"
+        "geordmrecords-records-record-v1.0.0", search_alias="geordmrecords-records"
     )
 
     files = FilesField(
