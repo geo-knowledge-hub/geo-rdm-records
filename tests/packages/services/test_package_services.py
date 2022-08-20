@@ -7,7 +7,9 @@
 
 """Test Package API Services."""
 
+import pytest
 from invenio_rdm_records.proxies import current_rdm_records_service
+from sqlalchemy.orm.exc import NoResultFound
 
 from geo_rdm_records.modules.packages import GEOPackageDraft
 from geo_rdm_records.proxies import current_geo_packages_service
@@ -122,7 +124,7 @@ def test_package_resource_integration_service(
     assert len(package_draft_relationship["related_resources"]) == 1
 
 
-def test_package_publishing_workflow(
+def test_package_publishing_flow(
     running_app,
     db,
     draft_resource_record,
@@ -186,7 +188,102 @@ def test_package_publishing_workflow(
     )  # we are able to search for published records.
 
 
-def test_package_import_resources(
+def test_package_edition_flow(
+    running_app,
+    db,
+    draft_resource_record,
+    published_resource_record,
+    minimal_record,
+    refresh_index,
+    es_clear,
+):
+    """Test the edition flow for Packages and their resources."""
+    superuser_identity = running_app.superuser_identity
+
+    # 1. Creating a package draft
+    record_item = current_geo_packages_service.create(
+        superuser_identity, minimal_record
+    )
+
+    package_pid = record_item["id"]
+
+    # 2. Add resources to the package.
+    resources = dict(
+        resources=[
+            {"id": draft_resource_record.pid.pid_value, "type": "managed"},
+            {"id": published_resource_record.pid.pid_value, "type": "related"},
+        ]
+    )
+
+    current_geo_packages_service.resource_add(
+        superuser_identity, package_pid, resources
+    )
+
+    # 3. Publishing the package updated
+    current_geo_packages_service.publish(superuser_identity, package_pid)
+
+    # refreshing the index
+    refresh_index()
+
+    # 4. Creating a draft from the published package (Edit mode)
+    new_title = "The cake is a lie"
+
+    draft_from_published_record = current_geo_packages_service.edit(
+        superuser_identity, package_pid
+    ).to_dict()
+
+    assert draft_from_published_record["id"] == package_pid
+    assert draft_from_published_record["metadata"]["title"] != new_title  # making sure
+
+    # 5. Changing the draft
+
+    # 5.1. Valid modification
+    draft_from_published_record["metadata"]["title"] = new_title
+
+    # 5.2. Invalid modification
+    draft_from_published_record["relationship"] = {}  # trying to flush the content
+
+    current_geo_packages_service.update_draft(
+        superuser_identity, package_pid, draft_from_published_record
+    )
+
+    # refreshing the index
+    refresh_index()
+
+    # 6. Reloading and validating the modification
+    published_record = current_geo_packages_service.read(
+        superuser_identity, package_pid
+    )
+    draft_from_published_record = current_geo_packages_service.read_draft(
+        superuser_identity, package_pid
+    )
+
+    # basic validation
+    assert draft_from_published_record["metadata"]["title"] == new_title  # new title!
+    assert (
+        published_record["metadata"]["title"]
+        != draft_from_published_record["metadata"]["title"]
+    )
+
+    # invalid modification don't change anything
+    assert published_record["relationship"] == published_record["relationship"]
+
+    # 7. Publishing the draft
+    current_geo_packages_service.publish(superuser_identity, package_pid)
+
+    # 8. Loading and checking
+    published_record = current_geo_packages_service.read(
+        superuser_identity, package_pid
+    )
+
+    assert published_record["metadata"]["title"] == new_title
+
+    # 9. Trying to load the draft again
+    with pytest.raises(NoResultFound):
+        current_geo_packages_service.read_draft(superuser_identity, package_pid)
+
+
+def test_package_versioning_flow(
     running_app,
     db,
     draft_resource_record,

@@ -26,8 +26,10 @@ class GEORDMRecordResource(BaseRecordResource):
         url_rules = super().create_url_rules()
         url_rules += [
             # Packages API (with prefix included).
-            route("GET", routes["item-resources"], self.search_package_records),
-            route("GET", routes["item-draft-resources"], self.search_package_drafts),
+            route("GET", routes["item-resources-search"], self.search_package_records),
+            route(
+                "GET", routes["item-draft-resources-search"], self.search_package_drafts
+            ),
         ]
 
         return url_rules

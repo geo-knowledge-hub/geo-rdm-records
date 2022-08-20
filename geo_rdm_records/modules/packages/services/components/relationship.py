@@ -15,22 +15,14 @@ from invenio_drafts_resources.services.records.components import ServiceComponen
 class PackageRelationshipComponent(ServiceComponent):
     """Service component for the ``relationship`` field."""
 
-    def create(self, identity, data=None, record=None, **kwargs):
-        """Inject parsed relationship to the record."""
-        record.relationship = data.get("relationship", {})
-
-    def update_draft(self, identity, data=None, record=None, **kwargs):
-        """Inject parsed relationship to the record."""
-        record.relationship = data.get("relationship", {})
-
     def publish(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
         record.relationship = draft.get("relationship", {})
 
-    def edit(self, identity, draft=None, record=None, **kwargs):
-        """Update draft relationship."""
-        draft.relationship = record.get("relationship", {})
-
     def import_resources(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
         draft.relationship = copy(record.get("relationship", {}))
+
+    def edit(self, identity, draft=None, record=None, **kwargs):
+        """Update draft relationship."""
+        draft.relationship = record.get('relationship', {})

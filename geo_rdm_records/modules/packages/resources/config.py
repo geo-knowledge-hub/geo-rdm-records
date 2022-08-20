@@ -19,11 +19,15 @@ class GEOPackageRecordResourceConfig(rdm_resources_config.RDMRecordResourceConfi
     blueprint_name = "packages"
     url_prefix = "/packages"
 
-    routes = {
-        **rdm_resources_config.RDMRecordResourceConfig.routes,
-        "item-resources": "/<pid_value>/resources",
-        "item-draft-resources": "/<pid_value>/draft/resources",
-    }
+    # Packages API Routes
+    routes = rdm_resources_config.RDMRecordResourceConfig.routes
+
+    # Packages endpoints
+    routes["item-resources-import"] = "/<pid_value>/draft/actions/resources-import"
+
+    # Resources endpoints
+    routes["item-resources"] = "/<pid_value>/resources"
+    routes["item-draft-resources"] = "/<pid_value>/draft/resources"
 
 
 #

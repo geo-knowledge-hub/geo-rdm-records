@@ -7,8 +7,6 @@
 
 """GEO RDM Records Relationship component."""
 
-from copy import copy
-
 from invenio_drafts_resources.services.records.components import ServiceComponent
 
 
@@ -28,19 +26,3 @@ class ResourceRelationshipComponent(ServiceComponent):
     def create(self, identity, data=None, record=None, **kwargs):
         """Inject parsed relationship to the record."""
         record.parent.relationship = self._read_relationship(data)
-
-    def update_draft(self, identity, data=None, record=None, **kwargs):
-        """Inject parsed relationship to the record."""
-        record.parent.relationship = self._read_relationship(data)
-
-    def publish(self, identity, draft=None, record=None, **kwargs):
-        """Update draft relationship."""
-        record.parent.relationship = draft.parent.relationship
-
-    def edit(self, identity, draft=None, record=None, **kwargs):
-        """Update draft relationship."""
-        record.parent.relationship = draft.parent.relationship
-
-    def new_version(self, identity, draft=None, record=None, **kwargs):
-        """Update draft relationship."""
-        record.parent.relationship = draft.parent.relationship

@@ -216,14 +216,15 @@ class GEOPackageRecordService(BaseRDMRecordService):
 
     def _publish_resource(self, identity, resource_draft, uow, expand):
         """Publish a package resource."""
-        # ToDo: Should we use another service in this way ? We are in
-        #       the same 'architecture level', but, maybe, this can be confusing
-        #       to maintain. Also, the service is not injected in a 'direct' way.
-        resource_pid = resource_draft.pid.pid_value
+        if resource_draft.is_draft:
+            # ToDo: Should we use another service in this way ? We are in
+            #       the same 'architecture level', but, maybe, this can be confusing
+            #       to maintain. Also, the service is not injected in a 'direct' way.
+            resource_pid = resource_draft.pid.pid_value
 
-        return current_rdm_records_service.publish(
-            identity, resource_pid, uow=uow, expand=expand
-        )
+            return current_rdm_records_service.publish(
+                identity, resource_pid, uow=uow, expand=expand
+            )
 
     #
     # High-level Packages API.

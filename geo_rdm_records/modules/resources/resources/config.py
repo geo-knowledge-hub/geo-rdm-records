@@ -25,7 +25,7 @@ class GEORecordResourceConfig(BaseRecordResourceConfig):
     # Packages API Routes
 
     # Package resources endpoint
-    routes["item-resources"] = "/packages/<pid_value>/resources"
+    routes["item-resources-search"] = "/packages/<pid_value>/resources"
 
     # Draft Packages resources endpoint
-    routes["item-draft-resources"] = "/packages/<pid_value>/draft/resources"
+    routes["item-draft-resources-search"] = "/packages/<pid_value>/draft/resources"
