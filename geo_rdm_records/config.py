@@ -34,6 +34,10 @@ RDM_RECORD_SERVICE = (
     "geo_rdm_records.modules.resources.services.service.GEORDMRecordService"
 )
 
+RDM_REVIEW_SERVICE = (
+    "geo_rdm_records.modules.resources.services.review.service.ReviewService"
+)
+
 # Configuration
 RDM_RECORD_SERVICE_CFG = (
     "geo_rdm_records.modules.resources.services.config.GEORecordServiceConfig"

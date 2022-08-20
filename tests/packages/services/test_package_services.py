@@ -266,7 +266,9 @@ def test_package_edition_flow(
     )
 
     # invalid modification don't change anything
-    assert published_record["relationship"] == published_record["relationship"]
+    assert (
+        draft_from_published_record["relationship"] == published_record["relationship"]
+    )
 
     # 7. Publishing the draft
     current_geo_packages_service.publish(superuser_identity, package_pid)

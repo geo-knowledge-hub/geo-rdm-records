@@ -248,7 +248,7 @@ def test_package_resource_integration_flow(
     assert len(response.json["relationship"]["related_resources"]) == 0
 
 
-def test_package_versioning_flow(
+def test_package_edition_flow(
     running_app,
     client_with_login,
     minimal_record,
@@ -258,7 +258,7 @@ def test_package_versioning_flow(
     es_clear,
     refresh_index,
 ):
-    """Test Package versioning workflow."""
+    """Test Package edition flow."""
     package_base_url = "/packages"
     client = client_with_login
 
@@ -278,8 +278,108 @@ def test_package_versioning_flow(
 
     client.post(package_resources_url, headers=headers, json=resources)
 
+    # 3. Publishing the package
+    client.post(
+        f"{package_base_url}/{created_draft_id}/draft/actions/publish", headers=headers
+    )
+
     # Refreshing indices
     refresh_index()
+
+    # 4. Creating a draft from the published package (Edit mode)
+    new_title = "To Infinity and Beyond"
+
+    response = client.post(
+        f"{package_base_url}/{created_draft_id}/draft", headers=headers
+    )
+
+    assert response.status_code == 201
+    assert response.json["id"] == created_draft_id
+    assert response.json["metadata"]["title"] != new_title  # making sure
+
+    # 5. Editing the draft
+    published_record_content = response.json
+
+    # 5.1. Valid modification
+    published_record_content["metadata"]["title"] = new_title
+
+    # 5.2. Invalid modification
+    published_record_content["relationship"] = {}
+
+    response = client.put(
+        f"{package_base_url}/{created_draft_id}/draft",
+        headers=headers,
+        json=published_record_content,
+    )
+
+    assert response.status_code == 200
+
+    # refreshing the index
+    refresh_index()
+
+    # 6. Reloading and validating the modification
+    published_record = client.get(
+        f"{package_base_url}/{created_draft_id}", headers=headers
+    )
+    draft_from_published_record = client.get(
+        f"{package_base_url}/{created_draft_id}/draft", headers=headers
+    )
+
+    published_record = published_record.json
+    draft_from_published_record = draft_from_published_record.json
+
+    # basic validation
+    assert draft_from_published_record["metadata"]["title"] == new_title  # new title!
+    assert (
+        published_record["metadata"]["title"]
+        != draft_from_published_record["metadata"]["title"]
+    )
+
+    # invalid modification don't change anything
+    assert (
+        draft_from_published_record["relationship"] == published_record["relationship"]
+    )
+
+    # 7. Publishing the draft
+    response = client.post(
+        f"{package_base_url}/{created_draft_id}/draft/actions/publish", headers=headers
+    )
+
+    assert response.status_code == 202
+    assert response.json["metadata"]["title"] == new_title
+    assert response.json["is_published"]
+    assert not response.json["is_draft"]
+
+
+def test_package_versioning_flow(
+    running_app,
+    client_with_login,
+    minimal_record,
+    draft_record,
+    published_record,
+    headers,
+    es_clear,
+    refresh_index,
+):
+    """Test Package versioning flow."""
+    package_base_url = "/packages"
+    client = client_with_login
+
+    # 1. Creating a package
+    created_draft = client.post(package_base_url, headers=headers, json=minimal_record)
+
+    # 2. Linking resources in the package
+    created_draft_id = created_draft.json["id"]
+
+    package_resources_url = f"{package_base_url}/{created_draft_id}/draft/resources"
+    resources = dict(
+        resources=[
+            {"id": draft_record, "type": "managed"},
+            {"id": published_record, "type": "related"},
+        ]
+    )
+
+    client.post(package_resources_url, headers=headers, json=resources)
 
     # 3. Publishing the package
     response = client.post(
@@ -287,6 +387,9 @@ def test_package_versioning_flow(
     )
 
     assert response.status_code == 202
+
+    # Refreshing indices
+    refresh_index()
 
     # 4. Checking the published version
     response = client.get(f"{package_base_url}/{created_draft_id}", headers=headers)

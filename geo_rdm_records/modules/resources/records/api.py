@@ -12,6 +12,7 @@ from invenio_drafts_resources.records import Draft, Record
 from invenio_rdm_records.records.api import CommonFieldsMixin as BaseCommonFieldsMixin
 from invenio_rdm_records.records.api import RDMParent as BaseRecordParent
 from invenio_rdm_records.records.systemfields import HasDraftCheckField
+from invenio_rdm_records.records.systemfields.draft_status import DraftStatus
 from invenio_records.systemfields import ConstantField
 from invenio_records_resources.records.api import FileRecord
 from invenio_records_resources.records.systemfields import FilesField, IndexField
@@ -70,6 +71,8 @@ class GEODraft(CommonFieldsMixin, Draft):
 
     has_draft = HasDraftCheckField()
 
+    status = DraftStatus()
+
 
 #
 # Record API
@@ -100,6 +103,8 @@ class GEORecord(CommonFieldsMixin, Record):
     )
 
     has_draft = HasDraftCheckField(GEODraft)
+
+    status = DraftStatus()
 
 
 GEOFileDraft.record_cls = GEODraft

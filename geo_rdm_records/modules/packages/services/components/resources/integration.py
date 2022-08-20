@@ -7,6 +7,7 @@
 
 """GEO RDM Records Resources component."""
 
+from invenio_drafts_resources.services.records.components import ServiceComponent
 from invenio_rdm_records.proxies import current_rdm_records_service
 
 from geo_rdm_records.base.services.components.constraints import ConstrainedComponent
@@ -141,3 +142,20 @@ class PackageResourceIntegrationComponent(ConstrainedComponent):
             validate=False,
             **kwargs
         )
+
+
+class PackageResourceCommunityComponent(ServiceComponent):
+    """Component to validate and integrate packages and resources access."""
+
+    def add_package_resource(
+        self, identity, record=None, resource=None, relationship_type=None, **kwargs
+    ):
+        """Add resource to a package."""
+        if record.parent.communities:
+            # ToDo: Probably, we need to review and improve this. What we are
+            #       doing is 'hard copy' the communities definition from the
+            #       package to the resource to enable the search capabilities
+            #       for both packages and resources inside a community.
+            #       We are not using the ``add`` method because at this moment,
+            #       we not need use the database table with the requests.
+            resource.parent.communities.from_dict(record.parent.communities.to_dict())

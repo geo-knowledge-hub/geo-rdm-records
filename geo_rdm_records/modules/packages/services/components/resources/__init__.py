@@ -8,9 +8,13 @@
 """GEO RDM Records Resources component."""
 
 from .access import PackageResourceAccessComponent
-from .integration import PackageResourceIntegrationComponent
+from .integration import (
+    PackageResourceCommunityComponent,
+    PackageResourceIntegrationComponent,
+)
 
 __all__ = (
     "PackageResourceIntegrationComponent",
     "PackageResourceAccessComponent",
+    "PackageResourceCommunityComponent",
 )

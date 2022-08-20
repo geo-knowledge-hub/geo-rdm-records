@@ -165,6 +165,33 @@ def app_config(app_config):
         "RDM_FILE_DRAFT_SERVICE_CFG"
     ] = "geo_rdm_records.modules.resources.services.config.GEOFileDraftServiceConfig"
 
+    app_config[
+        "RDM_REVIEW_SERVICE"
+    ] = "geo_rdm_records.modules.resources.services.review.service.ReviewService"
+
+    #
+    # Actions
+    #
+    app_config[
+        "RDM_COMMUNITY_ACTION_SUBMIT"
+    ] = "geo_rdm_records.base.requests.community_submission.SubmitAction"
+
+    app_config[
+        "RDM_COMMUNITY_ACTION_ACCEPT"
+    ] = "geo_rdm_records.base.requests.community_submission.AcceptAction"
+
+    app_config[
+        "RDM_COMMUNITY_ACTION_DECLINE"
+    ] = "geo_rdm_records.base.requests.community_submission.DeclineAction"
+
+    app_config[
+        "RDM_COMMUNITY_ACTION_CANCEL"
+    ] = "geo_rdm_records.base.requests.community_submission.CancelAction"
+
+    app_config[
+        "RDM_COMMUNITY_ACTION_EXPIRE"
+    ] = "geo_rdm_records.base.requests.community_submission.ExpireAction"
+
     return app_config
 
 
