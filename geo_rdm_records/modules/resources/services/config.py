@@ -12,7 +12,8 @@ from invenio_rdm_records.services.customizations import FromConfigSearchOptions
 from invenio_records_resources.services.records.links import pagination_links
 
 from geo_rdm_records.modules.resources.records.api import GEODraft, GEORecord
-from geo_rdm_records.modules.resources.services.components.relationship import (
+from geo_rdm_records.modules.resources.services.components import (
+    PackageResourceCommunitiesComponent,
     ResourceRelationshipComponent,
 )
 from geo_rdm_records.modules.resources.services.params.search import BoundingBoxParam
@@ -70,7 +71,8 @@ class GEORecordServiceConfig(rdm_config.RDMRecordServiceConfig):
 
     # Components - order matters!
     components = [
-        ResourceRelationshipComponent
+        ResourceRelationshipComponent,
+        PackageResourceCommunitiesComponent,
     ] + rdm_config.RDMRecordServiceConfig.components
 
     #

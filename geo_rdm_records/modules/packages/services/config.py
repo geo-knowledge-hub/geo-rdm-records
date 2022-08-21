@@ -18,6 +18,7 @@ from ..records.api import GEOPackageDraft, GEOPackageRecord
 from .components.relationship import PackageRelationshipComponent
 from .components.resources import (
     PackageResourceAccessComponent,
+    PackageResourceCommunityComponent,
     PackageResourceIntegrationComponent,
 )
 from .permissions import GEOPackageRecordPermissionPolicy
@@ -53,6 +54,7 @@ class GEOPackageRecordServiceConfig(rdm_config.RDMRecordServiceConfig):
         PackageRelationshipComponent,
         PackageResourceIntegrationComponent,
         PackageResourceAccessComponent,
+        PackageResourceCommunityComponent,
     ] + rdm_config.RDMRecordServiceConfig.components
 
     # Links

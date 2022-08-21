@@ -17,6 +17,7 @@ from invenio_rdm_records.records.systemfields import (
     HasDraftCheckField,
     RecordAccessField,
 )
+from invenio_rdm_records.records.systemfields.draft_status import DraftStatus
 from invenio_records.systemfields import ConstantField
 from invenio_records_resources.records.api import FileRecord
 from invenio_records_resources.records.systemfields import FilesField, IndexField
@@ -105,6 +106,8 @@ class GEOPackageDraft(CommonFieldsMixin, Draft):
 
     has_draft = HasDraftCheckField()
 
+    status = DraftStatus()
+
     relationship = PackageRelationshipField(key="relationship")
 
 
@@ -137,6 +140,8 @@ class GEOPackageRecord(CommonFieldsMixin, Record):
     )
 
     has_draft = HasDraftCheckField(GEOPackageDraft)
+
+    status = DraftStatus()
 
     relationship = PackageRelationshipField(key="relationship")
 

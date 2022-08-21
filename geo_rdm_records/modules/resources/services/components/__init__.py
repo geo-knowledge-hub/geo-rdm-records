@@ -6,3 +6,8 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 """GEO RDM Records Resources API Service component."""
+
+from .package import PackageResourceCommunitiesComponent
+from .relationship import ResourceRelationshipComponent
+
+__all__ = ("ResourceRelationshipComponent", "PackageResourceCommunitiesComponent")

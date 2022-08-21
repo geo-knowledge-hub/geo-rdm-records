@@ -7,6 +7,8 @@
 
 """GEO RDM Records Resources component."""
 
+from copy import copy
+
 from invenio_drafts_resources.services.records.components import ServiceComponent
 
 
@@ -17,6 +19,4 @@ class PackageResourceAccessComponent(ServiceComponent):
         self, identity, record=None, resource=None, relationship_type=None, **kwargs
     ):
         """Add resource to a package."""
-        # copying access definitions from the package to the resource
-        package_access = record["access"]
-        resource.access.from_dict(package_access)
+        resource.access = copy(record.get("access", {}))

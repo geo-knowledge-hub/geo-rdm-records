@@ -25,4 +25,4 @@ class PackageRelationshipComponent(ServiceComponent):
 
     def edit(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
-        draft.relationship = record.get('relationship', {})
+        draft.relationship = record.get("relationship", {})
