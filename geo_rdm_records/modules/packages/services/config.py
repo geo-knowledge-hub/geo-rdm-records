@@ -92,7 +92,7 @@ class GEOPackageDraftServiceConfig(rdm_config.RDMFileDraftServiceConfig):
     service_id = "files_package_draft"
 
     # Record class
-    record_cls = GEOPackageRecord
+    record_cls = GEOPackageDraft
 
     # Permission policy
     permission_action_prefix = "draft_"
