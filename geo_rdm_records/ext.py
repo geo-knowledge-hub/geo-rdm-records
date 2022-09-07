@@ -7,7 +7,6 @@
 
 """GEO RDM Records extension definition."""
 
-from invenio_rdm_records.services import SecretLinkService
 from invenio_rdm_records.services.pids import PIDManager, PIDsService
 from invenio_rdm_records.services.review.service import ReviewService
 from invenio_records_resources.resources.files import FileResource
@@ -29,6 +28,7 @@ from .modules.packages.services.config import (
     GEOPackageFileRecordServiceConfig,
     GEOPackageRecordServiceConfig,
 )
+from .modules.packages.services.secret_links import SecretLinkService
 from .modules.packages.services.service import GEOPackageRecordService
 
 
