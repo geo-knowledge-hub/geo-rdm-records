@@ -10,7 +10,7 @@
 import pytest
 from jsonschema.exceptions import ValidationError
 
-from geo_rdm_records.modules.resources.records.api import GEORecord as Record
+from geo_rdm_records.customizations.records.api import GEORecord as Record
 
 
 #

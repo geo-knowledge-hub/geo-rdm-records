@@ -13,7 +13,10 @@ from invenio_rdm_records.services.customizations import FromConfig
 from invenio_records_resources.services import ConditionalLink
 from invenio_records_resources.services.records.links import RecordLink
 
-from ...resources import GEODraft, GEORecord
+from geo_rdm_records.base.services.config import BaseGEOServiceConfig
+from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
+from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
+
 from ..records.api import GEOPackageDraft, GEOPackageRecord
 from .components.relationship import PackageRelationshipComponent
 from .components.resources import (
@@ -21,11 +24,10 @@ from .components.resources import (
     PackageResourceCommunityComponent,
     PackageResourceIntegrationComponent,
 )
-from .permissions import GEOPackageRecordPermissionPolicy
 from .schemas import GEOPackageRecordSchema
 
 
-class GEOPackageRecordServiceConfig(rdm_config.RDMRecordServiceConfig):
+class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
     """GEO Package record draft service config."""
 
     # Configurations
@@ -45,7 +47,7 @@ class GEOPackageRecordServiceConfig(rdm_config.RDMRecordServiceConfig):
     # Permission policy
     permission_policy_cls = FromConfig(
         "GEO_RDM_PACKAGE_PERMISSION_POLICY",
-        default=GEOPackageRecordPermissionPolicy,
+        default=BaseGEOPermissionPolicy,
         import_string=True,
     )
 
@@ -80,7 +82,7 @@ class GEOPackageFileRecordServiceConfig(rdm_config.RDMFileRecordServiceConfig):
     # Permission policy
     permission_policy_cls = FromConfig(
         "GEO_RDM_PACKAGE_PERMISSION_POLICY",
-        default=GEOPackageRecordPermissionPolicy,
+        default=BaseGEOPermissionPolicy,
         import_string=True,
     )
 
@@ -98,6 +100,6 @@ class GEOPackageDraftServiceConfig(rdm_config.RDMFileDraftServiceConfig):
     permission_action_prefix = "draft_"
     permission_policy_cls = FromConfig(
         "GEO_RDM_PACKAGE_PERMISSION_POLICY",
-        default=GEOPackageRecordPermissionPolicy,
+        default=BaseGEOPermissionPolicy,
         import_string=True,
     )

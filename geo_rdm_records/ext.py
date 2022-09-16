@@ -30,6 +30,10 @@ from .modules.packages.services.config import (
     GEOPackageRecordServiceConfig,
 )
 from .modules.packages.services.service import GEOPackageRecordService
+from .modules.search.resources.config import SearchRecordResourceConfig
+from .modules.search.resources.resource import SearchRecordResource
+from .modules.search.services.config import SearchRecordServiceConfig
+from .modules.search.services.service import SearchRecordService
 
 
 class GEORDMRecords(object):
@@ -64,6 +68,7 @@ class GEORDMRecords(object):
             record = GEOPackageRecordServiceConfig.build(app)
             file = GEOPackageFileRecordServiceConfig.build(app)
             file_draft = GEOPackageDraftServiceConfig.build(app)
+            search = SearchRecordServiceConfig.build(app)
 
         return ServiceConfigs
 
@@ -82,6 +87,8 @@ class GEORDMRecords(object):
             ),  # same used for the records.
             review_service=ReviewService(service_configs.record),
         )
+
+        self.service_search = SearchRecordService(config=service_configs.search)
 
     def init_resource(self, app):
         """Initialize resources."""
@@ -106,4 +113,8 @@ class GEORDMRecords(object):
         self.package_parent_record_links_resource = GEOPackageParentRecordLinksResource(
             service=self.service,
             config=GEOPackageParentRecordLinksResourceConfig,
+        )
+
+        self.search_resource = SearchRecordResource(
+            service=self.service_search, config=SearchRecordResourceConfig
         )
