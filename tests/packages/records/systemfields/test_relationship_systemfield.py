@@ -7,10 +7,10 @@
 
 """Test relationship system field."""
 
+from geo_rdm_records.customizations.records.api import GEODraft
 from geo_rdm_records.modules.packages.records.systemfields.relationship import (
     PackageRelationship,
 )
-from geo_rdm_records.modules.resources.records.api import GEODraft
 
 
 def test_package_relationship_creation(running_app, minimal_record):

@@ -56,3 +56,9 @@ def create_parent_links_api_blueprint(app):
     """Create draft files blueprint."""
     ext = app.extensions["geo-rdm-records"]
     return ext.package_parent_record_links_resource.as_blueprint()
+
+
+def create_search_records_api_blueprint(app):
+    """Create packages/resources blueprint."""
+    ext = app.extensions["geo-rdm-records"]
+    return ext.search_resource.as_blueprint()

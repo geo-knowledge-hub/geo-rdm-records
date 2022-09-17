@@ -9,11 +9,13 @@
 
 from invenio_rdm_records.resources import config as rdm_resources_config
 
+from geo_rdm_records.base.resources import BaseGEOResourceConfig
+
 
 #
 # Package Records and versions.
 #
-class GEOPackageRecordResourceConfig(rdm_resources_config.RDMRecordResourceConfig):
+class GEOPackageRecordResourceConfig(BaseGEOResourceConfig):
     """Record resource configuration."""
 
     blueprint_name = "packages"

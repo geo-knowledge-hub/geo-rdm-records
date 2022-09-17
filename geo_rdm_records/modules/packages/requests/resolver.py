@@ -7,11 +7,9 @@
 
 """GEO RDM Records Resources requests resolver."""
 
-from geo_rdm_records.base.requests.resolver import BaseRecordProxy, BaseRecordResolver
-from geo_rdm_records.modules.packages.records.api import (
-    GEOPackageDraft,
-    GEOPackageRecord,
-)
+from geo_rdm_records.base.requests import BaseRecordProxy, BaseRecordResolver
+
+from ..records.api import GEOPackageDraft, GEOPackageRecord
 
 
 class RecordProxy(BaseRecordProxy):

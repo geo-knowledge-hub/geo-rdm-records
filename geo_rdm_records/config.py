@@ -9,7 +9,7 @@
 
 from invenio_rdm_records.services import facets as rdm_facets
 
-from geo_rdm_records.modules.resources.services import facets as geo_facets
+from geo_rdm_records.base.services import facets as geo_facets
 
 #
 # Resource
@@ -17,12 +17,12 @@ from geo_rdm_records.modules.resources.services import facets as geo_facets
 
 # Rest Resource
 RDM_RECORD_RESOURCE = (
-    "geo_rdm_records.modules.resources.resources.resource.GEORDMRecordResource"
+    "geo_rdm_records.customizations.resources.resource.GEORDMRecordResource"
 )
 
 # Configuration
 RDM_RECORD_RESOURCE_CFG = (
-    "geo_rdm_records.modules.resources.resources.config.GEORecordResourceConfig"
+    "geo_rdm_records.customizations.resources.config.GEORecordResourceConfig"
 )
 
 #
@@ -31,24 +31,24 @@ RDM_RECORD_RESOURCE_CFG = (
 
 # Services
 RDM_RECORD_SERVICE = (
-    "geo_rdm_records.modules.resources.services.service.GEORDMRecordService"
+    "geo_rdm_records.customizations.services.service.GEORDMRecordService"
 )
 
 RDM_REVIEW_SERVICE = (
-    "geo_rdm_records.modules.resources.services.review.service.ReviewService"
+    "geo_rdm_records.customizations.services.review.service.ReviewService"
 )
 
 # Configuration
 RDM_RECORD_SERVICE_CFG = (
-    "geo_rdm_records.modules.resources.services.config.GEORecordServiceConfig"
+    "geo_rdm_records.customizations.services.config.GEORecordServiceConfig"
 )
 
 RDM_FILE_SERVICE_CFG = (
-    "geo_rdm_records.modules.resources.services.config.GEOFileRecordServiceConfig"
+    "geo_rdm_records.customizations.services.config.GEOFileRecordServiceConfig"
 )
 
 RDM_FILE_DRAFT_SERVICE_CFG = (
-    "geo_rdm_records.modules.resources.services.config.GEOFileDraftServiceConfig"
+    "geo_rdm_records.customizations.services.config.GEOFileDraftServiceConfig"
 )
 
 #
