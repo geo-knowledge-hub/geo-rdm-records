@@ -37,11 +37,11 @@ from invenio_vocabularies.proxies import current_service as vocabulary_service
 from invenio_vocabularies.records.api import Vocabulary
 
 from geo_rdm_records import config
+from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     GEOPackageRecord,
 )
-from geo_rdm_records.modules.resources.records.api import GEODraft, GEORecord
 
 
 #
@@ -144,54 +144,54 @@ def app_config(app_config):
     # GEO RDM Records Configurations
     app_config[
         "RDM_RECORD_RESOURCE"
-    ] = "geo_rdm_records.modules.resources.resources.resource.GEORDMRecordResource"
+    ] = "geo_rdm_records.customizations.resources.resource.GEORDMRecordResource"
 
     app_config[
         "RDM_RECORD_RESOURCE_CFG"
-    ] = "geo_rdm_records.modules.resources.resources.config.GEORecordResourceConfig"
+    ] = "geo_rdm_records.customizations.resources.config.GEORecordResourceConfig"
 
     app_config[
         "RDM_RECORD_SERVICE"
-    ] = "geo_rdm_records.modules.resources.services.service.GEORDMRecordService"
+    ] = "geo_rdm_records.customizations.services.service.GEORDMRecordService"
 
     app_config[
         "RDM_RECORD_SERVICE_CFG"
-    ] = "geo_rdm_records.modules.resources.services.config.GEORecordServiceConfig"
+    ] = "geo_rdm_records.customizations.services.config.GEORecordServiceConfig"
 
     app_config[
         "RDM_FILE_SERVICE_CFG"
-    ] = "geo_rdm_records.modules.resources.services.config.GEOFileRecordServiceConfig"
+    ] = "geo_rdm_records.customizations.services.config.GEOFileRecordServiceConfig"
 
     app_config[
         "RDM_FILE_DRAFT_SERVICE_CFG"
-    ] = "geo_rdm_records.modules.resources.services.config.GEOFileDraftServiceConfig"
+    ] = "geo_rdm_records.customizations.services.config.GEOFileDraftServiceConfig"
 
     app_config[
         "RDM_REVIEW_SERVICE"
-    ] = "geo_rdm_records.modules.resources.services.review.service.ReviewService"
+    ] = "geo_rdm_records.customizations.services.review.service.ReviewService"
 
     #
     # Actions
     #
     app_config[
         "RDM_COMMUNITY_ACTION_SUBMIT"
-    ] = "geo_rdm_records.base.requests.community_submission.SubmitAction"
+    ] = "geo_rdm_records.base.requests.SubmitAction"
 
     app_config[
         "RDM_COMMUNITY_ACTION_ACCEPT"
-    ] = "geo_rdm_records.base.requests.community_submission.AcceptAction"
+    ] = "geo_rdm_records.base.requests.AcceptAction"
 
     app_config[
         "RDM_COMMUNITY_ACTION_DECLINE"
-    ] = "geo_rdm_records.base.requests.community_submission.DeclineAction"
+    ] = "geo_rdm_records.base.requests.DeclineAction"
 
     app_config[
         "RDM_COMMUNITY_ACTION_CANCEL"
-    ] = "geo_rdm_records.base.requests.community_submission.CancelAction"
+    ] = "geo_rdm_records.base.requests.CancelAction"
 
     app_config[
         "RDM_COMMUNITY_ACTION_EXPIRE"
-    ] = "geo_rdm_records.base.requests.community_submission.ExpireAction"
+    ] = "geo_rdm_records.base.requests.ExpireAction"
 
     return app_config
 

@@ -9,7 +9,7 @@
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from geo_rdm_records.modules.class_factory import ClassFactory
+from geo_rdm_records.class_factory import ClassFactory
 
 
 class BaseRecordProxy:

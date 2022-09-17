@@ -9,10 +9,10 @@
 
 from importlib import import_module
 
-from .class_factory import ClassFactory
+from geo_rdm_records.class_factory import ClassFactory
 
 MODULES = [
-    "geo_rdm_records.modules.resources",
+    "geo_rdm_records.customizations",
     "geo_rdm_records.modules.packages",
     # "geo_rdm_records.modules.members",
 ]

@@ -7,7 +7,8 @@
 
 """GEO RDM Records Packages API."""
 
-from ..class_factory import init_class_factory
+from geo_rdm_records.class_factory import init_class_factory
+
 from .records.api import (
     GEOPackageDraft,
     GEOPackageFileDraft,

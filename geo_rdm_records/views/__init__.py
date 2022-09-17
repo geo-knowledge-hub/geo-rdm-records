@@ -13,6 +13,7 @@ from .api import (
     create_packages_api_blueprint,
     create_packages_files_api_blueprint,
     create_parent_links_api_blueprint,
+    create_search_records_api_blueprint,
 )
 
 __all__ = (
@@ -21,4 +22,5 @@ __all__ = (
     "create_packages_api_blueprint",
     "create_packages_files_api_blueprint",
     "create_parent_links_api_blueprint",
+    "create_search_records_api_blueprint",
 )

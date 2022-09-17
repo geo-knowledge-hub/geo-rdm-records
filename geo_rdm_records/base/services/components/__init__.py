@@ -6,3 +6,7 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 """Base services components for the GEO RDM Records."""
+
+from .constraints import BaseComponentConstraint, ConstrainedComponent
+
+__all__ = ("BaseComponentConstraint", "ConstrainedComponent")
