@@ -7,11 +7,11 @@
 
 """GEO RDM Records Services."""
 
-from invenio_records_permissions.api import permission_filter
-from invenio_records_resources.config import lt_es7
 from invenio_drafts_resources.services.records.service import (
     RecordService as BaseRecordService,
 )
+from invenio_records_permissions.api import permission_filter
+from invenio_records_resources.config import lt_es7
 from invenio_search import current_search_client
 
 from .links import MutableLinksTemplate
