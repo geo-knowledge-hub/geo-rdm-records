@@ -20,6 +20,7 @@ from invenio_records_resources.services.records.links import RecordLink
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
+from geo_rdm_records.base.services.schemas import ParentSchema
 from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
@@ -28,6 +29,7 @@ from geo_rdm_records.modules.packages.records.api import (
 
 from .links import LinksRegistryType
 from .results import MutableRecordList, ResultRegistryType
+from .schemas import GEORecordSchema
 
 
 class SearchRecordServiceConfig(BaseGEOServiceConfig):
@@ -41,6 +43,10 @@ class SearchRecordServiceConfig(BaseGEOServiceConfig):
         GEORecord.index.search_alias,
         GEOPackageRecord.index.search_alias,
     ]
+
+    # Schemas
+    schema = GEORecordSchema
+    schema_parent = ParentSchema
 
     # Result classes
     result_list_cls = MutableRecordList

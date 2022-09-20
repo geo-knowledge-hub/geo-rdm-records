@@ -22,7 +22,9 @@ from invenio_records.systemfields import ConstantField
 from invenio_records_resources.records.api import FileRecord
 from invenio_records_resources.records.systemfields import FilesField, IndexField
 
+from geo_rdm_records.base.records.api import GEOBaseRecord
 from geo_rdm_records.base.records.systemfields.common import BaseGEORecordsFieldsMixin
+from geo_rdm_records.base.records.types import GEORecordTypes
 
 from .models import (
     GEOPackageDraftMetadata,
@@ -53,7 +55,7 @@ class PackageRelationship(enum.Enum):
 #
 # Parent
 #
-class GEOPackageParent(BaseRecordParent):
+class GEOPackageParent(GEOBaseRecord, BaseRecordParent):
     """Parent record."""
 
     # Configuration
@@ -63,6 +65,8 @@ class GEOPackageParent(BaseRecordParent):
     schema = ConstantField("$schema", "local://packages/geo-parent-v1.0.0.json")
 
     communities = CommunitiesField(GEOPackageParentCommunity)
+
+    type = GEORecordTypes.package
 
 
 #

@@ -86,6 +86,13 @@
           "$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"
         }
       }
+    },
+
+    "type": {
+      "type": "string",
+      "description": "Type of the entity represented by the Record in the System.",
+      "additionalProperties": false
     }
+
   }
 }
