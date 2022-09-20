@@ -15,6 +15,7 @@ from invenio_records_resources.services.records.links import RecordLink
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
+from geo_rdm_records.base.services.schemas import ParentSchema
 from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 
 from ..records.api import GEOPackageDraft, GEOPackageRecord
@@ -43,6 +44,7 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
 
     # Schemas
     schema = GEOPackageRecordSchema
+    schema_parent = ParentSchema
 
     # Permission policy
     permission_policy_cls = FromConfig(

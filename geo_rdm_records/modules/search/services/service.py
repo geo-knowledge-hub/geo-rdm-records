@@ -67,7 +67,7 @@ class SearchRecordService(BaseRecordService):
         search = search_opts.search_cls(
             using=current_search_client,
             default_filter=default_filter,
-            index=self.indices[0],  # enabling multiple indices search
+            index=self.indices,  # enabling multiple indices search
         )
 
         search = (

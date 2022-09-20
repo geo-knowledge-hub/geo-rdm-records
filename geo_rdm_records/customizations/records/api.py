@@ -17,7 +17,9 @@ from invenio_records.systemfields import ConstantField
 from invenio_records_resources.records.api import FileRecord
 from invenio_records_resources.records.systemfields import FilesField, IndexField
 
+from geo_rdm_records.base.records.api import GEOBaseRecord
 from geo_rdm_records.base.records.systemfields.common import BaseGEORecordsFieldsMixin
+from geo_rdm_records.base.records.types import GEORecordTypes
 
 from .systemfields.relationship import RecordRelationshipField
 
@@ -25,7 +27,7 @@ from .systemfields.relationship import RecordRelationshipField
 #
 # Parent record API
 #
-class GEOParent(BaseRecordParent):
+class GEOParent(GEOBaseRecord, BaseRecordParent):
     """Record parent."""
 
     #
@@ -34,6 +36,8 @@ class GEOParent(BaseRecordParent):
     schema = ConstantField("$schema", "local://records/geo-parent-v1.0.0.json")
 
     relationship = RecordRelationshipField(key="relationship")
+
+    type = GEORecordTypes.resource
 
 
 class CommonFieldsMixin(BaseCommonFieldsMixin, BaseGEORecordsFieldsMixin):

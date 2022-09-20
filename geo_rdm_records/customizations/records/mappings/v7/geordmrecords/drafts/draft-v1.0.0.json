@@ -78,6 +78,9 @@
               }
             }
           },
+          "type": {
+            "type": "keyword"
+          },
           "relationship": {
             "type": "object",
             "properties": {
