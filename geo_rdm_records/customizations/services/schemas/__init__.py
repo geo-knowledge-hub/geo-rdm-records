@@ -7,17 +7,16 @@
 
 """GEO RDM Records Services schema."""
 
-from invenio_rdm_records.services.schemas import RDMParentSchema as BaseParentSchema
 from invenio_rdm_records.services.schemas import RDMRecordSchema as BaseRecordSchema
 from marshmallow import fields
 from marshmallow_utils.fields import NestedAttribute
 
-from geo_rdm_records.base.services.schemas import MetadataSchema
+from geo_rdm_records.base.services.schemas import MetadataSchema, ParentSchema
 
 from .parent import ParentRelationshipSchema
 
 
-class GEOParentSchema(BaseParentSchema):
+class GEOParentSchema(ParentSchema):
     """GEO Knowledge Hub Parent schema."""
 
     relationship = fields.Nested(ParentRelationshipSchema, dump_only=True)

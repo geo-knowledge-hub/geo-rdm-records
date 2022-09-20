@@ -81,6 +81,9 @@
               }
             }
           },
+          "type": {
+            "type": "keyword"
+          },
           "relationship": {
             "properties": {
               "managed_resources": {

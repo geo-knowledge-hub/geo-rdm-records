@@ -84,6 +84,11 @@
 
     "review": {
       "$ref": "local://requests/request-v1.0.0.json"
+    },
+    "type": {
+      "type": "string",
+      "description": "Type of the entity represented by the Record in the System.",
+      "additionalProperties": false
     }
   }
 }
