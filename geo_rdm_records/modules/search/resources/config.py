@@ -17,4 +17,4 @@ class SearchRecordResourceConfig(BaseGEOResourceConfig):
     blueprint_name = "records_search"
     url_prefix = "/search"
 
-    routes = {"list": ""}
+    routes = {"list": "", "user-prefix": "/user"}
