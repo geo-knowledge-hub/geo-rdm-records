@@ -11,4 +11,8 @@ from .location import FeatureSchema
 from .metadata import MetadataSchema
 from .parent import ParentSchema
 
-__all__ = ("FeatureSchema", "MetadataSchema", "ParentSchema",)
+__all__ = (
+    "FeatureSchema",
+    "MetadataSchema",
+    "ParentSchema",
+)

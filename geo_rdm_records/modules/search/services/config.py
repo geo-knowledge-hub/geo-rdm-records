@@ -44,6 +44,8 @@ class SearchRecordServiceConfig(BaseGEOServiceConfig):
         GEOPackageRecord.index.search_alias,
     ]
 
+    indices_draft = [GEODraft.index.search_alias, GEOPackageDraft.index.search_alias]
+
     # Schemas
     schema = GEORecordSchema
     schema_parent = ParentSchema
