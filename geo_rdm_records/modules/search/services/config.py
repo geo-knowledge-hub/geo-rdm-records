@@ -134,3 +134,7 @@ class SearchRecordServiceConfig(BaseGEOServiceConfig):
     }
 
     links_search = pagination_links("{+api}/search{?args*}")
+
+    links_search_community_records = pagination_links(
+        "{+api}/communities/{id}/search{?args*}"
+    )
