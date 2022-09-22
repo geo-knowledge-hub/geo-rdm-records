@@ -20,6 +20,16 @@ class GEORecordResourceConfig(BaseGEOResourceConfig):
     # Resource routes
     routes = BaseRecordResourceConfig.routes
 
+    # PIDs endpoints
+    routes["item-pids-reserve"] = "/<pid_value>/draft/pids/<scheme>"
+
+    # Review endpoints
+    routes["item-review"] = "/<pid_value>/draft/review"
+    routes["item-actions-review"] = "/<pid_value>/draft/actions/submit-review"
+
+    # Community endpoints
+    routes["community-records"] = "/communities/<pid_value>/records"
+
     # Packages API Routes
 
     # Package resources endpoint

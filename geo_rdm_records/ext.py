@@ -25,7 +25,7 @@ from .modules.packages.resources.resource import (
     GEOPackageRecordResource,
 )
 from .modules.packages.services.config import (
-    GEOPackageDraftServiceConfig,
+    GEOPackageDraftFileServiceConfig,
     GEOPackageFileRecordServiceConfig,
     GEOPackageRecordServiceConfig,
 )
@@ -67,7 +67,7 @@ class GEORDMRecords(object):
         class ServiceConfigs:
             record = GEOPackageRecordServiceConfig.build(app)
             file = GEOPackageFileRecordServiceConfig.build(app)
-            file_draft = GEOPackageDraftServiceConfig.build(app)
+            file_draft = GEOPackageDraftFileServiceConfig.build(app)
             search = SearchRecordServiceConfig.build(app)
 
         return ServiceConfigs

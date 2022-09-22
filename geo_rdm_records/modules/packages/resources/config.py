@@ -31,6 +31,9 @@ class GEOPackageRecordResourceConfig(BaseGEOResourceConfig):
     routes["item-resources"] = "/<pid_value>/resources"
     routes["item-draft-resources"] = "/<pid_value>/draft/resources"
 
+    # Community endpoints
+    routes["community-records"] = "/communities/<pid_value>/packages"
+
 
 #
 # Record files
