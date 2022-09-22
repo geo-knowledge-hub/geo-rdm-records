@@ -35,8 +35,11 @@ class ResultRegistryType:
         for key in cls.supported_types.keys():
             cls_type = "draft"
 
-            if key in obj["$schema"]:
-                if obj["is_published"]:
+            schema_ = obj.get("$schema", "")
+            schema_parent_ = obj.get("parent", {}).get("$schema", "")
+
+            if key in schema_ or key in schema_parent_:
+                if obj.get("is_published", False):
                     cls_type = "record"
 
                 # creating the object

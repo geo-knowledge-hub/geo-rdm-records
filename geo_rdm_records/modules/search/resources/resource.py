@@ -8,7 +8,9 @@
 """GEO RDM Records Search resources."""
 
 from flask_resources import route
-from invenio_drafts_resources.resources import RecordResource as BaseRecordResource
+from invenio_rdm_records.resources.resources import (
+    RDMRecordResource as BaseRecordResource,
+)
 
 
 class SearchRecordResource(BaseRecordResource):
@@ -25,4 +27,5 @@ class SearchRecordResource(BaseRecordResource):
                 f"{routes['user-prefix']}{self.config.url_prefix}",
                 self.search_user_records,
             ),
+            route("GET", routes["community-records"], self.search_community_records),
         ]

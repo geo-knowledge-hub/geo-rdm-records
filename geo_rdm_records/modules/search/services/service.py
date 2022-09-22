@@ -224,3 +224,39 @@ class SearchRecordService(BaseRecordService):
             expandable_fields=self.expandable_fields,
             expand=expand,
         )
+
+    def search_community_records(
+        self, identity, community_id, params=None, es_preference=None, **kwargs
+    ):
+        """Search for records published in the given community."""
+        self.require_permission(identity, "read")
+
+        # Prepare and execute the search
+        params = params or {}
+
+        search_result = self._search(
+            "search",
+            identity,
+            params,
+            es_preference,
+            search_opts=self.config.search,
+            extra_filter=Q("term", **{"parent.communities.ids": str(community_id)}),
+            permission_action="read",
+            indices=self.indices,
+            **kwargs,
+        ).execute()
+
+        return self.result_list(
+            self,
+            identity,
+            search_result,
+            params,
+            links_tpl=LinksTemplate(
+                self.config.links_search_community_records,
+                context={
+                    "args": params,
+                    "id": community_id,
+                },
+            ),
+            links_item_tpl=self.links_item_tpl,
+        )
