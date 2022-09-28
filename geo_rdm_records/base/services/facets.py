@@ -37,3 +37,12 @@ engagement_priority = TermsFacet(
     label=_("Engagement Priorities"),
     value_labels=VocabularyLabels("engagementprioritiestypes"),
 )
+
+#
+# Base Resource Type
+#
+base_type = TermsFacet(
+    field="metadata.resource_type.props.basetype",
+    label=_("Base resource type"),
+    value_labels=VocabularyLabels("resourcetypes"),
+)
