@@ -84,7 +84,7 @@ class BaseGEORecordsFieldsMixin:
         ),
         resource_type=PIDRelation(
             "metadata.resource_type",
-            keys=["title", "props.type", "props.subtype"],
+            keys=["title", "props.type", "props.subtype", "props.basetype"],
             pid_field=Vocabulary.pid.with_type_ctx("resourcetypes"),
             cache_key="resource_type",
             value_check=dict(tags=["depositable"]),
