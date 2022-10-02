@@ -7,6 +7,8 @@
 
 """Resources configuration."""
 
+from copy import deepcopy
+
 from invenio_rdm_records.resources.config import (
     RDMRecordResourceConfig as BaseRecordResourceConfig,
 )
@@ -18,7 +20,17 @@ class GEORecordResourceConfig(BaseGEOResourceConfig):
     """Record resource configuration."""
 
     # Resource routes
-    routes = BaseRecordResourceConfig.routes
+    routes = deepcopy(BaseRecordResourceConfig.routes)
+
+    # PIDs endpoints
+    routes["item-pids-reserve"] = "/<pid_value>/draft/pids/<scheme>"
+
+    # Review endpoints
+    routes["item-review"] = "/<pid_value>/draft/review"
+    routes["item-actions-review"] = "/<pid_value>/draft/actions/submit-review"
+
+    # Community endpoints
+    routes["community-records"] = "/communities/<pid_value>/records"
 
     # Packages API Routes
 

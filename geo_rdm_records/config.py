@@ -55,6 +55,12 @@ RDM_FILE_DRAFT_SERVICE_CFG = (
 # Search configuration
 #
 RDM_FACETS = {
+    "base_type": {
+        "facet": geo_facets.base_type,
+        "ui": {
+            "field": "resource_type.basetype",
+        },
+    },
     "access_status": {
         "facet": rdm_facets.access_status,
         "ui": {
@@ -109,4 +115,14 @@ RDM_FACETS = {
         "facet": geo_facets.geo_work_programme_activity,
         "ui": {"field": "geo_work_programme_activity.type"},
     },
+}
+
+RDM_SEARCH_PACKAGE_RESOURCE = {
+    "facets": ["access_status", "resource_type", "base_type"],
+    "sort": ["bestmatch", "newest", "oldest", "version"],
+}
+
+RDM_SEARCH_PACKAGE_RESOURCE_DRAFTS = {
+    "facets": ["access_status", "is_published", "resource_type", "base_type"],
+    "sort": ["bestmatch", "updated-desc", "updated-asc", "newest", "oldest", "version"],
 }

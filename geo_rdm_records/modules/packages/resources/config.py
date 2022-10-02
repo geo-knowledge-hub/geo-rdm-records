@@ -7,6 +7,8 @@
 
 """Bibliographic Record Resource config for the Packages API."""
 
+from copy import deepcopy
+
 from invenio_rdm_records.resources import config as rdm_resources_config
 
 from geo_rdm_records.base.resources import BaseGEOResourceConfig
@@ -22,7 +24,7 @@ class GEOPackageRecordResourceConfig(BaseGEOResourceConfig):
     url_prefix = "/packages"
 
     # Packages API Routes
-    routes = rdm_resources_config.RDMRecordResourceConfig.routes
+    routes = deepcopy(rdm_resources_config.RDMRecordResourceConfig.routes)
 
     # Packages endpoints
     routes["item-resources-import"] = "/<pid_value>/draft/actions/resources-import"
@@ -30,6 +32,9 @@ class GEOPackageRecordResourceConfig(BaseGEOResourceConfig):
     # Resources endpoints
     routes["item-resources"] = "/<pid_value>/resources"
     routes["item-draft-resources"] = "/<pid_value>/draft/resources"
+
+    # Community endpoints
+    routes["community-records"] = "/communities/<pid_value>/packages"
 
 
 #

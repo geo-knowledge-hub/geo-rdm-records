@@ -10,10 +10,12 @@
 from invenio_rdm_records.services.schemas import RDMRecordSchema as BaseRecordSchema
 from marshmallow_utils.fields import NestedAttribute
 
-from geo_rdm_records.base.services.schemas import ParentSchema
+from geo_rdm_records.base.services.schemas import MetadataSchema, ParentSchema
 
 
 class GEORecordSchema(BaseRecordSchema):
     """Record schema."""
 
     parent = NestedAttribute(ParentSchema)
+
+    metadata = NestedAttribute(MetadataSchema)

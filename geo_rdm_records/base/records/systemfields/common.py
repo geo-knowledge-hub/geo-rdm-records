@@ -29,19 +29,19 @@ class BaseGEORecordsFieldsMixin:
         #
         target_audiences=PIDListRelation(
             "metadata.target_audiences",
-            keys=["title", "title", "props.subtype"],
+            keys=["title", "props.subtype"],
             pid_field=Vocabulary.pid.with_type_ctx("targetaudiencestypes"),
             cache_key="target_audiences",
         ),
         geo_work_programme_activity=PIDRelation(
             "metadata.geo_work_programme_activity",
-            keys=["id", "title", "props.type"],
+            keys=["title", "props.type"],
             pid_field=Vocabulary.pid.with_type_ctx("geowptypes"),
             cache_key="geo_work_programme_activity",
         ),
         engagement_priorities=PIDListRelation(
             "metadata.engagement_priorities",
-            keys=["id", "title", "props.type", "props.subtype"],
+            keys=["title", "props.type", "props.subtype"],
             pid_field=Vocabulary.pid.with_type_ctx("engagementprioritiestypes"),
             cache_key="engagement_priorities",
         ),
@@ -84,7 +84,7 @@ class BaseGEORecordsFieldsMixin:
         ),
         resource_type=PIDRelation(
             "metadata.resource_type",
-            keys=["title", "props.type", "props.subtype"],
+            keys=["title", "props.type", "props.subtype", "props.basetype"],
             pid_field=Vocabulary.pid.with_type_ctx("resourcetypes"),
             cache_key="resource_type",
             value_check=dict(tags=["depositable"]),

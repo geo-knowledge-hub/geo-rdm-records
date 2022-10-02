@@ -44,6 +44,8 @@ class SearchRecordServiceConfig(BaseGEOServiceConfig):
         GEOPackageRecord.index.search_alias,
     ]
 
+    indices_draft = [GEODraft.index.search_alias, GEOPackageDraft.index.search_alias]
+
     # Schemas
     schema = GEORecordSchema
     schema_parent = ParentSchema
@@ -132,3 +134,7 @@ class SearchRecordServiceConfig(BaseGEOServiceConfig):
     }
 
     links_search = pagination_links("{+api}/search{?args*}")
+
+    links_search_community_records = pagination_links(
+        "{+api}/communities/{id}/search{?args*}"
+    )

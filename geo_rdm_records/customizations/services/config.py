@@ -8,10 +8,17 @@
 """GEO RDM Records Services configuration."""
 
 from invenio_rdm_records.services import config as rdm_config
-from invenio_rdm_records.services.customizations import FromConfig
+from invenio_rdm_records.services.customizations import (
+    FromConfig,
+    FromConfigSearchOptions,
+)
 from invenio_records_resources.services.records.links import pagination_links
 
-from geo_rdm_records.base.services.config import BaseGEOServiceConfig
+from geo_rdm_records.base.services.config import (
+    BaseGEOServiceConfig,
+    GEOSearchDraftsOptions,
+    GEOSearchOptions,
+)
 from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
 from geo_rdm_records.customizations.services.schemas import (
     GEOParentSchema,
@@ -50,6 +57,14 @@ class GEORecordServiceConfig(BaseGEOServiceConfig):
     #
     # Packages API extension
     #
+    search_resource = FromConfigSearchOptions(
+        "RDM_SEARCH_PACKAGE_RESOURCE", search_option_cls=GEOSearchOptions
+    )
+
+    search_resource_drafts = FromConfigSearchOptions(
+        "RDM_SEARCH_PACKAGE_RESOURCE_DRAFTS", search_option_cls=GEOSearchDraftsOptions
+    )
+
     links_search_package_records = pagination_links(
         "{+api}/packages/{id}/resources{?args*}"
     )

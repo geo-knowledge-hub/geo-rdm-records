@@ -27,6 +27,7 @@ from invenio_accounts.testutils import login_user_via_session
 from invenio_admin.permissions import action_admin_access
 from invenio_app.factory import create_api as _create_api
 from invenio_communities.communities.records.api import Community
+from invenio_rdm_records.services import facets as rdm_facets
 from invenio_rdm_records.services.pids import providers
 from invenio_records_resources.proxies import current_service_registry
 from invenio_vocabularies.contrib.affiliations.api import Affiliation
@@ -37,6 +38,7 @@ from invenio_vocabularies.proxies import current_service as vocabulary_service
 from invenio_vocabularies.records.api import Vocabulary
 
 from geo_rdm_records import config
+from geo_rdm_records.base.services import facets as geo_facets
 from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
@@ -192,6 +194,72 @@ def app_config(app_config):
     app_config[
         "RDM_COMMUNITY_ACTION_EXPIRE"
     ] = "geo_rdm_records.base.requests.ExpireAction"
+
+    #
+    # Search (Facets)
+    #
+    app_config["RDM_FACETS"] = {
+        "base_type": {
+            "facet": geo_facets.base_type,
+            "ui": {
+                "field": "resource_type.basetype",
+            },
+        },
+        "access_status": {
+            "facet": rdm_facets.access_status,
+            "ui": {
+                "field": "access.status",
+            },
+        },
+        "is_published": {
+            "facet": rdm_facets.is_published,
+            "ui": {
+                "field": "is_published",
+            },
+        },
+        "language": {
+            "facet": rdm_facets.language,
+            "ui": {
+                "field": "languages",
+            },
+        },
+        "resource_type": {
+            "facet": rdm_facets.resource_type,
+            "ui": {
+                "field": "resource_type.type",
+                "childAgg": {
+                    "field": "resource_type.subtype",
+                },
+            },
+        },
+        "subject": {
+            "facet": rdm_facets.subject,
+            "ui": {
+                "field": "subjects.subject",
+            },
+        },
+        "subject_nested": {
+            "facet": rdm_facets.subject_nested,
+            "ui": {
+                "field": "subjects.scheme",
+                "childAgg": {
+                    "field": "subjects.subject",
+                },
+            },
+        },
+        "engagement_priority": {
+            "facet": geo_facets.engagement_priority,
+            "ui": {"field": "engagement_priorities.type"},
+        },
+        "target_audience": {
+            "facet": geo_facets.target_audience,
+            "ui": {"field": "target_audiences.type"},
+        },
+        "geo_work_programme_activity": {
+            "facet": geo_facets.geo_work_programme_activity,
+            "ui": {"field": "geo_work_programme_activity.type"},
+        },
+    }
 
     return app_config
 
