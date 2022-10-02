@@ -40,7 +40,7 @@ class GEOParent(GEOBaseRecord, BaseRecordParent):
     type = GEORecordTypes.resource
 
 
-class CommonFieldsMixin(BaseCommonFieldsMixin, BaseGEORecordsFieldsMixin):
+class CommonFieldsMixin(BaseGEORecordsFieldsMixin, BaseCommonFieldsMixin):
     """Common system fields between records and drafts."""
 
     parent_record_cls = GEOParent

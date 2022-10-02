@@ -72,7 +72,7 @@ class GEOPackageParent(GEOBaseRecord, BaseRecordParent):
 #
 # Record and Draft APIs.
 #
-class CommonFieldsMixin(BaseCommonFieldsMixin, BaseGEORecordsFieldsMixin):
+class CommonFieldsMixin(BaseGEORecordsFieldsMixin, BaseCommonFieldsMixin):
     """Common system fields between published and draft packages."""
 
     versions_model_cls = GEOPackageVersionsState
