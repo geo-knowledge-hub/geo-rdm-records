@@ -23,7 +23,9 @@ def init(state):
     ext = app.extensions["geo-rdm-records"]
 
     # services
-    rr_ext.registry.register(ext.service)
+    rr_ext.registry.register(ext.service, service_id="records_package")
+    rr_ext.registry.register(ext.service.files, service_id="files_package")
+    rr_ext.registry.register(ext.service.draft_files, service_id="files_package_draft")
 
     # indexers
     idx_ext.registry.register(ext.service.indexer, indexer_id="records_packages")
