@@ -17,6 +17,7 @@ from copy import deepcopy
 import pytest
 from fake_datacite_client import FakeDataCiteClient
 from flask import g
+from flask_principal import Identity, Need, UserNeed
 from flask_security import login_user, logout_user
 from flask_security.utils import hash_password
 from invenio_access.models import ActionRoles
@@ -499,7 +500,7 @@ def community_record(running_app, db):
 
 
 #
-# Users
+# Users and identities
 #
 class UserFixture_:
     """A user fixture for easy test user creation."""
@@ -621,6 +622,17 @@ class UserFixture_:
         res = client.get(f"{base_path}logout")
         assert res.status_code < 400
         return client
+
+
+@pytest.fixture(scope="function")
+def identity_simple(users):
+    """Simple identity fixture."""
+    user = users[0]
+    i = Identity(user.id)
+    i.provides.add(UserNeed(user.id))
+    i.provides.add(Need(method="system_role", value="any_user"))
+    i.provides.add(Need(method="system_role", value="authenticated_user"))
+    return i
 
 
 RunningApp = namedtuple(

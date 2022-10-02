@@ -133,9 +133,8 @@ class RecordStatusConstraint(BaseComponentConstraint):
         **kwargs
     ):
         """Check if the constraint is valid."""
-        if (
-            not record.is_draft
-            and relationship_type != PackageRelationship.RELATED.value
+        if not record.is_draft and (
+            relationship_type != PackageRelationship.RELATED.value
             or record.access.protection.record != "public"
         ):
             raise InvalidPackageResourceError(record)
