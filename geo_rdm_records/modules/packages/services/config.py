@@ -32,6 +32,7 @@ from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 
 from ..records.api import GEOPackageDraft, GEOPackageRecord
 from .components.relationship import PackageRelationshipComponent
+from .components.resource_type import PackageResourceTypeComponent
 from .components.resources import (
     PackageResourceAccessComponent,
     PackageResourceCommunityComponent,
@@ -71,6 +72,7 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
         PackageResourceIntegrationComponent,
         PackageResourceAccessComponent,
         PackageResourceCommunityComponent,
+        PackageResourceTypeComponent,
     ] + rdm_config.RDMRecordServiceConfig.components
 
     # Links
@@ -107,13 +109,13 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
         ),
         "self_iiif_manifest": ConditionalLink(
             cond=is_record,
-            if_=RecordLink("{+api}/iiif/record:{id}/manifest"),
-            else_=RecordLink("{+api}/iiif/draft:{id}/manifest"),
+            if_=RecordLink("{+api}/iiif/package:{id}/manifest"),
+            else_=RecordLink("{+api}/iiif/package-draft:{id}/manifest"),
         ),
         "self_iiif_sequence": ConditionalLink(
             cond=is_record,
-            if_=RecordLink("{+api}/iiif/record:{id}/sequence/default"),
-            else_=RecordLink("{+api}/iiif/draft:{id}/sequence/default"),
+            if_=RecordLink("{+api}/iiif/package:{id}/sequence/default"),
+            else_=RecordLink("{+api}/iiif/package-draft:{id}/sequence/default"),
         ),
         "files": ConditionalLink(
             cond=is_record,
@@ -172,14 +174,16 @@ class GEOPackageFileRecordServiceConfig(rdm_config.RDMFileRecordServiceConfig):
         "content": FileLink("{+api}/packages/{id}/files/{key}/content"),
         # FIXME: filename instead
         "iiif_canvas": FileLink(
-            "{+api}/iiif/record:{id}/canvas/{key}", when=is_iiif_compatible
+            "{+api}/iiif/package:{id}/canvas/{key}", when=is_iiif_compatible
         ),
-        "iiif_base": FileLink("{+api}/iiif/record:{id}:{key}", when=is_iiif_compatible),
+        "iiif_base": FileLink(
+            "{+api}/iiif/package:{id}:{key}", when=is_iiif_compatible
+        ),
         "iiif_info": FileLink(
-            "{+api}/iiif/record:{id}:{key}/info.json", when=is_iiif_compatible
+            "{+api}/iiif/package:{id}:{key}/info.json", when=is_iiif_compatible
         ),
         "iiif_api": FileLink(
-            "{+api}/iiif/record:{id}:{key}/{region=full}"
+            "{+api}/iiif/package:{id}:{key}/{region=full}"
             "/{size=full}/{rotation=0}/{quality=default}.{format=png}",
             when=is_iiif_compatible,
         ),
@@ -213,14 +217,16 @@ class GEOPackageDraftFileServiceConfig(rdm_config.RDMFileDraftServiceConfig):
         "commit": FileLink("{+api}/packages/{id}/draft/files/{key}/commit"),
         # FIXME: filename instead
         "iiif_canvas": FileLink(
-            "{+api}/iiif/draft:{id}/canvas/{key}", when=is_iiif_compatible
+            "{+api}/iiif/package-draft:{id}/canvas/{key}", when=is_iiif_compatible
         ),
-        "iiif_base": FileLink("{+api}/iiif/draft:{id}:{key}", when=is_iiif_compatible),
+        "iiif_base": FileLink(
+            "{+api}/iiif/package-draft:{id}:{key}", when=is_iiif_compatible
+        ),
         "iiif_info": FileLink(
-            "{+api}/iiif/draft:{id}:{key}/info.json", when=is_iiif_compatible
+            "{+api}/iiif/package-draft:{id}:{key}/info.json", when=is_iiif_compatible
         ),
         "iiif_api": FileLink(
-            "{+api}/iiif/draft:{id}:{key}/{region=full}"
+            "{+api}/iiif/package-draft:{id}:{key}/{region=full}"
             "/{size=full}/{rotation=0}/{quality=default}.{format=png}",
             when=is_iiif_compatible,
         ),

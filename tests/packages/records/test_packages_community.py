@@ -14,10 +14,10 @@ from geo_rdm_records.modules.packages.records.api import (
 
 
 def test_package_integration_with_communities(
-    db, community_record, running_app, minimal_record, es_clear
+    db, community_record, running_app, minimal_package, es_clear
 ):
     """Basic smoke test for packages integration with communities."""
-    draft = GEOPackageDraft.create(minimal_record)
+    draft = GEOPackageDraft.create(minimal_package)
     draft.commit()
     db.session.commit()
 

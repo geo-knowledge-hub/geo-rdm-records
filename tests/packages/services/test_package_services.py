@@ -15,13 +15,13 @@ from geo_rdm_records.modules.packages import GEOPackageDraft
 from geo_rdm_records.proxies import current_geo_packages_service
 
 
-def test_package_draft_creation(running_app, db, minimal_record, es_clear):
+def test_package_draft_creation(running_app, db, minimal_package, es_clear):
     """Test the creation of a package draft."""
     superuser_identity = running_app.superuser_identity
 
     # 1. Testing the draft creation.
     record_item = current_geo_packages_service.create(
-        superuser_identity, minimal_record
+        superuser_identity, minimal_package
     )
 
     # 2. Checking the generated package.
@@ -30,13 +30,13 @@ def test_package_draft_creation(running_app, db, minimal_record, es_clear):
     assert record_item_dict.get("id") is not None
 
 
-def test_package_record_creation(running_app, db, minimal_record, es_clear):
+def test_package_record_creation(running_app, db, minimal_package, es_clear):
     """Test the creation of a package record (Published)."""
     superuser_identity = running_app.superuser_identity
 
     # 1. Creating the draft.
     record_item = current_geo_packages_service.create(
-        superuser_identity, minimal_record
+        superuser_identity, minimal_package
     )
 
     # 2. Testing the draft publication.
@@ -53,13 +53,13 @@ def test_package_record_creation(running_app, db, minimal_record, es_clear):
 
 
 def test_package_resource_integration_service(
-    running_app, db, draft_resource_record, published_resource_record, minimal_record
+    running_app, db, draft_resource_record, published_resource_record, minimal_package
 ):
     """Basic smoke test for the package integration service."""
     superuser_identity = running_app.superuser_identity
 
     # 1. Creating a package draft
-    package_draft = GEOPackageDraft.create(minimal_record)
+    package_draft = GEOPackageDraft.create(minimal_package)
     package_draft.commit()
 
     db.session.commit()
@@ -129,7 +129,7 @@ def test_package_publishing_flow(
     db,
     draft_resource_record,
     published_resource_record,
-    minimal_record,
+    minimal_package,
     refresh_index,
     es_clear,
 ):
@@ -138,7 +138,7 @@ def test_package_publishing_flow(
 
     # 1. Creating a package draft
     record_item = current_geo_packages_service.create(
-        superuser_identity, minimal_record
+        superuser_identity, minimal_package
     )
 
     package_pid = record_item["id"]
@@ -193,7 +193,7 @@ def test_package_edition_flow(
     db,
     draft_resource_record,
     published_resource_record,
-    minimal_record,
+    minimal_package,
     refresh_index,
     es_clear,
 ):
@@ -202,7 +202,7 @@ def test_package_edition_flow(
 
     # 1. Creating a package draft
     record_item = current_geo_packages_service.create(
-        superuser_identity, minimal_record
+        superuser_identity, minimal_package
     )
 
     package_pid = record_item["id"]
@@ -290,7 +290,7 @@ def test_package_versioning_flow(
     db,
     draft_resource_record,
     published_resource_record,
-    minimal_record,
+    minimal_package,
     refresh_index,
     es_clear,
 ):
@@ -299,7 +299,7 @@ def test_package_versioning_flow(
 
     # 1. Creating a package draft
     record_item = current_geo_packages_service.create(
-        superuser_identity, minimal_record
+        superuser_identity, minimal_package
     )
 
     package_pid = record_item["id"]

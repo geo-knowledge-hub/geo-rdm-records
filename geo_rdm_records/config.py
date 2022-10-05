@@ -38,6 +38,8 @@ RDM_REVIEW_SERVICE = (
     "geo_rdm_records.customizations.services.review.service.ReviewService"
 )
 
+RDM_IIIF_SERVICE = "geo_rdm_records.customizations.services.iiif.service.IIIFService"
+
 # Configuration
 RDM_RECORD_SERVICE_CFG = (
     "geo_rdm_records.customizations.services.config.GEORecordServiceConfig"

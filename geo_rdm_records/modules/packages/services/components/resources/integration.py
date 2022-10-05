@@ -145,9 +145,9 @@ class PackageResourceIntegrationComponent(ConstrainedComponent):
 
 
 class PackageResourceCommunityComponent(ServiceComponent):
-    """Component to validate and integrate packages and resources access."""
+    """Component to validate and integrate packages and resources communities."""
 
-    def add_package_resource(
+    def package_add_resource(
         self, identity, record=None, resource=None, relationship_type=None, **kwargs
     ):
         """Add resource to a package."""
