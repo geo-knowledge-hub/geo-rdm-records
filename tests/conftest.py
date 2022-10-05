@@ -465,7 +465,6 @@ def minimal_package():
         },
         "metadata": {
             "publication_date": "2020-06-01",
-            "resource_type": {"id": "image-photo"},
             "creators": [
                 {
                     "person_or_org": {
@@ -773,8 +772,7 @@ def resource_type_type(app):
 @pytest.fixture(scope="module")
 def resource_type_v(app, resource_type_type):
     """Resource type vocabulary record."""
-    vocabulary_service.create(
-        system_identity,
+    resource_types = [
         {
             "id": "dataset",
             "icon": "table",
@@ -793,10 +791,6 @@ def resource_type_v(app, resource_type_type):
             "tags": ["depositable", "linkable"],
             "type": "resourcetypes",
         },
-    )
-
-    vocabulary_service.create(
-        system_identity,
         {  # create base resource type
             "id": "image",
             "props": {
@@ -815,10 +809,6 @@ def resource_type_v(app, resource_type_type):
             "tags": ["depositable", "linkable"],
             "type": "resourcetypes",
         },
-    )
-
-    vocab = vocabulary_service.create(
-        system_identity,
         {
             "id": "image-photo",
             "props": {
@@ -837,11 +827,30 @@ def resource_type_v(app, resource_type_type):
             "tags": ["depositable", "linkable"],
             "type": "resourcetypes",
         },
-    )
+        {
+            "id": "knowledge",
+            "props": {
+                "csl": "article",
+                "datacite_general": "Other",
+                "datacite_type": "",
+                "openaire_resourceType": "20",
+                "openaire_type": "other",
+                "eurepo": "info:eu-repo/semantics/other",
+                "schema.org": "https://schema.org/CreativeWork",
+                "subtype": "",
+                "type": "knowledge",
+            },
+            "icon": "asterisk",
+            "title": {"en": "Knowledge Package"},
+            "tags": ["depositable", "linkable"],
+            "type": "resourcetypes",
+        },
+    ]
+
+    for resource_type in resource_types:
+        vocabulary_service.create(system_identity, resource_type)
 
     Vocabulary.index.refresh()
-
-    return vocab
 
 
 @pytest.fixture(scope="module")

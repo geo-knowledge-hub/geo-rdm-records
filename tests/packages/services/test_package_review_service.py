@@ -34,8 +34,8 @@ def requests_service():
 
 
 @pytest.fixture()
-def draft(minimal_record, community_record, service, running_app, db):
-    minimal_record["parent"] = {
+def draft(minimal_package, community_record, service, running_app, db):
+    minimal_package["parent"] = {
         "review": {
             "type": "community-submission",
             "receiver": {"community": community_record.id},
@@ -43,7 +43,7 @@ def draft(minimal_record, community_record, service, running_app, db):
     }
 
     # Create draft with review
-    return service.create(running_app.superuser_identity, minimal_record)
+    return service.create(running_app.superuser_identity, minimal_package)
 
 
 #
@@ -54,6 +54,7 @@ def test_package_reviewing_validation(
     community_record,
     service,
     resources_service,
+    minimal_package,
     minimal_record,
     requests_service,
     es_clear,
@@ -62,7 +63,7 @@ def test_package_reviewing_validation(
     superuser_identity = running_app.superuser_identity
 
     # 1. Creating a package
-    package = service.create(superuser_identity, minimal_record)
+    package = service.create(superuser_identity, minimal_package)
     package_id = package["id"]
 
     # 2. Create a resource

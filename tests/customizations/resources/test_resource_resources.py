@@ -15,13 +15,13 @@ from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 
 
 @pytest.fixture()
-def package(running_app, client_with_login, minimal_record, headers):
+def package(running_app, client_with_login, minimal_package, headers):
     """Get the current RDM records service."""
     base_url = "/packages"
     client = client_with_login
 
     created_draft = client.post(
-        base_url, headers=headers, data=json.dumps(minimal_record)
+        base_url, headers=headers, data=json.dumps(minimal_package)
     )
 
     return created_draft.json["id"]

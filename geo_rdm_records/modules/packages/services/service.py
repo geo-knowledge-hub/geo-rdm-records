@@ -74,7 +74,9 @@ class GEOPackageRecordService(BaseRDMRecordService):
         """Handle Package resources."""
         # defining auxiliary function
         def uow_storage_record(record):
+            uow.register(RecordCommitOp(record))
             uow.register(RecordCommitOp(record.parent))
+
             uow.register(
                 RecordIndexOp(record, indexer=current_rdm_records_service.indexer)
             )

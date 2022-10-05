@@ -38,7 +38,7 @@ def test_package_resource_access_component(running_app, minimal_record, es_clear
     # 4. Using the component to transfer the access from the ``package`` to the ``resource``
     component = PackageResourceAccessComponent(None)
 
-    component.add_package_resource(None, package_draft, resource_draft)
+    component.package_add_resource(None, package_draft, resource_draft)
 
     assert resource_draft.access == package_draft.access
 
@@ -67,6 +67,6 @@ def test_package_resource_community_component(
     #    the communities from the package.
     component = PackageResourceCommunityComponent(None)
 
-    component.add_package_resource(None, package_draft, resource_draft)
+    component.package_add_resource(None, package_draft, resource_draft)
 
     assert package_draft.parent.communities.ids == resource_draft.parent.communities.ids
