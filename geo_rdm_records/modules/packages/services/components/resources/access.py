@@ -15,7 +15,7 @@ from invenio_drafts_resources.services.records.components import ServiceComponen
 class PackageResourceAccessComponent(ServiceComponent):
     """Component to validate and integrate packages and resources access."""
 
-    def add_package_resource(
+    def package_add_resource(
         self, identity, record=None, resource=None, relationship_type=None, **kwargs
     ):
         """Add resource to a package."""

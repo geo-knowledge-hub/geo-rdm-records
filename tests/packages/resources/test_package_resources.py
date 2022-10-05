@@ -71,7 +71,7 @@ def _validate_relationship(
 # Tests
 #
 def test_package_deposit_flow(
-    running_app, client_with_login, minimal_record, headers, es_clear
+    running_app, client_with_login, minimal_package, headers, es_clear
 ):
     """Simple Package REST API deposit flow."""
     base_url = "/packages"
@@ -79,11 +79,11 @@ def test_package_deposit_flow(
 
     # Creating a draft
     created_draft = client.post(
-        base_url, headers=headers, data=json.dumps(minimal_record)
+        base_url, headers=headers, data=json.dumps(minimal_package)
     )
     assert created_draft.status_code == 201
     _assert_single_item_response(created_draft)
-    _validate_access(created_draft.json, minimal_record)
+    _validate_access(created_draft.json, minimal_package)
     id_ = created_draft.json["id"]
 
     # Reading the draft
@@ -91,7 +91,7 @@ def test_package_deposit_flow(
 
     assert read_draft.status_code == 200
     assert read_draft.json["metadata"] == created_draft.json["metadata"]
-    _validate_access(read_draft.json, minimal_record)
+    _validate_access(read_draft.json, minimal_package)
 
     # Updating the draft
     data = read_draft.json
@@ -101,7 +101,7 @@ def test_package_deposit_flow(
 
     assert res.status_code == 200
     assert res.json["metadata"]["title"] == "New title"
-    _validate_access(res.json, minimal_record)
+    _validate_access(res.json, minimal_package)
 
     # Publishing the created draft
     response = client.post(f"{base_url}/{id_}/draft/actions/publish", headers=headers)
@@ -113,7 +113,7 @@ def test_package_deposit_flow(
     response = client.get(f"{base_url}/{recid}", headers=headers)
 
     assert response.status_code == 200
-    _validate_access(response.json, minimal_record)
+    _validate_access(response.json, minimal_package)
 
     # Refreshing the index before search for records
     GEOPackageRecord.index.refresh()
@@ -130,13 +130,13 @@ def test_package_deposit_flow(
     data = res.json["hits"]["hits"][0]
 
     assert data["metadata"]["title"] == "New title"
-    _validate_access(data, minimal_record)
+    _validate_access(data, minimal_package)
 
 
 def test_package_resource_integration_flow(
     running_app,
     client_with_login,
-    minimal_record,
+    minimal_package,
     draft_record,
     published_record,
     headers,
@@ -150,7 +150,7 @@ def test_package_resource_integration_flow(
 
     # 1. Creating a package
     created_draft = client.post(
-        package_base_url, headers=headers, data=json.dumps(minimal_record)
+        package_base_url, headers=headers, data=json.dumps(minimal_package)
     )
 
     # 2. Linking resources in the package
@@ -251,7 +251,7 @@ def test_package_resource_integration_flow(
 def test_package_edition_flow(
     running_app,
     client_with_login,
-    minimal_record,
+    minimal_package,
     draft_record,
     published_record,
     headers,
@@ -263,7 +263,7 @@ def test_package_edition_flow(
     client = client_with_login
 
     # 1. Creating a package
-    created_draft = client.post(package_base_url, headers=headers, json=minimal_record)
+    created_draft = client.post(package_base_url, headers=headers, json=minimal_package)
 
     # 2. Linking resources in the package
     created_draft_id = created_draft.json["id"]
@@ -354,7 +354,7 @@ def test_package_edition_flow(
 def test_package_versioning_flow(
     running_app,
     client_with_login,
-    minimal_record,
+    minimal_package,
     draft_record,
     published_record,
     headers,
@@ -366,7 +366,7 @@ def test_package_versioning_flow(
     client = client_with_login
 
     # 1. Creating a package
-    created_draft = client.post(package_base_url, headers=headers, json=minimal_record)
+    created_draft = client.post(package_base_url, headers=headers, json=minimal_package)
 
     # 2. Linking resources in the package
     created_draft_id = created_draft.json["id"]

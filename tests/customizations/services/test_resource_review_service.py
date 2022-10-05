@@ -59,13 +59,14 @@ def test_package_resource_reviewing_validation(
     service,
     packages_service,
     minimal_record,
+    minimal_package,
     es_clear,
 ):
     """Test the package resource relation in the reviewing flow."""
     superuser_identity = running_app.superuser_identity
 
     # 1. Creating a package
-    package = packages_service.create(superuser_identity, minimal_record)
+    package = packages_service.create(superuser_identity, minimal_package)
     package_id = package["id"]
 
     # 2. Create a resource

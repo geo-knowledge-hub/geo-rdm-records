@@ -10,7 +10,7 @@
 from geo_rdm_records.modules.packages.records.api import GEOPackageDraft
 
 
-def test_idempotence_dumps_loads(running_app, minimal_record):
+def test_idempotence_dumps_loads(running_app, minimal_package):
     """Idempotence of dumps and loads."""
     # This simple test asserts a key property of the dumps and loads methods.
     # A record that's dumped, must when loaded produce exactly the same dict
@@ -23,6 +23,6 @@ def test_idempotence_dumps_loads(running_app, minimal_record):
     # method is having an issue, or it might be an Elasticsearch dumper.
 
     # DO NOT CHANGE TEST UNLESS YOU ABSOLUTELY KNOW WHAT YOU'RE DOING
-    draft = GEOPackageDraft.create(minimal_record)
+    draft = GEOPackageDraft.create(minimal_package)
     loaded_draft = GEOPackageDraft.loads(draft.dumps())
     assert dict(draft) == dict(loaded_draft)
