@@ -28,7 +28,7 @@ from .modules.packages.services.config import (
     GEOPackageFileRecordServiceConfig,
     GEOPackageRecordServiceConfig,
 )
-from .modules.packages.services.secret_links.service import SecretLinkService
+from .modules.packages.services.secret_links import SecretLinkService
 from .modules.packages.services.service import GEOPackageRecordService
 from .modules.search.resources.config import SearchRecordResourceConfig
 from .modules.search.resources.resource import SearchRecordResource
