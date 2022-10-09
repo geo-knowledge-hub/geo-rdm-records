@@ -69,7 +69,7 @@
             "additionalProperties": false,
             "properties": {
               "person_or_org": {
-                "$ref": "local://records/definitions-v2.0.0.json#/person_or_org"
+                "$ref": "local://records/geo-definitions-v1.0.0.json#/person_or_org"
               },
               "role": {
                 "$ref": "local://records/definitions-v2.0.0.json#/role"
@@ -128,7 +128,7 @@
             "additionalProperties": false,
             "properties": {
               "person_or_org": {
-                "$ref": "local://records/definitions-v2.0.0.json#/person_or_org"
+                "$ref": "local://records/geo-definitions-v1.0.0.json#/person_or_org"
               },
               "role": {
                 "$ref": "local://records/definitions-v2.0.0.json#/role"

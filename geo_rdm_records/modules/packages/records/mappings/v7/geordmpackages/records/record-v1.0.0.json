@@ -242,6 +242,9 @@
               },
               "person_or_org": {
                 "properties": {
+                  "email": {
+                    "type": "keyword"
+                  },
                   "family_name" : {
                     "type" : "text"
                   },
@@ -301,6 +304,9 @@
               },
               "person_or_org": {
                 "properties": {
+                  "email": {
+                    "type": "keyword"
+                  },
                   "family_name" : {
                     "type" : "text"
                   },

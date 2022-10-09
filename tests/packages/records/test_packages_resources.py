@@ -11,7 +11,9 @@ from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 from geo_rdm_records.modules.packages.records.api import GEOPackageDraft
 
 
-def test_package_integration_with_resources(db, running_app, minimal_package, minimal_record, es_clear):
+def test_package_integration_with_resources(
+    db, running_app, minimal_package, minimal_record, es_clear
+):
     """Basic smoke test for packages integration."""
 
     # Creating the package and the resource
