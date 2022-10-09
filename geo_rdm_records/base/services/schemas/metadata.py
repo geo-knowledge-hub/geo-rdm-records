@@ -7,15 +7,55 @@
 
 """GEO RDM Records Metadata schema definition."""
 
+from flask_babelex import lazy_gettext as _
 from invenio_rdm_records.services.schemas import MetadataSchema as BaseMetadataSchema
+from invenio_rdm_records.services.schemas.metadata import (
+    ContributorSchema as BaseContributorSchema,
+)
+from invenio_rdm_records.services.schemas.metadata import (
+    CreatorSchema as BaseCreatorSchema,
+)
+from invenio_rdm_records.services.schemas.metadata import (
+    PersonOrOrganizationSchema as BasePersonOrOrganizationSchema,
+)
 from invenio_rdm_records.services.schemas.metadata import VocabularySchema
-from marshmallow import fields
+from marshmallow import fields, validate
+from marshmallow_utils.fields import SanitizedUnicode
 
 from .location import FeatureSchema
 
 
+class PersonOrOrganizationSchema(BasePersonOrOrganizationSchema):
+    """Person or Organization schema."""
+
+    email = SanitizedUnicode(required=False, validate=validate.Email())
+
+
+class CreatorSchema(BaseCreatorSchema):
+    """Creator schema."""
+
+    person_or_org = fields.Nested(PersonOrOrganizationSchema, required=True)
+
+
+class ContributorSchema(BaseContributorSchema):
+    """Contributor schema."""
+
+    person_or_org = fields.Nested(PersonOrOrganizationSchema, required=True)
+
+
 class MetadataSchema(BaseMetadataSchema):
     """GEO Knowledge Hub Record Metadata field schema."""
+
+    #
+    # Base Metadata fields
+    #
+    creators = fields.List(
+        fields.Nested(CreatorSchema),
+        required=True,
+        validate=validate.Length(min=1, error=_("Missing data for required field.")),
+    )
+
+    contributors = fields.List(fields.Nested(ContributorSchema))
 
     #
     # Locations

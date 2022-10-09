@@ -422,12 +422,14 @@ def minimal_record():
                         "family_name": "Brown",
                         "given_name": "Troy",
                         "type": "personal",
+                        "email": "admin@inveniosoftware.org"
                     }
                 },
                 {
                     "person_or_org": {
                         "name": "Troy Inc.",
                         "type": "organizational",
+                        "email": "admin@inveniosoftware.org"
                     },
                 },
             ],
@@ -471,12 +473,14 @@ def minimal_package():
                         "family_name": "Brown",
                         "given_name": "Troy",
                         "type": "personal",
+                        "email": "admin@inveniosoftware.org"
                     }
                 },
                 {
                     "person_or_org": {
                         "name": "Troy Inc.",
                         "type": "organizational",
+                        "email": "admin@inveniosoftware.org"
                     },
                 },
             ],

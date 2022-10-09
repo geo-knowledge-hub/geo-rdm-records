@@ -28,7 +28,10 @@ class MetadataSchema(BaseMetadataSchema):
     # resource type, which is the `knowledge` (Knowledge Package type
     # identifier in the GEO Knowledge Hub types vocabulary).
     resource_type = fields.Nested(
-        VocabularySchema, required=False, validate=ResourceType("knowledge"), dump_only=False
+        VocabularySchema,
+        required=False,
+        validate=ResourceType("knowledge"),
+        dump_only=False,
     )
 
 
