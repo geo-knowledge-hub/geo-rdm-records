@@ -17,6 +17,37 @@
       }
     }
   },
+  "person_or_org": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "type"
+    ],
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "type": {
+        "$ref": "local://records/definitions-v2.0.0.json#/nameType"
+      },
+      "given_name": {
+        "type": "string"
+      },
+      "family_name": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "identifiers": {
+        "type": "array",
+        "items": {
+          "$ref": "local://definitions-v1.0.0.json#/identifiers_with_scheme"
+        },
+        "uniqueItems": true
+      }
+    }
+  },
   "GeoJSON-Point": {
     "title": "GeoJSON Point",
     "type": "object",
