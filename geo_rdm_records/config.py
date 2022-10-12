@@ -128,3 +128,13 @@ RDM_SEARCH_PACKAGE_RESOURCE_DRAFTS = {
     "facets": ["access_status", "is_published", "resource_type", "base_type"],
     "sort": ["bestmatch", "updated-desc", "updated-asc", "newest", "oldest", "version"],
 }
+
+# OAI-PMH
+# =======
+# See https://github.com/inveniosoftware/invenio-oaiserver/blob/master/invenio_oaiserver/config.py
+
+OAISERVER_RECORD_CLS = "geo_rdm_records.customizations.records.api:GEORecord"
+"""Record retrieval class (With support for both Packages and Records)."""
+
+OAISERVER_RECORD_INDEX = ("geordmrecords-records", "geordmpackages-records")
+"""Specify an Elastic index with records that should be exposed via OAI-PMH (Packages and Records)."""

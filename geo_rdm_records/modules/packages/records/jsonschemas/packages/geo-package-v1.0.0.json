@@ -196,6 +196,14 @@
               },
               "resource_type": {
                 "$ref": "local://records/definitions-v2.0.0.json#/resource_type"
+              },
+              "title": {
+                "description": "High-level title for the related identifier.",
+                "type": "string"
+              },
+              "description": {
+                "description": "Description for the related identifier (may contain HTML).",
+                "type": "string"
               }
             }
           }

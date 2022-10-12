@@ -561,6 +561,12 @@
           },
           "related_identifiers" : {
             "properties" : {
+              "title" : {
+                "type" : "text"
+              },
+              "description" : {
+                "type" : "text"
+              },
               "identifier" : {
                 "type" : "keyword",
                 "copy_to" : [

@@ -18,9 +18,12 @@ from invenio_rdm_records.services.schemas.metadata import (
 from invenio_rdm_records.services.schemas.metadata import (
     PersonOrOrganizationSchema as BasePersonOrOrganizationSchema,
 )
+from invenio_rdm_records.services.schemas.metadata import (
+    RelatedIdentifierSchema as BaseRelatedIdentifierSchema,
+)
 from invenio_rdm_records.services.schemas.metadata import VocabularySchema
 from marshmallow import fields, validate
-from marshmallow_utils.fields import SanitizedUnicode
+from marshmallow_utils.fields import SanitizedHTML, SanitizedUnicode
 
 from .location import FeatureSchema
 
@@ -43,6 +46,14 @@ class ContributorSchema(BaseContributorSchema):
     person_or_org = fields.Nested(PersonOrOrganizationSchema, required=True)
 
 
+class RelatedIdentifierSchema(BaseRelatedIdentifierSchema):
+    """Related identifier schema."""
+
+    title = SanitizedUnicode(required=False)
+
+    description = SanitizedHTML(required=False)
+
+
 class MetadataSchema(BaseMetadataSchema):
     """GEO Knowledge Hub Record Metadata field schema."""
 
@@ -56,6 +67,7 @@ class MetadataSchema(BaseMetadataSchema):
     )
 
     contributors = fields.List(fields.Nested(ContributorSchema))
+    related_identifiers = fields.List(fields.Nested(RelatedIdentifierSchema))
 
     #
     # Locations

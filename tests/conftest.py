@@ -414,6 +414,16 @@ def minimal_record():
             "geo_work_programme_activity": {
                 "id": "geo-activities-geobon",
             },
+            "related_identifiers": [
+                {
+                    "identifier": "10.1234/foo.bar",
+                    "scheme": "doi",
+                    "title": "Dataset Foo Bar",
+                    "description": "Dataset Foo Bar",
+                    "relation_type": {"id": "iscitedby"},
+                    "resource_type": {"id": "dataset"},
+                }
+            ],
             "publication_date": "2020-06-01",
             "resource_type": {"id": "image-photo"},
             "creators": [
@@ -422,14 +432,14 @@ def minimal_record():
                         "family_name": "Brown",
                         "given_name": "Troy",
                         "type": "personal",
-                        "email": "admin@inveniosoftware.org"
+                        "email": "admin@inveniosoftware.org",
                     }
                 },
                 {
                     "person_or_org": {
                         "name": "Troy Inc.",
                         "type": "organizational",
-                        "email": "admin@inveniosoftware.org"
+                        "email": "admin@inveniosoftware.org",
                     },
                 },
             ],
@@ -467,20 +477,30 @@ def minimal_package():
         },
         "metadata": {
             "publication_date": "2020-06-01",
+            "related_identifiers": [
+                {
+                    "identifier": "10.1234/foo.bar",
+                    "scheme": "doi",
+                    "title": "Dataset Foo Bar",
+                    "description": "Dataset Foo Bar",
+                    "relation_type": {"id": "iscitedby"},
+                    "resource_type": {"id": "dataset"},
+                }
+            ],
             "creators": [
                 {
                     "person_or_org": {
                         "family_name": "Brown",
                         "given_name": "Troy",
                         "type": "personal",
-                        "email": "admin@inveniosoftware.org"
+                        "email": "admin@inveniosoftware.org",
                     }
                 },
                 {
                     "person_or_org": {
                         "name": "Troy Inc.",
                         "type": "organizational",
-                        "email": "admin@inveniosoftware.org"
+                        "email": "admin@inveniosoftware.org",
                     },
                 },
             ],
