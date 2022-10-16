@@ -14,6 +14,7 @@ from marshmallow_utils.fields import NestedAttribute
 from geo_rdm_records.base.services.schemas import MetadataSchema, ParentSchema
 
 from .parent import ParentRelationshipSchema
+from .relationship import RelationshipSchema
 
 
 class GEOParentSchema(ParentSchema):
@@ -25,6 +26,8 @@ class GEOParentSchema(ParentSchema):
 class GEORecordSchema(BaseRecordSchema):
     """GEO Knowledge Hub Record Schema."""
 
-    metadata = NestedAttribute(MetadataSchema)
+    relationship = fields.Nested(RelationshipSchema, dump_only=True)
 
     parent = NestedAttribute(GEOParentSchema)
+
+    metadata = NestedAttribute(MetadataSchema)

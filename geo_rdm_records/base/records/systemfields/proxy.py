@@ -21,6 +21,9 @@ class BaseRecordProxy:
     draft_cls = None
     """Draft Record API class."""
 
+    is_parent = False
+    """Flag indicating if the searched record is a parent."""
+
     def __init__(self, record, record_cls=None, draft_cls=None, allow_drafts=True):
         """Initializer.
 
@@ -32,6 +35,8 @@ class BaseRecordProxy:
             draft_cls (invenio_records.Record): Record class to handle draft record from the database.
 
             allow_drafts (bool): Flag to set if draft can be handled by the proxy.
+
+            is_parent (bool): Flag to set if the searched record is a parent.
         """
         self._entity = None  # record cache
 
@@ -80,15 +85,24 @@ class BaseRecordProxy:
     def resolve(self):
         """Resolve the record entity (e.g., RDMRecord)."""
         if self._entity is None and self.record_id is not None:
-            try:
-                self._entity = self.record_cls.pid.resolve(
+
+            # If parent is used, then return it
+            if self.is_parent:
+
+                self._entity = self.record_cls.parent_record_cls.pid.resolve(
                     self.record_id, registered_only=False
                 )
-            except NoResultFound:
-                if self.allow_drafts:
-                    self._entity = self.draft_cls.pid.resolve(
+
+            else:
+                try:
+                    self._entity = self.record_cls.pid.resolve(
                         self.record_id, registered_only=False
                     )
+                except NoResultFound:
+                    if self.allow_drafts:
+                        self._entity = self.draft_cls.pid.resolve(
+                            self.record_id, registered_only=False
+                        )
 
         return self._entity
 

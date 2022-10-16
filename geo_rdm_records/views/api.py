@@ -5,7 +5,7 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""GEO RDM Records API Views ."""
+"""GEO RDM Records API Views."""
 
 from flask import Blueprint
 
@@ -62,3 +62,9 @@ def create_search_records_api_blueprint(app):
     """Create packages/resources blueprint."""
     ext = app.extensions["geo-rdm-records"]
     return ext.search_resource.as_blueprint()
+
+
+def create_packages_context_api_blueprint(app):
+    """Create package context blueprint."""
+    ext = app.extensions["geo-rdm-records"]
+    return ext.packages_context_resource.as_blueprint()

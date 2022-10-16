@@ -10,9 +10,11 @@
 from .location import FeatureSchema
 from .metadata import MetadataSchema
 from .parent import ParentSchema
+from .relationship import RelationshipElementSchema
 
 __all__ = (
     "FeatureSchema",
     "MetadataSchema",
     "ParentSchema",
+    "RelationshipElementSchema",
 )

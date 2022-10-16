@@ -10,7 +10,10 @@
 from copy import copy
 
 from geo_rdm_records.customizations.records.api import GEODraft
-from geo_rdm_records.modules.packages.records.api import GEOPackageDraft
+from geo_rdm_records.modules.packages.records.api import (
+    GEOPackageDraft,
+    PackageRelationship,
+)
 from geo_rdm_records.modules.packages.services.components.resources import (
     PackageResourceAccessComponent,
     PackageResourceCommunityComponent,
@@ -38,7 +41,9 @@ def test_package_resource_access_component(running_app, minimal_record, es_clear
     # 4. Using the component to transfer the access from the ``package`` to the ``resource``
     component = PackageResourceAccessComponent(None)
 
-    component.package_add_resource(None, package_draft, resource_draft)
+    component.package_add_resource(
+        None, package_draft, resource_draft, PackageRelationship.MANAGED.value
+    )
 
     assert resource_draft.access == package_draft.access
 
@@ -60,13 +65,19 @@ def test_package_resource_community_component(
     resource_draft = GEODraft.create(minimal_record)
     resource_draft.commit()
 
-    # 3. Validating that the access objects are different
+    # 4. Validating that the access objects are different
     assert package_draft.parent.communities.ids != resource_draft.parent.communities.ids
 
-    # 4. Using the component to ``tag`` the resource with
+    # 5. Associating the package and the resource
+    resource_draft.parent.relationship.managed_by = package_draft.parent
+    resource_draft.parent.commit()
+    resource_draft.commit()
+
+    # 6. Using the component to ``tag`` the resource with
     #    the communities from the package.
     component = PackageResourceCommunityComponent(None)
-
-    component.package_add_resource(None, package_draft, resource_draft)
+    component.package_add_resource(
+        None, package_draft, resource_draft, PackageRelationship.MANAGED.value
+    )
 
     assert package_draft.parent.communities.ids == resource_draft.parent.communities.ids

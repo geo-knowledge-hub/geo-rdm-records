@@ -31,9 +31,7 @@ class GEORDMRecordService(BaseRecordService):
             es_preference,
             record_cls=self.record_cls,
             search_opts=self.config.search_resource,
-            extra_filter=Q(
-                "term", **{"parent.relationship.managed_by.id": str(package_id)}
-            ),
+            extra_filter=Q("term", **{"relationship.packages.id": str(package_id)}),
             permission_action="read",
             **kwargs
         ).execute()
@@ -66,9 +64,7 @@ class GEORDMRecordService(BaseRecordService):
             es_preference,
             record_cls=self.draft_cls,
             search_opts=self.config.search_resource_drafts,
-            extra_filter=Q(
-                "term", **{"parent.relationship.managed_by.id": str(package_id)}
-            )
+            extra_filter=Q("term", **{"relationship.packages.id": str(package_id)})
             & Q("term", has_draft=False),
             permission_action="read_draft",
             **kwargs

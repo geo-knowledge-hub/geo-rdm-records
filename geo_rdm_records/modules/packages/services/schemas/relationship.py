@@ -8,20 +8,12 @@
 """GEO RDM Records Packages API Relationship Schemas."""
 
 from marshmallow import Schema, fields
-from marshmallow_utils.fields import SanitizedUnicode
 
-
-class RelationshipResourceSchema(Schema):
-    """Schema for the Resource used in the RelationshipSchema."""
-
-    id = SanitizedUnicode(required=True)
+from geo_rdm_records.base.services.schemas import RelationshipElementSchema
 
 
 class RelationshipSchema(Schema):
     """Schema for the Record relationship."""
 
     # Managed resource
-    managed_resources = fields.List(fields.Nested(RelationshipResourceSchema))
-
-    # Related resource
-    related_resources = fields.List(fields.Nested(RelationshipResourceSchema))
+    resources = fields.List(fields.Nested(RelationshipElementSchema))

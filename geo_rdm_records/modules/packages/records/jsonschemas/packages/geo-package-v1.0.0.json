@@ -432,28 +432,19 @@
         }
       }
     },
-
     "relationship": {
       "type": "object",
       "description": "Record relationship with other records",
       "additionalProperties": false,
       "properties": {
-        "managed_resources": {
-          "description": "List of resources managed by the package.",
-          "type": "array",
-          "uniqueItems": true,
-          "items": {"$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"}
-        },
-
-        "related_resources": {
-          "description": "List of resources related with the package.",
+        "resources": {
+          "description": "List of resources linked to the specific version of the Package.",
           "type": "array",
           "uniqueItems": true,
           "items": {"$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"}
         }
       }
     },
-
     "access": {
       "type": "object",
       "description": "Record access control and ownership.",

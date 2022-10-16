@@ -33,32 +33,24 @@ def test_package_integration_with_resources(
     db.session.commit()
 
     # Linking the resource with the package
-    package_draft.relationship.managed_resources.add(resource_record)
-    package_draft.relationship.managed_resources.add(
-        resource_record
-    )  # only one must be added.
-
-    package_draft.relationship.related_resources.add(resource_record)
+    package_draft.relationship.resources.add(resource_draft)
+    package_draft.relationship.resources.add(resource_record)
 
     package_draft.commit()
     db.session.commit()
 
     # Linking the package with the resource
-    resource_record.parent.relationship.managed_by = package_draft
+    resource_record.parent.relationship.managed_by = package_draft.parent
 
     # Checking the package relationship
-    assert len(package_draft.relationship.managed_resources) == 1
-    assert len(package_draft.relationship.related_resources) == 1
+    assert len(package_draft.relationship.resources) == 1
 
     # Checking the record relationship
     assert resource_record.parent.relationship.dump() == dict(
-        managed_by={"id": package_draft.pid.pid_value}
+        managed_by={"id": package_draft.parent.pid.pid_value}
     )
 
     # Removing and checking again
-    package_draft.relationship.managed_resources.remove(resource_record)
+    package_draft.relationship.resources.remove(resource_record)
 
-    assert len(package_draft.relationship.managed_resources) == 0
-    assert (
-        len(package_draft.relationship.related_resources) == 1
-    )  # the second object must not change
+    assert len(package_draft.relationship.resources) == 0

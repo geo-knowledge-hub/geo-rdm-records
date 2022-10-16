@@ -12,6 +12,10 @@ class PackageError(Exception):
     """Base Package error class."""
 
 
+class InvalidPackageError(PackageError):
+    """Package invalid error."""
+
+
 class InvalidPackageResourceError(PackageError):
     """Resource package invalid error."""
 

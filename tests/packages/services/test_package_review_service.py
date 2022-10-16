@@ -71,8 +71,12 @@ def test_package_reviewing_validation(
     resource_id = resource["id"]
 
     # 3. Linking the package in the resource
-    resources = dict(resources=[{"id": resource_id, "type": "managed"}])
+    elements = [{"id": resource_id}]
 
+    records = dict(records=elements)
+    resources = dict(resources=elements)
+
+    service.context_associate(superuser_identity, package_id, records)
     service.resource_add(superuser_identity, package_id, resources)
 
     # 4. Trying to link the package with a community
@@ -126,20 +130,25 @@ def test_package_reviewing_validation(
     assert draft["status"] == "new_version_draft"
 
     # 7. Checking the package resources (`Managed` resources)
-    record_relationship_managed = record["relationship"]["managed_resources"]
+    record_relationship_managed = record["relationship"]["resources"]
 
     for record_resource in record_relationship_managed:
+        # reading resource metadata
         record_resource_id = record_resource["id"]
 
         record_resource_obj = resources_service.read(
             superuser_identity, record_resource_id
         ).to_dict()
 
-        assert record_resource_obj["is_draft"] is False
-        assert record_resource_obj["is_published"] is True
+        if (
+            record_resource_obj["parent"]["relationship"]["managed_by"]["id"]
+            == record["parent"]["id"]
+        ):
+            assert record_resource_obj["is_draft"] is False
+            assert record_resource_obj["is_published"] is True
 
-        # Package resources must be associated with the community
-        assert (
-            record_resource_obj["parent"]["communities"]["ids"]
-            == record["parent"]["communities"]["ids"]
-        )
+            # Package resources must be associated with the community
+            assert (
+                record_resource_obj["parent"]["communities"]["ids"]
+                == record["parent"]["communities"]["ids"]
+            )

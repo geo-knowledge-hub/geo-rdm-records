@@ -11,12 +11,13 @@ from invenio_records.api import Record
 
 from geo_rdm_records.base.records.systemfields import (
     BaseRecordProxy,
+    BaseRecordsProxy,
     BaseRelationshipField,
 )
 
 
-class RecordProxy(BaseRecordProxy):
-    """Class to proxy record access from the database."""
+class RecordParentProxy(BaseRecordProxy):
+    """Class to proxy record parent access from the database."""
 
     record_cls = "GEOPackageRecord"
     """Record API class."""
@@ -24,24 +25,30 @@ class RecordProxy(BaseRecordProxy):
     draft_cls = "GEOPackageDraft"
     """Draft Record API class."""
 
+    is_parent = True
+    """Flag indicating if the searched record is a parent."""
 
-class RecordRelationship:
+
+class RecordsProxy(BaseRecordsProxy):
+    """A list of records."""
+
+    record_proxy_cls = RecordParentProxy
+    """Class used to proxy the records from the database."""
+
+
+class RecordParentRelationship:
     """Related record management for specific versions of a package."""
 
-    linked_resource_cls = RecordProxy
+    resource_cls = RecordParentProxy
     """Class used to handle the package records."""
 
-    def __init__(self, managed_by=None, linked_resource_cls=None):
+    def __init__(self, managed_by=None, resource_cls=None):
         """Create a new related record object for a record."""
-        linked_resource_cls = (
-            linked_resource_cls or RecordRelationship.linked_resource_cls
-        )
+        resource_cls = resource_cls or RecordParentRelationship.resource_cls
 
         self.errors = []
         self._record_manager = (
-            linked_resource_cls(managed_by)
-            if type(managed_by) != linked_resource_cls
-            else managed_by
+            resource_cls(managed_by) if type(managed_by) != resource_cls else managed_by
         )
 
     #
@@ -78,7 +85,7 @@ class RecordRelationship:
     @classmethod
     def from_dict(cls, relationship_dict, linked_resource_cls=None):
         """Create a new Relationship object from the specified ``relationship`` object."""
-        linked_resource_cls = linked_resource_cls or cls.linked_resource_cls
+        linked_resource_cls = linked_resource_cls or cls.resource_cls
         errors = []
 
         # defining the default values
@@ -110,15 +117,17 @@ class RecordRelationship:
     #
     def __repr__(self):
         """Return repr(self)."""
-        return ("<{} (is_managed: {})>").format(
+        return "<{} (is_managed: {})>".format(
             type(self).__name__, self._record_manager is None
         )
 
 
-class RecordRelationshipField(BaseRelationshipField):
-    """System field for managing record relationship."""
+class RecordParentRelationshipField(BaseRelationshipField):
+    """System field for managing record parent relationship."""
 
-    def __init__(self, key="relationship", relationship_obj_cls=RecordRelationship):
+    def __init__(
+        self, key="relationship", relationship_obj_cls=RecordParentRelationship
+    ):
         """Initializer."""
         super().__init__(key=key, relationship_obj_cls=relationship_obj_cls)
 
@@ -132,3 +141,77 @@ class RecordRelationshipField(BaseRelationshipField):
         assert isinstance(obj, self._relationship_obj_cls)
 
         self._set_cache(record, obj)
+
+
+class PackageRelationship:
+    """Related record management for specific versions of a record."""
+
+    packages_cls = RecordsProxy
+    """List class used to handle the records."""
+
+    def __init__(self, packages=None, packages_cls=None):
+        """Create a new related record object for a record."""
+        packages_cls = packages_cls or PackageRelationship.packages_cls
+
+        self._packages = packages if packages else packages_cls()
+
+        self.errors = []
+
+    @property
+    def packages(self):
+        """An alias for the ``packages`` property."""
+        return self._packages
+
+    def dump(self):
+        """Dump the field values as dictionary."""
+        relationship = {
+            "packages": self.packages.dump(),
+        }
+
+        return relationship
+
+    def refresh_from_dict(self, relationship_dict):
+        """Re-initialize the ``Relationship`` object using the given dictionary."""
+        new_relationship_obj = self.from_dict(relationship_dict)
+
+        self.errors = new_relationship_obj.errors
+        self._packages = new_relationship_obj.packages
+
+    @classmethod
+    def from_dict(cls, relationship_dict, packages_cls=None):
+        """Create a new Relationship object from the specified ``relationship`` object."""
+        packages_cls = packages_cls or cls.packages_cls
+        errors = []
+
+        # defining the default values
+        packages = packages_cls()
+
+        if relationship_dict:
+            # Resources
+            for package in relationship_dict.get("packages", []):
+                try:
+                    packages.add(package)
+                except Exception as e:
+                    errors.append(e)
+
+        relationship = cls(
+            packages=packages,
+        )
+        relationship.errors = errors
+
+        return relationship
+
+    def __repr__(self):
+        """Return repr(self)."""
+        return "<{} (packages: {})>".format(
+            type(self).__name__,
+            len(self.packages or []),
+        )
+
+
+class PackageRelationshipField(BaseRelationshipField):
+    """System field for managing record relationship."""
+
+    def __init__(self, key="relationship", relationship_obj_cls=PackageRelationship):
+        """Initializer."""
+        super().__init__(key=key, relationship_obj_cls=relationship_obj_cls)

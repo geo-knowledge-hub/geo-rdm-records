@@ -462,6 +462,19 @@
       "items":{
         "type": "string"
       }
+    },
+    "relationship": {
+      "type": "object",
+      "description": "Package relationship with other elements (e.g., Packages, Resources)",
+      "additionalProperties": false,
+      "properties": {
+        "packages": {
+          "description": "List of packages linked to the specific version of the Package.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"}
+        }
+      }
     }
   }
 }
