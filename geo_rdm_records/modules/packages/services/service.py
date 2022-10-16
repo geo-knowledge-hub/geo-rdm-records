@@ -128,7 +128,9 @@ class GEOPackageRecordService(BaseRDMRecordService):
 
         return record
 
-    def _handle_records(self, identity, id_, data, revision_id, action, uow, expand):
+    def _handle_records(
+        self, identity, id_, data, action, uow, revision_id=None, expand=False
+    ):
         """Handle records to associate/dissociate them with the package context."""
         package = self._read_package(identity, id_, allow_draft=True)
 
@@ -183,7 +185,9 @@ class GEOPackageRecordService(BaseRDMRecordService):
 
         return dict(errors=errors)
 
-    def _handle_resources(self, identity, id_, data, revision_id, action, uow, expand):
+    def _handle_resources(
+        self, identity, id_, data, action, uow, revision_id=None, expand=False
+    ):
         """Handle Package resources."""
         # reproducibility/consistency requirement: users can only add/remove
         # resources from draft packages.
@@ -352,7 +356,7 @@ class GEOPackageRecordService(BaseRDMRecordService):
         """Bulk add resources in a package."""
         action = PackageServiceAction.ADD.value
         return self._handle_resources(
-            identity, id_, data, revision_id, action, uow, expand
+            identity, id_, data, action, uow, revision_id, expand
         )
 
     @unit_of_work()
@@ -362,7 +366,7 @@ class GEOPackageRecordService(BaseRDMRecordService):
         """Bulk delete resources from a package."""
         action = PackageServiceAction.DELETE.value
         return self._handle_resources(
-            identity, id_, data, revision_id, action, uow, expand
+            identity, id_, data, action, uow, revision_id, expand
         )
 
     @unit_of_work()
@@ -406,6 +410,20 @@ class GEOPackageRecordService(BaseRDMRecordService):
             "import_resources", identity, draft=draft, record=record, uow=uow
         )
 
+        # Registering the new package in the resources
+        resources = draft.relationship.resources
+        resources = dict(
+            resources=[dict(id=resource.record_id) for resource in resources]
+        )
+
+        self._handle_resources(
+            identity,
+            draft.pid.pid_value,
+            resources,
+            action=PackageServiceAction.ADD.value,
+            uow=uow,
+        )
+
         # Commit and index
         uow.register(RecordCommitOp(draft, indexer=self.indexer))
 
@@ -424,7 +442,7 @@ class GEOPackageRecordService(BaseRDMRecordService):
         """Bulk operation to associate resources to a package."""
         action = PackageServiceAction.ASSOCIATE.value
         return self._handle_records(
-            identity, id_, data, revision_id, action, uow, expand
+            identity, id_, data, action, uow, revision_id, expand
         )
 
     @unit_of_work()
@@ -434,7 +452,7 @@ class GEOPackageRecordService(BaseRDMRecordService):
         """Bulk operation to dissociate resources from the package."""
         action = PackageServiceAction.DISSOCIATE.value
         return self._handle_records(
-            identity, id_, data, revision_id, action, uow, expand
+            identity, id_, data, action, uow, revision_id, expand
         )
 
     @unit_of_work()
@@ -465,3 +483,19 @@ class GEOPackageRecordService(BaseRDMRecordService):
         # ToDo: Improve this return and enable users to
         #       visualize the content updated.
         return True
+
+    def validate_package(self, identity, id_):
+        """Validate if package is ready to be published."""
+        package_draft = self.draft_cls.pid.resolve(id_, registered_only=False)
+
+        # 1. Permissions
+        self.require_permission(identity, "read", record=package_draft)
+
+        # 2. Checking if the package can be published
+        errors = self._validate_draft_package(
+            identity, package_draft, raise_error=False
+        )
+
+        # ToDo: Check if we can create a pattern for this kind
+        #       of return in the API.
+        return dict(errors=errors)

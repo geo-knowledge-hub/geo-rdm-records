@@ -28,6 +28,7 @@ class GEOPackageRecordResourceConfig(BaseGEOResourceConfig):
     routes = deepcopy(rdm_resources_config.RDMRecordResourceConfig.routes)
 
     # Packages endpoints
+    routes["item-validate"] = "/<pid_value>/draft/actions/validate"
     routes["item-resources-import"] = "/<pid_value>/draft/actions/resources-import"
 
     # Resources endpoints

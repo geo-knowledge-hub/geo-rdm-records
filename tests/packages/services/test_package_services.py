@@ -536,6 +536,14 @@ def test_package_versioning_flow(
 
     assert len(package_new_relationship.get("resources", [])) == 2
 
+    # 8. Checking if the reference to the package was registered
+    # in the resources side.
+    resources = current_rdm_records_service.search_package_records(
+        superuser_identity, package_new_pid
+    )
+
+    assert resources.total == 2
+
 
 def test_update_package_access(
     running_app,
@@ -574,3 +582,53 @@ def test_update_package_access(
     package_obj = GEOPackageDraft.pid.resolve(package_pid, registered_only=False)
 
     assert package_obj.parent["access"]["record_policy"] == "closed"
+
+
+def test_package_validation(
+    running_app,
+    db,
+    draft_resource_record,
+    published_resource_record,
+    minimal_package,
+    refresh_index,
+    es_clear,
+):
+    """Test ``Validation`` operation."""
+    superuser_identity = running_app.superuser_identity
+
+    # 1. Creating a package draft
+    record_item = current_geo_packages_service.create(
+        superuser_identity, minimal_package
+    )
+
+    package_pid = record_item["id"]
+
+    # 2. Add resources to the package.
+    records = dict(
+        records=[
+            {"id": draft_resource_record.pid.pid_value},
+        ]
+    )
+
+    current_geo_packages_service.context_associate(
+        superuser_identity, package_pid, records
+    )
+
+    resources = dict(
+        resources=[
+            {"id": draft_resource_record.pid.pid_value},
+            {"id": published_resource_record.pid.pid_value},
+        ]
+    )
+
+    result = current_geo_packages_service.resource_add(
+        superuser_identity, package_pid, resources
+    )
+    assert len(result["errors"]) == 0
+
+    # 3. Validating
+    result = current_geo_packages_service.validate_package(
+        superuser_identity, package_pid
+    )
+
+    assert len(result["errors"]) == 0
