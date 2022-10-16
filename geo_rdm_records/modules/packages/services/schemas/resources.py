@@ -8,12 +8,12 @@
 """GEO RDM Records Packages API Schemas."""
 
 from marshmallow import Schema, fields, validate
+from marshmallow_utils.fields import NestedAttribute
 
 
 class ResourceEntitySchema(Schema):
     """Represents a single resource entity."""
 
-    type = fields.String(required=True, validate=validate.OneOf(["managed", "related"]))
     id = fields.String(required=True)
 
 
@@ -28,3 +28,30 @@ class ResourcesSchema(Schema):
         # to hold.
         validate=validate.Length(min=1, max=100),
     )
+
+
+class RecordsSchema(Schema):
+    """Records schema."""
+
+    records = fields.List(
+        fields.Nested(ResourceEntitySchema), validate=validate.Length(min=1, max=100)
+    )
+
+
+class RecordAccessSchema(Schema):
+    """Record policy schema."""
+
+    record_policy = fields.String(
+        validate=validate.OneOf(
+            [
+                "open",
+                "closed",
+            ]
+        )
+    )
+
+
+class RecordsParentSchema(Schema):
+    """Records (Parent) schema."""
+
+    access = NestedAttribute(RecordAccessSchema, required=True)

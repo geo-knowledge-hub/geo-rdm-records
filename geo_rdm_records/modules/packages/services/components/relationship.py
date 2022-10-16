@@ -7,7 +7,6 @@
 
 """GEO RDM Records Packages API Relationship component."""
 
-from copy import copy
 
 from invenio_drafts_resources.services.records.components import ServiceComponent
 
@@ -21,7 +20,8 @@ class PackageRelationshipComponent(ServiceComponent):
 
     def import_resources(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
-        draft.relationship = copy(record.get("relationship", {}))
+        # ToDo: Handle the  reference to the package in the resources available in the "relationship"
+        draft.relationship = record.get("relationship", {})
 
     def edit(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""

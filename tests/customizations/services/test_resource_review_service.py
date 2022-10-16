@@ -74,8 +74,12 @@ def test_package_resource_reviewing_validation(
     resource_id = resource["id"]
 
     # 3. Linking the package in the resource
-    resources = dict(resources=[{"id": resource_id, "type": "managed"}])
+    elements = [{"id": resource_id}]
 
+    records = dict(records=elements)
+    resources = dict(resources=elements)
+
+    packages_service.context_associate(superuser_identity, package_id, records)
     packages_service.resource_add(superuser_identity, package_id, resources)
 
     # 4. Trying to link the resource with a community

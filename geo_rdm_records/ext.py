@@ -16,10 +16,12 @@ from . import config
 from .modules.packages.resources.config import (
     GEOPackageDraftFilesResourceConfig,
     GEOPackageParentRecordLinksResourceConfig,
+    GEOPackageParentRelationshipConfig,
     GEOPackageRecordFilesResourceConfig,
     GEOPackageRecordResourceConfig,
 )
 from .modules.packages.resources.resource import (
+    GEOPackageContextResource,
     GEOPackageParentRecordLinksResource,
     GEOPackageRecordResource,
 )
@@ -115,6 +117,12 @@ class GEORDMRecords(object):
             config=GEOPackageParentRecordLinksResourceConfig,
         )
 
+        # Search
         self.search_resource = SearchRecordResource(
             service=self.service_search, config=SearchRecordResourceConfig
+        )
+
+        # Context
+        self.packages_context_resource = GEOPackageContextResource(
+            service=self.service, config=GEOPackageParentRelationshipConfig
         )

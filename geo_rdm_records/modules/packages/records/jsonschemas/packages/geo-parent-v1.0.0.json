@@ -22,14 +22,26 @@
       "description": "Access control and ownership for all versions of a record.",
       "additionalProperties": false,
       "properties": {
-
+        "member_policy": {
+          "description": "Package member policy.",
+          "enum": [
+            "open",
+            "closed"
+          ]
+        },
+        "record_policy": {
+          "description": "Package record policy.",
+          "enum": [
+            "open",
+            "closed"
+          ]
+        },
         "owned_by": {
           "description": "List of owners of the child records.",
           "type": "array",
           "uniqueItems": true,
           "items": {"$ref": "local://records/definitions-v1.0.0.json#/agent"}
         },
-
         "grants": {
           "description": "Access grants for the child records.",
           "type": "array",
@@ -51,7 +63,6 @@
             }
           }
         },
-
         "links": {
           "description": "Secret links for the child records.",
           "type": "array",
@@ -65,19 +76,22 @@
               }
             }
           }
-        },
-
-        "member_policy": {
-          "description": "Package member policy.",
-          "enum": [
-            "open",
-            "closed"
-          ]
         }
-
       }
     },
-
+    "relationship": {
+      "type": "object",
+      "description": "Package relationship with other elements (e.g., Packages, Resources)",
+      "additionalProperties": false,
+      "properties": {
+        "resources": {
+          "description": "List of resources linked to the specific version of the Package.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"}
+        }
+      }
+    },
     "communities": {
       "$ref": "local://communities/definitions-v2.0.0.json#/communities"
     },

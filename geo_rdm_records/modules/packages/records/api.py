@@ -64,6 +64,7 @@ class GEOPackageParent(GEOBaseRecord, BaseRecordParent):
     access = ParentRecordAccessField()
     schema = ConstantField("$schema", "local://packages/geo-parent-v1.0.0.json")
 
+    # relationship = PackageRelationshipField(key="relationship")
     communities = CommunitiesField(GEOPackageParentCommunity)
 
     type = GEORecordTypes.package

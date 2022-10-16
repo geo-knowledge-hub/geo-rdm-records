@@ -20,11 +20,12 @@ from invenio_records_resources.services.uow import (
     RecordIndexOp,
     unit_of_work,
 )
+from marshmallow import ValidationError
 from sqlalchemy.orm.exc import NoResultFound
 
-from ..errors import InvalidPackageResourceError
+from ..errors import InvalidPackageError, InvalidPackageResourceError
 from ..records.api import PackageRelationship
-from .schemas.resources import ResourcesSchema
+from .schemas.resources import RecordsParentSchema, RecordsSchema, ResourcesSchema
 
 
 #
@@ -33,14 +34,23 @@ from .schemas.resources import ResourcesSchema
 class PackageServiceAction(enum.Enum):
     """Package relationship types."""
 
-    CREATE = "package_add_resource"
+    #
+    # Package
+    #
+    ADD = "package_add_resource"
     """Create action."""
-
-    UPDATE = "package_update_resource"
-    """Update action."""
 
     DELETE = "package_delete_resource"
     """Delete action."""
+
+    #
+    # Package Context
+    #
+    ASSOCIATE = "context_associate_resource"
+    """Associate action."""
+
+    DISSOCIATE = "context_dissociate_resource"
+    """Dissociate action."""
 
 
 #
@@ -67,127 +77,236 @@ class GEOPackageRecordService(BaseRDMRecordService):
         """Schema for resource definition."""
         return ServiceSchemaWrapper(self, schema=ResourcesSchema)
 
+    @property
+    def records_schema(self):
+        """Schema for records definition (Package context)."""
+        return ServiceSchemaWrapper(self, schema=RecordsSchema)
+
+    @property
+    def records_access_schema(self):
+        """Schema for records access (parent) definition (Package context)."""
+        return ServiceSchemaWrapper(self, schema=RecordsParentSchema)
+
     #
     # Internal methods
     #
-    def _handle_resources(self, identity, id_, data, revision_id, action, uow, expand):
-        """Handle Package resources."""
-        # defining auxiliary function
-        def uow_storage_record(record):
-            uow.register(RecordCommitOp(record))
-            uow.register(RecordCommitOp(record.parent))
+    def _uow_commit_resource(self, record, uow):
+        """Register both Commit and Index Operations for a Resource Record."""
+        uow.register(RecordCommitOp(record))
+        uow.register(RecordCommitOp(record.parent))
 
-            uow.register(
-                RecordIndexOp(record, indexer=current_rdm_records_service.indexer)
-            )
+        uow.register(RecordIndexOp(record, indexer=current_rdm_records_service.indexer))
 
-        # reproducibility/consistency requirement: users can only add/remove
-        # resources from draft packages.
-        draft = self.draft_cls.pid.resolve(id_, registered_only=False)
+    def _read_package(self, identity, id_, allow_draft=False):
+        """Read a package (Draft or Record)."""
+        try:
+            record = self.record_cls.pid.resolve(id_, registered_only=False)
+        except NoResultFound as e:
+            if not allow_draft:
+                raise InvalidPackageError(id_) from e
+
+            record = self.draft_cls.pid.resolve(id_, registered_only=False)
+
+        # basic required permission
+        self.require_permission(identity, "read", record=record)
+
+        return record
+
+    def _read_record(self, identity, id_, allow_draft=False):
+        """Read a bibliographic record (Draft or Record)."""
+        try:
+            record = self.resource_cls.pid.resolve(id_, registered_only=False)
+        except NoResultFound as e:
+            if not allow_draft:
+                raise InvalidPackageResourceError(id_) from e
+
+            record = self.resource_draft_cls.pid.resolve(id_, registered_only=False)
+
+        # Checking if user is able to read
+        # Note: Is this the best way to do this validation ?
+        current_rdm_records_service.require_permission(identity, "read", record=record)
+
+        return record
+
+    def _handle_records(
+        self, identity, id_, data, action, uow, revision_id=None, expand=False
+    ):
+        """Handle records to associate/dissociate them with the package context."""
+        package = self._read_package(identity, id_, allow_draft=True)
 
         # concurrency control (not used to create a record)
-        self.check_revision_id(draft, revision_id)
+        self.check_revision_id(package, revision_id)
 
         # permissions
-        self.require_permission(identity, "update_draft", record=draft)
+        self.require_permission(identity, action, record=package)
 
-        # Load data with service schema
-        data, errors = self.resource_schema.load(data, context={"identity": identity})
+        # load data with service schema
+        data, _ = self.records_schema.load(data, context={"identity": identity})
 
+        # associating records with the selected package
+        errors = []
+
+        records = data["records"]
+        records_processed = []
+
+        for record_id in records:
+            record_id = record_id["id"]
+
+            record = self._read_record(identity, record_id, allow_draft=True)
+
+            # only record without association with a package context
+            # can be added to a context.
+            if (
+                action == PackageServiceAction.ASSOCIATE
+                and record.parent.relationship.managed_by
+            ):
+                errors.append(
+                    dict(
+                        record=record.pid.pid_value,
+                        message="Record already associated with a package",
+                    )
+                )
+
+            else:
+                # running the components to link the package and resources
+                self.run_components(
+                    action,
+                    identity,
+                    package=package,
+                    record=record,
+                )
+
+                self._uow_commit_resource(record, uow)
+
+                records_processed.append(record)
+
+        if records_processed:  # avoiding extra operations
+            uow.register(RecordCommitOp(package, self.indexer))
+
+        return dict(errors=errors)
+
+    def _handle_resources(
+        self, identity, id_, data, action, uow, revision_id=None, expand=False
+    ):
+        """Handle Package resources."""
+        # reproducibility/consistency requirement: users can only add/remove
+        # resources from draft packages.
+        package_draft = self.draft_cls.pid.resolve(id_, registered_only=False)
+
+        # concurrency control (not used to create a record)
+        self.check_revision_id(package_draft, revision_id)
+
+        # permissions
+        self.require_permission(identity, "update_draft", record=package_draft)
+
+        # load data with service schema
+        data, _ = self.resource_schema.load(data, context={"identity": identity})
+
+        errors = []
         resources = data["resources"]
+        resources_processed = []
 
         for resource in resources:
             resource_obj = None
             resource_id = resource["id"]
-            relationship_type = resource["type"]
 
-            # defining the rule to load a resource based on
-            # the relationship type:
-            #   - ``related``: Can't be loaded as a draft;
-            #   - ``managed``: Must be loaded as a draft.
-            allow_draft = not (relationship_type == PackageRelationship.RELATED.value)
+            resource_errors = []
 
+            # loading the resource metadata.
             # for both ``Published`` and ``Draft`` records it is assumed
             # that the permission verification is done in a specialized
             # constrained component. This is done because this verification
             # is combined with other properties of the record.
-            try:
-                resource_obj = self.resource_cls.pid.resolve(
-                    resource_id, registered_only=False
-                )
+            resource_obj = self._read_record(identity, resource_id, allow_draft=True)
 
-            except NoResultFound as e:
-                if not allow_draft:
-                    raise InvalidPackageResourceError(resource) from e
+            # defining the relation type of the component with the package:
+            #   - ``related``: It can't be loaded as a draft (it is out of package context);
+            #   - ``managed``: It can be loaded as a draft (it is in the package context).
+            relationship_type = "related"
 
-                resource_obj = self.resource_draft_cls.pid.resolve(
-                    resource_id, registered_only=False
-                )
+            if resource_obj.parent.relationship.managed_by:
 
-            # running the components to link the package and resources
+                if resource_obj.parent.relationship.managed_by == package_draft.parent:
+                    relationship_type = "managed"
+
+            allow_draft = not (relationship_type == PackageRelationship.RELATED.value)
+
+            # checking if the loaded resource is draft and if draft is allowed
+            if not allow_draft:
+                if resource_obj.is_draft:
+
+                    errors.append(
+                        dict(
+                            record=resource_obj.pid.pid_value,
+                            message="This record is a draft and can't be linked to "
+                            "the package as a resource.",
+                        )
+                    )
+
+                    continue
+
+            # running the components to link the resources with the package
             self.run_components(
                 action,
                 identity,
-                record=draft,
+                errors=resource_errors,
+                package=package_draft,
                 resource=resource_obj,
                 relationship_type=relationship_type,
             )
 
-            # Commit and index (only in bidirectional connections) where
-            # modifications are made in the resource.
-            if relationship_type == PackageRelationship.MANAGED.value:
+            if not resource_errors:
+                # commit and index the modified resource
+                self._uow_commit_resource(resource_obj, uow)
 
-                # in both `create/update` and `delete` actions is
-                # assumed that the package/resource integration only
-                # uses the ``parent``.
-                if action in (
-                    PackageServiceAction.CREATE.value,
-                    PackageServiceAction.UPDATE.value,
-                ):
+                resources_processed.append(resource_obj)
+            else:
+                # ToDo: Create a way to return multiple error messages.
+                errors.append(resource_errors[0])
 
-                    for r in draft.relationship.managed:
-                        # verification to avoid unnecessary operations
-                        if r.record_id == resource_obj.pid.pid_value:
-                            record_resource = r.resolve()  # cached
-                            uow_storage_record(record_resource)
+        # commit and index the package
+        if resources_processed:  # avoiding extra operations
+            uow.register(RecordCommitOp(package_draft, self.indexer))
 
-                elif action == PackageServiceAction.DELETE.value:
+        return dict(errors=errors)
 
-                    uow_storage_record(resource_obj)
-
-        # Commit and index
-        uow.register(RecordCommitOp(draft, self.indexer))
-
-        return self.result_item(
-            self,
-            identity,
-            draft,
-            links_tpl=self.links_item_tpl,
-            errors=errors,
-            expandable_fields=self.expandable_fields,
-            expand=expand,
-        )
-
-    def _validate_draft_package(self, identity, package_draft):
+    def _validate_draft_package(self, identity, package_draft, raise_error=False):
         """Validate a package draft."""
+        errors = []
+
         # 1. Checking if the package can be published
         self._validate_draft(identity, package_draft)
 
         # 2. Checking all resources can be published
         # We validate only the ``Managed`` resource once we
         # need to publish them with the package itself.
-        package_resources = package_draft.relationship.managed
+        package_resources = package_draft.relationship.resources
 
         for package_resource in package_resources:
             # Checking the resource
             # here, we are using an internal method from the `record service`.
             # This maybe is not a good approach. Is the future, we can return
             # to this implementation and evaluate if this is the best solution.
+            package_resource_obj = package_resource.resolve()
 
-            # ToDo: Check a way to return errors (e.g., Use a list of errors).
-            current_rdm_records_service._validate_draft(
-                identity, package_resource.resolve()
-            )
+            if package_resource_obj.is_draft:
+                try:
+                    current_rdm_records_service._validate_draft(
+                        identity, package_resource_obj
+                    )
+
+                except ValidationError as e:
+
+                    if raise_error:
+                        raise e
+
+                    errors.append(
+                        dict(
+                            record=package_resource_obj.pid.pid_value,
+                            message="The record can't be published",
+                        )
+                    )
+        return errors
 
     def _publish_package(self, identity, package_draft, uow, expand):
         """Publish a package."""
@@ -216,17 +335,16 @@ class GEOPackageRecordService(BaseRDMRecordService):
             expand=expand,
         )
 
-    def _publish_resource(self, identity, resource_draft, uow, expand):
+    def _publish_resource(self, identity, package, resource_draft, uow, expand):
         """Publish a package resource."""
         if resource_draft.is_draft:
-            # ToDo: Should we use another service in this way ? We are in
-            #       the same 'architecture level', but, maybe, this can be confusing
-            #       to maintain. Also, the service is not injected in a 'direct' way.
-            resource_pid = resource_draft.pid.pid_value
+            # Avoiding errors with ``Related`` and ``Managed`` resources.
+            if resource_draft.parent.relationship.managed_by == package.parent:
+                resource_pid = resource_draft.pid.pid_value
 
-            return current_rdm_records_service.publish(
-                identity, resource_pid, uow=uow, expand=expand
-            )
+                return current_rdm_records_service.publish(
+                    identity, resource_pid, uow=uow, expand=expand
+                )
 
     #
     # High-level Packages API.
@@ -236,9 +354,9 @@ class GEOPackageRecordService(BaseRDMRecordService):
         self, identity, id_, data, revision_id=None, uow=None, expand=False
     ):
         """Bulk add resources in a package."""
-        action = PackageServiceAction.CREATE.value
+        action = PackageServiceAction.ADD.value
         return self._handle_resources(
-            identity, id_, data, revision_id, action, uow, expand
+            identity, id_, data, action, uow, revision_id, expand
         )
 
     @unit_of_work()
@@ -248,41 +366,32 @@ class GEOPackageRecordService(BaseRDMRecordService):
         """Bulk delete resources from a package."""
         action = PackageServiceAction.DELETE.value
         return self._handle_resources(
-            identity, id_, data, revision_id, action, uow, expand
-        )
-
-    @unit_of_work()
-    def resource_update(
-        self, identity, id_, data, revision_id=None, uow=None, expand=False
-    ):
-        """Bulk update resources from a package."""
-        action = PackageServiceAction.UPDATE.value
-        return self._handle_resources(
-            identity, id_, data, revision_id, action, uow, expand
+            identity, id_, data, action, uow, revision_id, expand
         )
 
     @unit_of_work()
     def publish(self, identity, id_, uow=None, expand=False):
         """Publish a draft."""
-        # Get the package draft
+        # get the package draft
         draft = self.draft_cls.pid.resolve(id_, registered_only=False)
         self.require_permission(identity, "publish", record=draft)
 
-        # Package publishing workflow
+        # package publishing workflow
+        # 1. validating the package and its resources
+        self._validate_draft_package(identity, draft, raise_error=True)
 
-        # 1. Publishing the package and its resources
-        self._validate_draft_package(identity, draft)
-
-        # 2. Publishing the package
+        # 2. publishing the package
         published_package = self._publish_package(identity, draft, uow, expand)
 
-        # 3. Publish the resources
-        package_resources = draft.relationship.managed
+        # 3. publish the resources
+        package_resources = draft.relationship.resources
 
         for package_resource in package_resources:
-            self._publish_resource(identity, package_resource.resolve(), uow, expand)
+            self._publish_resource(
+                identity, draft, package_resource.resolve(), uow, expand
+            )
 
-        # 4. Returning the projection of the published record.
+        # 4. returning the projection of the published record.
         return published_package
 
     @unit_of_work()
@@ -301,6 +410,20 @@ class GEOPackageRecordService(BaseRDMRecordService):
             "import_resources", identity, draft=draft, record=record, uow=uow
         )
 
+        # Registering the new package in the resources
+        resources = draft.relationship.resources
+        resources = dict(
+            resources=[dict(id=resource.record_id) for resource in resources]
+        )
+
+        self._handle_resources(
+            identity,
+            draft.pid.pid_value,
+            resources,
+            action=PackageServiceAction.ADD.value,
+            uow=uow,
+        )
+
         # Commit and index
         uow.register(RecordCommitOp(draft, indexer=self.indexer))
 
@@ -311,3 +434,68 @@ class GEOPackageRecordService(BaseRDMRecordService):
             links_tpl=self.links_item_tpl,
             expandable_fields=self.expandable_fields,
         )
+
+    @unit_of_work()
+    def context_associate(
+        self, identity, id_, data, revision_id=None, uow=None, expand=False
+    ):
+        """Bulk operation to associate resources to a package."""
+        action = PackageServiceAction.ASSOCIATE.value
+        return self._handle_records(
+            identity, id_, data, action, uow, revision_id, expand
+        )
+
+    @unit_of_work()
+    def context_dissociate(
+        self, identity, id_, data, revision_id=None, uow=None, expand=False
+    ):
+        """Bulk operation to dissociate resources from the package."""
+        action = PackageServiceAction.DISSOCIATE.value
+        return self._handle_records(
+            identity, id_, data, action, uow, revision_id, expand
+        )
+
+    @unit_of_work()
+    def context_update(
+        self, identity, id_, data, revision_id=None, uow=None, expand=False
+    ):
+        """Update the context of a package."""
+        package = self._read_package(identity, id_, allow_draft=True)
+
+        # Concurrency control (not used to create a record)
+        self.check_revision_id(package, revision_id)
+
+        # Permissions
+        self.require_permission(identity, "context_update_access", record=package)
+
+        # Load data with service schema
+        data, errors = self.records_access_schema.load(
+            data, context={"identity": identity}
+        )
+
+        self.run_components(
+            "context_update_access", identity, record=package, data=data
+        )
+
+        uow.register(RecordCommitOp(package.parent))
+        uow.register(RecordCommitOp(package, self.indexer))
+
+        # ToDo: Improve this return and enable users to
+        #       visualize the content updated.
+        return True
+
+    def validate_package(self, identity, id_):
+        """Validate if package is ready to be published."""
+        package_draft = self.draft_cls.pid.resolve(id_, registered_only=False)
+
+        # 1. Permissions
+        self.require_permission(identity, "read", record=package_draft)
+
+        # 2. Checking if the package can be published
+        errors = self._validate_draft_package(
+            identity, package_draft, raise_error=False
+        )
+
+        # ToDo: Check if we can create a pattern for this kind
+        #       of return in the API.
+        return dict(errors=errors)

@@ -11,6 +11,30 @@ from invenio_rdm_records.services import facets as rdm_facets
 
 from geo_rdm_records.base.services import facets as geo_facets
 
+# UI Configurations
+# ===================
+GEO_RDM_PACKAGES_ROUTES = {
+    "package-dashboard-versions": "/packages/<pid_value>/dashboard/versions",
+    "package-dashboard-resources": "/packages/<pid_value>/dashboard/resources",
+    "package-dashboard-settings": "/packages/<pid_value>/dashboard/settings",
+    "package-dashboard-members": "/packages/<pid_value>/dashboard/members",
+}
+
+GEO_RDM_PACKAGES_VERSION_SEARCH = {
+    "facets": ["access_status", "resource_type", "language"],
+    "sort": ["bestmatch", "newest", "oldest", "version"],
+}
+"""Search configuration to Search versions."""
+
+GEO_RDM_PACKAGES_RESOURCES_SEARCH = {
+    "facets": ["access_status", "resource_type", "language"],
+    "sort": ["bestmatch", "newest", "oldest", "version"],
+}
+"""Search configuration to Search package resources."""
+
+# API Configurations
+# ===================
+
 #
 # Resource
 #

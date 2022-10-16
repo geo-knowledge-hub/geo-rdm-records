@@ -11,6 +11,7 @@ import json
 
 import arrow
 
+from geo_rdm_records.modules.packages import GEOPackageDraft
 from geo_rdm_records.modules.packages.records.api import GEOPackageRecord
 
 
@@ -56,15 +57,14 @@ def _validate_relationship(
     expected_related = expected_related if not to_be_empty else 0
 
     package_version_relationships = response.json["relationship"]
-    package_version_relationships_managed = package_version_relationships.get(
-        "managed_resources", []
-    )
-    package_version_relationships_related = package_version_relationships.get(
-        "related_resources", []
+    package_version_relationships_resources = package_version_relationships.get(
+        "resources", []
     )
 
-    assert len(package_version_relationships_managed) == expected_managed
-    assert len(package_version_relationships_related) == expected_related
+    assert (
+        len(package_version_relationships_resources)
+        == expected_managed + expected_related
+    )
 
 
 #
@@ -153,14 +153,27 @@ def test_package_resource_integration_flow(
         package_base_url, headers=headers, data=json.dumps(minimal_package)
     )
 
-    # 2. Linking resources in the package
     created_draft_id = created_draft.json["id"]
 
+    # 2. Associating resource with package context
+    package_context_associate_url = (
+        f"{package_base_url}/{created_draft_id}/context/actions/associate"
+    )
+
+    # 2.1. Associating
+    records = dict(records=[{"id": draft_record}])
+
+    response = client.post(
+        package_context_associate_url, headers=headers, data=json.dumps(records)
+    )
+    assert response.status_code == 204
+
+    # 3. Adding resources to a specific package version
     package_resources_url = f"{package_base_url}/{created_draft_id}/draft/resources"
     resources = dict(
         resources=[
-            {"id": draft_record, "type": "managed"},
-            {"id": published_record, "type": "related"},
+            {"id": draft_record},  # associated to the package context
+            {"id": published_record},
         ]
     )
 
@@ -168,84 +181,84 @@ def test_package_resource_integration_flow(
         package_resources_url, headers=headers, data=json.dumps(resources)
     )
 
-    assert response.status_code == 204
+    assert response.status_code == 200
 
     # Refreshing indices
     refresh_index()
 
-    # 3. Checking if the `Managed` record are associated with the package
+    # 4. Checking if the `Managed` record are associated with the package
     response = client.get(package_resources_url, headers=headers)
 
     assert response.status_code == 200
-    assert response.json["hits"]["total"] == 1
+    assert response.json["hits"]["total"] == 2
 
-    # 4. Checking if the `Related` record are associated with the package
+    # 5. Checking if the `Related` record are associated with the package
     package_url = f"{package_base_url}/{created_draft_id}/draft"
 
     response = client.get(package_url, headers=headers)
 
     assert response.status_code == 200
 
-    # 4.1. Validating the content
+    # 5.1. Validating the content
     relationship = response.json["relationship"]
 
-    assert len(relationship["related_resources"]) == 1
-    assert relationship["managed_resources"][0]["id"] == draft_record
-    assert relationship["related_resources"][0]["id"] == published_record
+    assert len(relationship["resources"]) == 2
+    assert relationship["resources"][0]["id"] == draft_record
+    assert relationship["resources"][1]["id"] == published_record
 
-    # 5. Removing resources from the package
+    # 6. Removing resources from the package
 
-    # 5.1. Removing the `Managed` records
+    # 6.1. Removing the `Managed` records
     managed_resources = dict(
         resources=[
-            {"id": draft_record, "type": "managed"},
+            {"id": draft_record},
         ]
     )
 
-    # 5.1.1. Removing
+    # 6.1.1. Removing
     response = client.delete(
         package_resources_url, headers=headers, data=json.dumps(managed_resources)
     )
 
-    assert response.status_code == 204
+    assert response.status_code == 200
 
     # Refreshing indices
     refresh_index()
 
-    # 5.1.2. Checking if the record was removed using the package document
+    # 6.1.2. Checking if the record was removed using the package document
     response = client.get(package_url, headers=headers)
 
     assert response.status_code == 200
-    assert len(response.json["relationship"]["managed_resources"]) == 0
+    assert len(response.json["relationship"]["resources"]) == 1
 
-    # 5.1.3. Checking if the record was removing using the search method
+    # 6.1.3. Checking if the record was removing using the search method
     response = client.get(package_resources_url, headers=headers)
 
     assert response.status_code == 200
-    assert response.json["hits"]["total"] == 0
+    assert response.json["hits"]["total"] == 1
 
-    # 5.2. Removing the `Related` records
+    # 6.2. Removing the `Related` records
     related_resources = dict(
         resources=[
-            {"id": published_record, "type": "related"},
+            {"id": published_record},
         ]
     )
 
-    # 5.2.1. Removing
+    # 6.2.1. Removing
     response = client.delete(
         package_resources_url, headers=headers, data=json.dumps(related_resources)
     )
 
-    assert response.status_code == 204
+    assert response.status_code == 200
 
     # Refreshing indices
     refresh_index()
 
-    # 5.2.2. Checking if the record was removed using the package document
+    # 6.2.2. Checking if the record was removed using the package document
     response = client.get(package_url, headers=headers)
 
     assert response.status_code == 200
-    assert len(response.json["relationship"]["related_resources"]) == 0
+    assert len(response.json["relationship"]["resources"]) == 0
 
 
 def test_package_edition_flow(
@@ -265,20 +278,37 @@ def test_package_edition_flow(
     # 1. Creating a package
     created_draft = client.post(package_base_url, headers=headers, json=minimal_package)
 
-    # 2. Linking resources in the package
     created_draft_id = created_draft.json["id"]
 
+    # 2. Associating resource with package context
+    package_context_associate_url = (
+        f"{package_base_url}/{created_draft_id}/context/actions/associate"
+    )
+
+    # 2.1. Associating
+    records = dict(records=[{"id": draft_record}])
+
+    response = client.post(
+        package_context_associate_url, headers=headers, data=json.dumps(records)
+    )
+    assert response.status_code == 204
+
+    # 3. Adding resources to a specific package version
     package_resources_url = f"{package_base_url}/{created_draft_id}/draft/resources"
     resources = dict(
         resources=[
-            {"id": draft_record, "type": "managed"},
-            {"id": published_record, "type": "related"},
+            {"id": draft_record},  # associated to the package context
+            {"id": published_record},
         ]
     )
 
-    client.post(package_resources_url, headers=headers, json=resources)
+    response = client.post(
+        package_resources_url, headers=headers, data=json.dumps(resources)
+    )
 
-    # 3. Publishing the package
+    assert response.status_code == 200
+
+    # 4. Publishing the package
     client.post(
         f"{package_base_url}/{created_draft_id}/draft/actions/publish", headers=headers
     )
@@ -286,7 +316,7 @@ def test_package_edition_flow(
     # Refreshing indices
     refresh_index()
 
-    # 4. Creating a draft from the published package (Edit mode)
+    # 5. Creating a draft from the published package (Edit mode)
     new_title = "To Infinity and Beyond"
 
     response = client.post(
@@ -297,13 +327,13 @@ def test_package_edition_flow(
     assert response.json["id"] == created_draft_id
     assert response.json["metadata"]["title"] != new_title  # making sure
 
-    # 5. Editing the draft
+    # 6. Editing the draft
     published_record_content = response.json
 
-    # 5.1. Valid modification
+    # 6.1. Valid modification
     published_record_content["metadata"]["title"] = new_title
 
-    # 5.2. Invalid modification
+    # 6.2. Invalid modification
     published_record_content["relationship"] = {}
 
     response = client.put(
@@ -317,7 +347,7 @@ def test_package_edition_flow(
     # refreshing the index
     refresh_index()
 
-    # 6. Reloading and validating the modification
+    # 7. Reloading and validating the modification
     published_record = client.get(
         f"{package_base_url}/{created_draft_id}", headers=headers
     )
@@ -340,7 +370,7 @@ def test_package_edition_flow(
         draft_from_published_record["relationship"] == published_record["relationship"]
     )
 
-    # 7. Publishing the draft
+    # 8. Publishing the draft
     response = client.post(
         f"{package_base_url}/{created_draft_id}/draft/actions/publish", headers=headers
     )
@@ -368,20 +398,37 @@ def test_package_versioning_flow(
     # 1. Creating a package
     created_draft = client.post(package_base_url, headers=headers, json=minimal_package)
 
-    # 2. Linking resources in the package
     created_draft_id = created_draft.json["id"]
 
+    # 2. Associating resource with package context
+    package_context_associate_url = (
+        f"{package_base_url}/{created_draft_id}/context/actions/associate"
+    )
+
+    # 2.1. Associating
+    records = dict(records=[{"id": draft_record}])
+
+    response = client.post(
+        package_context_associate_url, headers=headers, data=json.dumps(records)
+    )
+    assert response.status_code == 204
+
+    # 3. Adding resources to a specific package version
     package_resources_url = f"{package_base_url}/{created_draft_id}/draft/resources"
     resources = dict(
         resources=[
-            {"id": draft_record, "type": "managed"},
-            {"id": published_record, "type": "related"},
+            {"id": draft_record},  # associated to the package context
+            {"id": published_record},
         ]
     )
 
-    client.post(package_resources_url, headers=headers, json=resources)
+    response = client.post(
+        package_resources_url, headers=headers, data=json.dumps(resources)
+    )
 
-    # 3. Publishing the package
+    assert response.status_code == 200
+
+    # 4. Publishing the package
     response = client.post(
         f"{package_base_url}/{created_draft_id}/draft/actions/publish", headers=headers
     )
@@ -391,7 +438,7 @@ def test_package_versioning_flow(
     # Refreshing indices
     refresh_index()
 
-    # 4. Checking the published version
+    # 5. Checking the published version
     response = client.get(f"{package_base_url}/{created_draft_id}", headers=headers)
 
     assert response.status_code == 200
@@ -400,21 +447,21 @@ def test_package_versioning_flow(
 
     _validate_relationship(response)
 
-    # 5. Creating a new version
+    # 6. Creating a new version
     response = client.post(
         f"{package_base_url}/{created_draft_id}/versions", headers=headers
     )
 
-    # 5.1. Basic validations
+    # 6.1. Basic validations
     assert response.status_code == 201
     assert response.json["id"] != created_draft_id
     assert response.json["is_draft"]
     assert not response.json["is_published"]
 
-    # 5.2. Relationships validations
+    # 6.2. Relationships validations
     _validate_relationship(response, to_be_empty=True)
 
-    # 6. Importing resources from the previous package version
+    # 7. Importing resources from the previous package version
     package_new_version_id = response.json["id"]
 
     response = client.post(
@@ -426,7 +473,89 @@ def test_package_versioning_flow(
     # Refreshing indices
     refresh_index()
 
-    # 7. Checking the imported resources
+    # 8. Checking the imported resources
     response = client.get(f"{package_base_url}/{package_new_version_id}/draft")
 
     _validate_relationship(response)
+
+
+def test_package_update_access(
+    running_app,
+    client_with_login,
+    minimal_package,
+    draft_record,
+    published_record,
+    headers,
+    es_clear,
+    refresh_index,
+):
+    """Test Package versioning flow."""
+    package_base_url = "/packages"
+    client = client_with_login
+
+    # 1. Creating a package
+    created_draft = client.post(package_base_url, headers=headers, json=minimal_package)
+
+    created_draft_id = created_draft.json["id"]
+
+    # 2. Checking the access object
+    package_obj = GEOPackageDraft.pid.resolve(created_draft_id, registered_only=False)
+
+    assert package_obj.parent["access"]["record_policy"] == "open"
+
+    # 3. Changing the record policy
+    package_ctx_url = f"{package_base_url}/{created_draft_id}/context"
+    package_record_policy = dict(access={"record_policy": "closed"})
+
+    res = client.put(package_ctx_url, headers=headers, json=package_record_policy)
+
+    assert res.status_code == 204
+
+    # refreshing the index
+    refresh_index()
+
+    # 4. Checking changed package
+    package_obj = GEOPackageDraft.pid.resolve(created_draft_id, registered_only=False)
+
+    assert package_obj.parent["access"]["record_policy"] == "closed"
+
+
+def test_package_validation(
+    running_app,
+    client_with_login,
+    minimal_package,
+    draft_record,
+    published_record,
+    headers,
+    es_clear,
+    refresh_index,
+):
+    """Test ``Validation`` operation."""
+    package_base_url = "/packages"
+    client = client_with_login
+
+    # 1. Creating a package
+    created_draft = client.post(package_base_url, headers=headers, json=minimal_package)
+
+    created_draft_id = created_draft.json["id"]
+
+    # 2. Associating resource with package context
+    package_context_associate_url = (
+        f"{package_base_url}/{created_draft_id}/context/actions/associate"
+    )
+
+    # 2.1. Associating
+    records = dict(records=[{"id": draft_record}])
+
+    response = client.post(
+        package_context_associate_url, headers=headers, data=json.dumps(records)
+    )
+    assert response.status_code == 204
+
+    # 3. Validating the package
+    validate_url = f"{package_base_url}/{created_draft_id}/draft/actions/validate"
+
+    response = client.post(validate_url, headers=headers)
+
+    assert response.status_code == 200
+    assert len(response.json["errors"]) == 0

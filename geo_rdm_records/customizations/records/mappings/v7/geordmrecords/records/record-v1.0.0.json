@@ -136,7 +136,6 @@
               }
             }
           },
-
           "engagement_priorities": {
             "type": "object",
             "properties": {
@@ -212,7 +211,6 @@
               }
             }
           },
-
           "contact" : {
             "type" : "keyword"
           },
@@ -789,6 +787,17 @@
           },
           "next_draft_id": {
             "type": "keyword"
+          }
+        }
+      },
+      "relationship": {
+        "properties": {
+          "packages": {
+            "properties": {
+              "id": {
+                "type": "keyword"
+              }
+            }
           }
         }
       }

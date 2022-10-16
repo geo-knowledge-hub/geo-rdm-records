@@ -16,8 +16,10 @@ class PackageResourceCommunitiesComponent(ServiceComponent):
     def publish(self, identity, draft=None, record=None):
         """Publish handler."""
         # 1. Checking if the resource is associated with a package
-        package = record.parent.relationship.managed_by
+        #    Note: In the current version, the `managed by` returns
+        #          the package parent (used as a context for the resources)
+        package_parent = record.parent.relationship.managed_by
 
-        if package:
-            # 2. Copy the package community definition to the resource
-            record.parent.communities.from_dict(package.parent.communities.to_dict())
+        if package_parent:
+            # 2. Copy community from the package parent (context)
+            record.parent.communities.from_dict(package_parent.communities.to_dict())

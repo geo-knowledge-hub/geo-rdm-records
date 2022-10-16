@@ -39,6 +39,12 @@
           },
           "access": {
             "properties" : {
+              "member_policy": {
+                "type": "keyword"
+              },
+              "record_policy": {
+                "type": "keyword"
+              },
               "owned_by" : {
                 "properties": {
                   "user": {
@@ -68,9 +74,6 @@
                     "type": "keyword"
                   }
                 }
-              },
-              "member_policy": {
-                "type": "keyword"
               }
             }
           },
@@ -86,14 +89,7 @@
           },
           "relationship": {
             "properties": {
-              "managed_resources": {
-                "properties": {
-                  "id": {
-                    "type": "keyword"
-                  }
-                }
-              },
-              "related_resources": {
+              "resources": {
                 "properties": {
                   "id": {
                     "type": "keyword"
@@ -794,6 +790,17 @@
           },
           "next_draft_id": {
             "type": "keyword"
+          }
+        }
+      },
+      "relationship": {
+        "properties": {
+          "resources": {
+            "properties": {
+              "id": {
+                "type": "keyword"
+              }
+            }
           }
         }
       }
