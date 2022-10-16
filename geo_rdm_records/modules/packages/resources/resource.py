@@ -50,7 +50,8 @@ class GEOPackageRecordResource(BaseRecordResource):
                 "POST",
                 p(routes["item-resources-import"]),
                 self.package_import_resources,
-            )
+            ),
+            route("POST", p(routes["item-validate"]), self.package_validate)
             # route("PUT", p(routes["item-draft-resources"]), self.resource_update_draft)
         ]
 
@@ -94,6 +95,15 @@ class GEOPackageRecordResource(BaseRecordResource):
         # ``result`` can contain a list of errors.
         # in this case, we return ``200``, because the
         # operation is done, even though some parts have errors
+        return result, 200
+
+    @request_view_args
+    def package_validate(self):
+        """Check if a package is valid."""
+        result = self.service.validate_package(
+            g.identity,
+            resource_requestctx.view_args["pid_value"],
+        )
         return result, 200
 
 

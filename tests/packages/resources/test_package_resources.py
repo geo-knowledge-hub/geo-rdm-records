@@ -518,3 +518,44 @@ def test_package_update_access(
     package_obj = GEOPackageDraft.pid.resolve(created_draft_id, registered_only=False)
 
     assert package_obj.parent["access"]["record_policy"] == "closed"
+
+
+def test_package_validation(
+    running_app,
+    client_with_login,
+    minimal_package,
+    draft_record,
+    published_record,
+    headers,
+    es_clear,
+    refresh_index,
+):
+    """Test ``Validation`` operation."""
+    package_base_url = "/packages"
+    client = client_with_login
+
+    # 1. Creating a package
+    created_draft = client.post(package_base_url, headers=headers, json=minimal_package)
+
+    created_draft_id = created_draft.json["id"]
+
+    # 2. Associating resource with package context
+    package_context_associate_url = (
+        f"{package_base_url}/{created_draft_id}/context/actions/associate"
+    )
+
+    # 2.1. Associating
+    records = dict(records=[{"id": draft_record}])
+
+    response = client.post(
+        package_context_associate_url, headers=headers, data=json.dumps(records)
+    )
+    assert response.status_code == 204
+
+    # 3. Validating the package
+    validate_url = f"{package_base_url}/{created_draft_id}/draft/actions/validate"
+
+    response = client.post(validate_url, headers=headers)
+
+    assert response.status_code == 200
+    assert len(response.json["errors"]) == 0
