@@ -35,18 +35,24 @@ class SecretLinkService(BaseSecretLinkService):
                 can be a problem, once we need to iterate and update all of them before
                 publish the package.
         """
-        record, _ = self.get_parent_and_record_or_draft(id_)
+        package, _ = self.get_parent_and_record_or_draft(id_)
 
         # Use the same link to the resources.
-        for resource in record.relationship.managed_resources:
+        for resource in package.relationship.resources:
             resource = resource.resolve()
 
-            resource.parent.access.links = copy(record.parent.access.links)
+            # ToDo: In the first approach of the Packages API, the relations are classified
+            #       Now, this classification is implicit and must be checked all the time.
+            #       In a future version, we need to validate if this is the best approach
+            #       or test a "classified" relation, where the relations are internally
+            #       classified with a "type" tag.
+            if resource.parent.relationship.managed_by == package.parent:
+                resource.parent.access.links = copy(package.parent.access.links)
 
-            uow.register(RecordCommitOp(resource.parent))
-            uow.register(RecordCommitOp(resource))
+                uow.register(RecordCommitOp(resource.parent))
+                uow.register(RecordCommitOp(resource))
 
-            self._index_related_records(resource, resource.parent, uow=uow)
+                self._index_related_records(resource, resource.parent, uow=uow)
 
     @unit_of_work()
     def create(self, identity, id_, data, links_config=None, uow=None):

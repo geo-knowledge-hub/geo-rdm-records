@@ -9,6 +9,7 @@
 
 from copy import deepcopy
 
+from invenio_drafts_resources.resources import RecordResourceConfig
 from invenio_rdm_records.resources import config as rdm_resources_config
 
 from geo_rdm_records.base.resources import BaseGEOResourceConfig
@@ -73,3 +74,16 @@ class GEOPackageParentRecordLinksResourceConfig(
 
     blueprint_name = "package_parent"
     url_prefix = "/packages/<pid_value>/access"
+
+
+class GEOPackageParentRelationshipConfig(RecordResourceConfig):
+    """Bibliographic package context resource configuration."""
+
+    blueprint_name = "package_parent_relationship"
+    url_prefix = "/packages/<pid_value>/context"
+
+    routes = {
+        "context": "",
+        "context-associate": "/actions/associate",
+        "context-dissociate": "/actions/dissociate",
+    }

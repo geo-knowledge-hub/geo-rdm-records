@@ -1,0 +1,31 @@
+{#
+  -*- coding: utf-8 -*-
+  Copyright (C) 2022 Geo Secretariat.
+
+  geo-rdm-records is free software; you can redistribute it and/or modify it
+  under the terms of the MIT License; see LICENSE file for more details.
+#}
+
+{% extends "geo_rdm_records/packages/dashboard/base.html" %}
+
+{%- set title = "Package settings" -%}
+
+{%- block page_body %}
+{{ super() }}
+<div class="ui container grid communities-settings rel-mt-2">
+  {%- block settings_menu %}
+  {%- set menu_items = {
+    'privileges': (_('Privileges'), url_for('geo_rdm_records.packages_dashboard_settings', pid_value=package.id)),
+  } %}
+  <div class="sixteen wide mobile sixteen wide tablet three wide computer column">
+    <div class="ui vertical computer horizontal tablet horizontal mobile menu">
+      {% for menu_key, (menu_item, menu_link, ) in menu_items.items() %}
+      <a href="{{ menu_link }}" class="{{ 'brand item active' if active_settings_menu_item and menu_key == active_settings_menu_item }} {{ 'disabled' if not menu_link }} item">{{ menu_item }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  {%- endblock settings_menu %}
+  {%- block settings_body %}
+  {%- endblock settings_body %}
+</div>
+{%- endblock page_body %}

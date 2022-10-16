@@ -26,11 +26,11 @@ from invenio_records_resources.services.records.links import (
 )
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
-from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
 from geo_rdm_records.base.services.schemas import ParentSchema
 from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 
 from ..records.api import GEOPackageDraft, GEOPackageRecord
+from .components.context import PackageContextComponent
 from .components.relationship import PackageRelationshipComponent
 from .components.resource_type import PackageResourceTypeComponent
 from .components.resources import (
@@ -38,6 +38,7 @@ from .components.resources import (
     PackageResourceCommunityComponent,
     PackageResourceIntegrationComponent,
 )
+from .permissions import PackagesPermissionPolicy
 from .schemas import GEOPackageRecordSchema
 
 
@@ -62,7 +63,7 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
     # Permission policy
     permission_policy_cls = FromConfig(
         "GEO_RDM_PACKAGE_PERMISSION_POLICY",
-        default=BaseGEOPermissionPolicy,
+        default=PackagesPermissionPolicy,
         import_string=True,
     )
 
@@ -73,6 +74,7 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
         PackageResourceAccessComponent,
         PackageResourceCommunityComponent,
         PackageResourceTypeComponent,
+        PackageContextComponent,
     ] + rdm_config.RDMRecordServiceConfig.components
 
     # Links
@@ -165,7 +167,7 @@ class GEOPackageFileRecordServiceConfig(rdm_config.RDMFileRecordServiceConfig):
     # Permission policy
     permission_policy_cls = FromConfig(
         "GEO_RDM_PACKAGE_PERMISSION_POLICY",
-        default=BaseGEOPermissionPolicy,
+        default=PackagesPermissionPolicy,
         import_string=True,
     )
 
@@ -203,7 +205,7 @@ class GEOPackageDraftFileServiceConfig(rdm_config.RDMFileDraftServiceConfig):
     permission_action_prefix = "draft_"
     permission_policy_cls = FromConfig(
         "GEO_RDM_PACKAGE_PERMISSION_POLICY",
-        default=BaseGEOPermissionPolicy,
+        default=PackagesPermissionPolicy,
         import_string=True,
     )
 

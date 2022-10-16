@@ -23,7 +23,6 @@ from geo_rdm_records.modules.packages.services.components.resources.constraints 
     CommunityRelationshipConstraint,
     PackageRelationshipConstraint,
     PublishedPackageConstraint,
-    RecordStatusConstraint,
     ValidDraftConstraint,
 )
 
@@ -73,7 +72,7 @@ def test_community_relationship_constraint(
         InvalidPackageResourceError,
         CommunityRelationshipConstraint.check,
         identity=superuser_identity,
-        record=draft_resource_record,
+        resource=draft_resource_record,
         relationship_type=PackageRelationship.MANAGED.value,
     )
 
@@ -97,7 +96,7 @@ def test_valid_draft_constraint(
         PermissionDeniedError,
         ValidDraftConstraint.check,
         identity=anyuser_identity,
-        record=draft_resource_record,
+        resource=draft_resource_record,
         service=current_rdm_records_service,
     )
 
@@ -106,7 +105,7 @@ def test_valid_draft_constraint(
         InvalidRelationshipError,
         ValidDraftConstraint.check,
         identity=superuser_identity,
-        record=draft_resource_record,
+        resource=draft_resource_record,
         relationship_type=PackageRelationship.RELATED.value,
         service=current_rdm_records_service,
     )
@@ -118,64 +117,9 @@ def test_valid_draft_constraint(
         InvalidPackageResourceError,
         ValidDraftConstraint.check,
         identity=superuser_identity,
-        record=draft_resource_record,
+        resource=draft_resource_record,
         relationship_type=PackageRelationship.MANAGED.value,
         service=current_rdm_records_service,
-    )
-
-
-def test_record_status_constraint(
-    running_app,
-    anyuser_identity,
-    draft_resource_record,
-    published_resource_record,
-    es_clear,
-):
-    """Test the Record Status constraint."""
-    superuser_identity = running_app.superuser_identity
-
-    # 1. Draft record is valid.
-    with does_not_raise():
-        RecordStatusConstraint.check(superuser_identity, draft_resource_record)
-
-    # 2. Published record must have the ``Related`` relationship.
-    with does_not_raise():
-        RecordStatusConstraint.check(
-            superuser_identity,
-            published_resource_record,
-            PackageRelationship.RELATED.value,
-        )
-
-    pytest.raises(
-        InvalidPackageResourceError,
-        RecordStatusConstraint.check,
-        identity=superuser_identity,
-        record=published_resource_record,
-        relationship_type=PackageRelationship.MANAGED.value,
-    )
-
-    # 3. Published record must be ``public`` to be linked using the ``Related`` relationship.
-    access = published_resource_record.access.dump()
-
-    # 3.1. Valid case
-    published_resource_record.access.protection.set(record="public")
-
-    with does_not_raise():
-        RecordStatusConstraint.check(
-            superuser_identity,
-            published_resource_record,
-            PackageRelationship.RELATED.value,
-        )
-
-    # 3.2. Invalid case
-    published_resource_record.access.protection.set(record="restricted")
-
-    pytest.raises(
-        InvalidPackageResourceError,
-        RecordStatusConstraint.check,
-        identity=superuser_identity,
-        record=published_resource_record,
-        relationship_type=PackageRelationship.RELATED.value,
     )
 
 
@@ -230,7 +174,7 @@ def test_package_relationship_constraint(
         InvalidPackageResourceError,
         PackageRelationshipConstraint.check,
         identity=superuser_identity,
-        record=published_resource_record,
+        resource=published_resource_record,
         relationship_type=PackageRelationship.MANAGED.value,
         package=package2,
     )
@@ -257,13 +201,14 @@ def test_published_package_constraint(
 
     # 2. Published packaged must have the relationship ``Related``
 
-    # 2.1. Valid case
-    with does_not_raise():
-        PublishedPackageConstraint.check(
-            identity=superuser_identity,
-            relationship_type=PackageRelationship.RELATED.value,
-            package=published_resource_record,
-        )
+    # 2.1. Invalid case
+    pytest.raises(
+        InvalidRelationshipError,
+        PublishedPackageConstraint.check,
+        identity=superuser_identity,
+        relationship_type=PackageRelationship.RELATED.value,
+        package=published_resource_record,
+    )
 
     # 2.2. Invalid case
     pytest.raises(

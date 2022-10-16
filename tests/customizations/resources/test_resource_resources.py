@@ -41,13 +41,19 @@ def test_search_package_records(
             base_records_url, headers=headers, data=json.dumps(minimal_record)
         )
 
-        resources = dict(
-            resources=[
-                {"id": created_draft.json["id"], "type": "managed"},
-            ]
-        )
+        elements = [
+            {"id": created_draft.json["id"]},
+        ]
 
-        # Publishing.
+        # Associating resources into the package.
+        records = dict(records=elements)
+
+        context_url = f"{base_package_url}/{package}/context/actions/associate"
+        client.post(context_url, headers=headers, data=json.dumps(records))
+
+        # Adding resource into a specific package version
+        resources = dict(resources=elements)
+
         resources_url = f"{base_package_url}/{package}/draft/resources"
         client.post(resources_url, headers=headers, data=json.dumps(resources))
 

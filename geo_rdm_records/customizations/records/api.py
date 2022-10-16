@@ -21,7 +21,10 @@ from geo_rdm_records.base.records.api import GEOBaseRecord
 from geo_rdm_records.base.records.systemfields.common import BaseGEORecordsFieldsMixin
 from geo_rdm_records.base.records.types import GEORecordTypes
 
-from .systemfields.relationship import RecordRelationshipField
+from .systemfields.relationship import (
+    PackageRelationshipField,
+    RecordParentRelationshipField,
+)
 
 
 #
@@ -33,11 +36,11 @@ class GEOParent(GEOBaseRecord, BaseRecordParent):
     #
     # System fields
     #
+    type = GEORecordTypes.resource
+
     schema = ConstantField("$schema", "local://records/geo-parent-v1.0.0.json")
 
-    relationship = RecordRelationshipField(key="relationship")
-
-    type = GEORecordTypes.resource
+    relationship = RecordParentRelationshipField(key="relationship")
 
 
 class CommonFieldsMixin(BaseGEORecordsFieldsMixin, BaseCommonFieldsMixin):
@@ -77,6 +80,8 @@ class GEODraft(CommonFieldsMixin, Draft):
 
     status = DraftStatus()
 
+    relationship = PackageRelationshipField(key="relationship")
+
 
 #
 # Record API
@@ -109,6 +114,7 @@ class GEORecord(CommonFieldsMixin, Record):
     has_draft = HasDraftCheckField(GEODraft)
 
     status = DraftStatus()
+    relationship = PackageRelationshipField(key="relationship")
 
 
 GEOFileDraft.record_cls = GEODraft

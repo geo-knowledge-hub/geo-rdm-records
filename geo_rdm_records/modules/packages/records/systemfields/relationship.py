@@ -34,45 +34,28 @@ class RecordsProxy(BaseRecordsProxy):
 class PackageRelationship:
     """Related record management for specific versions of a record."""
 
-    linked_resources_cls = RecordsProxy
+    resources_cls = RecordsProxy
     """List class used to handle the records."""
 
-    def __init__(
-        self, managed_resources=None, related_resources=None, linked_resources_cls=None
-    ):
+    def __init__(self, resources=None, resources_cls=None):
         """Create a new related record object for a record."""
-        linked_resources_cls = (
-            linked_resources_cls or PackageRelationship.linked_resources_cls
-        )
+        resources_cls = resources_cls or PackageRelationship.resources_cls
 
         # In the GEO Knowledge Hub, the relation is always
-        # between packages and resources. So, if not specified,
-        # we define empty values using the same class for both
-        # ``related`` and ``managed`` resources.
-        self.related_resources = (
-            related_resources if related_resources else linked_resources_cls()
-        )
-        self.managed_resources = (
-            managed_resources if managed_resources else linked_resources_cls()
-        )
+        # between packages and resources.
+        self._resources = resources if resources else resources_cls()
 
         self.errors = []
 
     @property
-    def managed(self):
-        """An alias for the ``managed_resources`` property."""
-        return self.managed_resources
-
-    @property
-    def related(self):
-        """An alias for the ``related_resources`` property."""
-        return self.related_resources
+    def resources(self):
+        """An alias for the ``resources`` property."""
+        return self._resources
 
     def dump(self):
         """Dump the field values as dictionary."""
         relationship = {
-            "managed_resources": self.managed_resources.dump(),
-            "related_resources": self.related_resources.dump(),
+            "resources": self.resources.dump(),
         }
 
         return relationship
@@ -82,36 +65,27 @@ class PackageRelationship:
         new_relationship_obj = self.from_dict(relationship_dict)
 
         self.errors = new_relationship_obj.errors
-        self.managed_resources = new_relationship_obj.managed_resources
-        self.related_resources = new_relationship_obj.related_resources
+        self._resources = new_relationship_obj.resources
 
     @classmethod
-    def from_dict(cls, relationship_dict, linked_resources_cls=None):
+    def from_dict(cls, relationship_dict, resources_cls=None):
         """Create a new Relationship object from the specified ``relationship`` object."""
-        linked_resources_cls = linked_resources_cls or cls.linked_resources_cls
+        resources_cls = resources_cls or cls.resources_cls
         errors = []
 
         # defining the default values
-        related_resources = linked_resources_cls()
-        managed_resources = linked_resources_cls()
+        resources = resources_cls()
 
         if relationship_dict:
-            # Related resources
-            for related_resource in relationship_dict.get("related_resources", []):
+            # Resources
+            for resource in relationship_dict.get("resources", []):
                 try:
-                    related_resources.add(related_resource)
-                except Exception as e:
-                    errors.append(e)
-
-            # Managed resources
-            for managed_resource in relationship_dict.get("managed_resources", []):
-                try:
-                    managed_resources.add(managed_resource)
+                    resources.add(resource)
                 except Exception as e:
                     errors.append(e)
 
         relationship = cls(
-            managed_resources=managed_resources, related_resources=related_resources
+            resources=resources,
         )
         relationship.errors = errors
 
@@ -119,10 +93,9 @@ class PackageRelationship:
 
     def __repr__(self):
         """Return repr(self)."""
-        return ("<{} (managed_resources: {}, related_resources: {})>").format(
+        return "<{} (resources: {})>".format(
             type(self).__name__,
-            len(self.managed_resources or []),
-            len(self.related_resources or []),
+            len(self.resources or []),
         )
 
 

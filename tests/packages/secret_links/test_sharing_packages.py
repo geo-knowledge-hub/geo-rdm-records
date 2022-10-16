@@ -66,11 +66,17 @@ def restricted_record(service, resources_service, minimal_record, identity_simpl
 
     resource = _record_factory(data, resources_service)
 
-    resources = dict(
-        resources=[
-            {"id": resource.id, "type": "managed"},
-        ]
-    )
+    elements = [
+        {"id": resource.id},
+    ]
+
+    # Associating the record with the package
+    records = dict(records=elements)
+
+    service.context_associate(identity_simple, package.id, records)
+
+    # Adding the resource into the specific version of the package
+    resources = dict(resources=elements)
 
     service.resource_add(identity_simple, package.id, resources)
 
@@ -210,9 +216,7 @@ def test_permission_levels(
 
     # Organizing the package/resource ids
     id_ = restricted_record.id
-    related_resource_id_ = restricted_record["relationship"]["managed_resources"][0][
-        "id"
-    ]
+    related_resource_id_ = restricted_record["relationship"]["resources"][0]["id"]
 
     # 1. Sharing the package (and its resource) via secret link
     view_link = service.secret_links.create(

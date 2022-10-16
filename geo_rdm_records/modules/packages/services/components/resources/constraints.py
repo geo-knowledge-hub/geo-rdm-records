@@ -28,14 +28,14 @@ class CommunityRelationshipConstraint(BaseComponentConstraint):
         the given record is valid. But, if linked, the second rule is executed;
 
         2. Checks if the relationship type is equal to ``Related``. If not, the
-        record cannot be used, and the constraint fails.
+        record cannot be used, and the constraint will fail.
     """
 
     @classmethod
     def check(
         cls,
         identity,
-        record=None,
+        resource=None,
         relationship_type=None,
         service=None,
         package=None,
@@ -43,10 +43,10 @@ class CommunityRelationshipConstraint(BaseComponentConstraint):
     ):
         """Check if the constraint is valid."""
         if (
-            len(record.parent.communities) != 0
+            len(resource.parent.communities) != 0
             and relationship_type != PackageRelationship.RELATED.value
         ):
-            raise InvalidPackageResourceError(record)
+            raise InvalidPackageResourceError(resource)
 
 
 class ValidDraftConstraint(BaseComponentConstraint):
@@ -76,68 +76,33 @@ class ValidDraftConstraint(BaseComponentConstraint):
     def check(
         cls,
         identity,
-        record=None,
+        resource=None,
         relationship_type=None,
         service=None,
         package=None,
         **kwargs
     ):
         """Check if the constraint is valid."""
-        if record.is_draft:
+        if resource.is_draft:
             # checking if user has the permission to perform the ``update_draft`` action in the record.
-            service.require_permission(identity, "update_draft", record=record)
+            service.require_permission(identity, "update_draft", record=resource)
 
             # checking the relationship. ``Draft`` can only be associated in a ``Managed`` relationship.
             if relationship_type != PackageRelationship.MANAGED.value:
-                raise InvalidRelationshipError(record)
+                raise InvalidRelationshipError(resource)
 
             # checking if the data is ready to be published
-            record_item = service.result_item(service, identity, record)
+            record_item = service.result_item(service, identity, resource)
 
             # Validate the data - will raise ValidationError if not valid.
             try:
                 service.schema.load(
                     data=record_item.data,
-                    context=dict(identity=identity, pid=record.pid, record=record),
+                    context=dict(identity=identity, pid=resource.pid, record=resource),
                     raise_errors=True,
                 )
             except ValidationError as e:
-                raise InvalidPackageResourceError(record) from e
-
-
-class RecordStatusConstraint(BaseComponentConstraint):
-    """Record status constraint.
-
-    This constraint checks if a given record haves the required publishing
-    status (``Record``, ``Draft``) to be used. The following rules are applied
-    in this verification:
-
-        1. Checks if the record is ``Draft``. If it is, then the given record is valid. But,
-        if it is not a ``Draft``, the second rule is executed;
-
-        2. Checks if the relationship type is equal to ``Related``. If not, the record cannot
-        be used, and the constraint fails;
-
-        3. Checks if the ``Record`` is ``public``. If not, the record cannot be used, and the
-        constraint fails. This is made to avoid permissions errors with the selected resources.
-    """
-
-    @classmethod
-    def check(
-        cls,
-        identity,
-        record=None,
-        relationship_type=None,
-        service=None,
-        package=None,
-        **kwargs
-    ):
-        """Check if the constraint is valid."""
-        if not record.is_draft and (
-            relationship_type != PackageRelationship.RELATED.value
-            or record.access.protection.record != "public"
-        ):
-            raise InvalidPackageResourceError(record)
+                raise InvalidPackageResourceError(resource) from e
 
 
 class PackageRelationshipConstraint(BaseComponentConstraint):
@@ -158,23 +123,23 @@ class PackageRelationshipConstraint(BaseComponentConstraint):
     def check(
         cls,
         identity,
-        record=None,
+        resource=None,
         relationship_type=None,
         service=None,
         package=None,
         **kwargs
     ):
         """Check if the constraint is valid."""
-        managed_by = record.parent.relationship.managed_by
+        managed_by = resource.parent.relationship.managed_by
         is_related_to_package = managed_by is not None and not (
-            managed_by.pid.pid_value == package.pid.pid_value
+            managed_by.pid.pid_value == package.parent.pid.pid_value
         )
 
         if (
             is_related_to_package
             and relationship_type != PackageRelationship.RELATED.value
         ):
-            raise InvalidPackageResourceError(record)
+            raise InvalidPackageResourceError(resource)
 
 
 class PublishedPackageConstraint(BaseComponentConstraint):
@@ -184,25 +149,19 @@ class PublishedPackageConstraint(BaseComponentConstraint):
     valid for modifications. The following rules are applied in this verification:
 
         1. Checks if the package is published. If it is not published, then
-        the given package is valid. But, if published, another verification is started;
-
-        2. Checks if a published package is using the relationship ``Related``.
-        If not, the record cannot be used, and the constraint fails.
+        the given package is valid. But, if published, the constraint fails.
     """
 
     @classmethod
     def check(
         cls,
         identity,
-        record=None,
+        resource=None,
         relationship_type=None,
         service=None,
         package=None,
         **kwargs
     ):
         """Check if the constraint is valid."""
-        if (
-            package.is_published
-            and relationship_type != PackageRelationship.RELATED.value
-        ):
+        if package.is_published:
             raise InvalidRelationshipError(package)
