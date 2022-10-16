@@ -63,10 +63,11 @@ def create_ui_blueprint(app):
         view_func=packages_ui.packages_dashboard_members,
     )
 
-    blueprint.add_url_rule(
-        routes["package-dashboard-settings"],
-        view_func=packages_ui.packages_dashboard_settings,
-    )
+    # Disable until permissions tests are created
+    # blueprint.add_url_rule(
+    #     routes["package-dashboard-settings"],
+    #     view_func=packages_ui.packages_dashboard_settings,
+    # )
 
     @blueprint.before_app_first_request
     def register_menus():
@@ -97,13 +98,14 @@ def create_ui_blueprint(app):
             **dict(icon="users", permissions=True)
         )
 
-        packages.submenu("settings").register(
-            "geo_rdm_records.packages_dashboard_settings",
-            text=_("Settings"),
-            order=4,
-            expected_args=["pid_value"],
-            **dict(icon="cogs", permissions=True)
-        )
+        # Disable until permissions tests are created
+        # packages.submenu("settings").register(
+        #     "geo_rdm_records.packages_dashboard_settings",
+        #     text=_("Settings"),
+        #     order=4,
+        #     expected_args=["pid_value"],
+        #     **dict(icon="cogs", permissions=True)
+        # )
 
     # Register error handlers
     blueprint.register_error_handler(
