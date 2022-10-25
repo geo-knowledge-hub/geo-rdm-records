@@ -49,6 +49,11 @@ def create_ui_blueprint(app):
     )
 
     blueprint.add_url_rule(
+        routes["package-dashboard"],
+        view_func=packages_ui.packages_dashboard_versions,
+    )
+
+    blueprint.add_url_rule(
         routes["package-dashboard-versions"],
         view_func=packages_ui.packages_dashboard_versions,
     )

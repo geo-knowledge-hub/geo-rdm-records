@@ -20,9 +20,6 @@
   "person_or_org": {
     "type": "object",
     "additionalProperties": false,
-    "required": [
-      "type"
-    ],
     "properties": {
       "name": {
         "type": "string"

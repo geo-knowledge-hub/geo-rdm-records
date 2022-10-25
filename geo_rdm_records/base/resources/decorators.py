@@ -10,6 +10,7 @@
 from functools import wraps
 
 from flask import g
+from invenio_pidstore.errors import PIDUnregistered
 from sqlalchemy.exc import NoResultFound
 
 from geo_rdm_records.base.resources.serializers import UIRecordJSONSerializer
@@ -34,7 +35,7 @@ def pass_package_or_draft(serialize):
 
             try:
                 package = service.read(identity=identity, id_=pid_value)
-            except NoResultFound:
+            except (NoResultFound, PIDUnregistered):
                 package = service.read_draft(identity=identity, id_=pid_value)
 
             kwargs["package"] = package

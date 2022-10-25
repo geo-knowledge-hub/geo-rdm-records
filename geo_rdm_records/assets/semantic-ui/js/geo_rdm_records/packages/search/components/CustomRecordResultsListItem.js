@@ -28,7 +28,7 @@ export const CustomRecordResultsListItem = ({ result }) => {
     "ui.created_date_l10n_long",
     "No creation date found."
   );
-  const creators = result.ui.creators.creators.slice(0, 3);
+  const creators = _get(result, "ui.creators.creators", []).slice(0, 3);
 
   const descriptionStripped = _get(
     result,
@@ -56,7 +56,11 @@ export const CustomRecordResultsListItem = ({ result }) => {
   );
 
   // Derivatives
-  const viewLink = result.links.self_html;
+  const isDraft = _get(result, "status") === "draft";
+  const viewLink = isDraft
+    ? `/uploads/${result.id}`
+    : `/records/${result.id}`;
+
   return (
     <Item>
       <Item.Content>
