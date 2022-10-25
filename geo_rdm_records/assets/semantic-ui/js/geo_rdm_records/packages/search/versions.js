@@ -19,8 +19,9 @@ import {
   CommunityRecordResultsGridItem,
   CommunityRecordSearchAppLayout,
   CommunityRecordSearchBarElement,
-  CommunityToggleComponent,
 } from "@js/invenio_communities/details_search/components";
+
+import { CustomToggleVersion } from "./components";
 
 createSearchAppInit({
   "BucketAggregation.element": CommunityBucketAggregationElement,
@@ -33,5 +34,5 @@ createSearchAppInit({
   "SearchBar.element": CommunityRecordSearchBarElement,
   "Count.element": CommunityCountComponent,
   "Error.element": CommunityErrorComponent,
-  "SearchFilters.Toggle.element": CommunityToggleComponent,
+  "SearchFilters.Toggle.element": CustomToggleVersion,
 });

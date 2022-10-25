@@ -30,6 +30,11 @@ class GEORDMRecordResource(BaseRecordResource):
             route(
                 "GET", routes["item-draft-resources-search"], self.search_package_drafts
             ),
+            route(
+                "GET",
+                routes["item-context-resources-search"],
+                self.search_package_context_versions,
+            ),
         ]
 
         return url_rules
@@ -58,6 +63,19 @@ class GEORDMRecordResource(BaseRecordResource):
         hits = self.service.search_package_drafts(
             identity=g.identity,
             package_id=resource_requestctx.view_args["pid_value"],
+            params=resource_requestctx.args,
+            es_preference=es_preference(),
+        )
+        return hits.to_dict(), 200
+
+    @request_search_args
+    @request_view_args
+    @response_handler(many=True)
+    def search_package_context_versions(self):
+        """Perform a search over the records and drafts of a package."""
+        hits = self.service.search_package_context_versions(
+            identity=g.identity,
+            package_parent_id=resource_requestctx.view_args["pid_value"],
             params=resource_requestctx.args,
             es_preference=es_preference(),
         )

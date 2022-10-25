@@ -52,8 +52,6 @@ class SecretLinkService(BaseSecretLinkService):
                 uow.register(RecordCommitOp(resource.parent))
                 uow.register(RecordCommitOp(resource))
 
-                self._index_related_records(resource, resource.parent, uow=uow)
-
     @unit_of_work()
     def create(self, identity, id_, data, links_config=None, uow=None):
         """Create a secret link for a record (resp. its parent)."""

@@ -9,18 +9,26 @@
 
 from copy import deepcopy
 
-from invenio_rdm_records.resources.config import (
-    RDMRecordResourceConfig as BaseRecordResourceConfig,
-)
+from flask_resources import ResponseHandler
+from invenio_rdm_records.resources import config as rdm_resources_config
 
 from geo_rdm_records.base.resources import BaseGEOResourceConfig
+from geo_rdm_records.base.resources.serializers import UIRecordJSONSerializer
+
+#
+# Response handlers
+#
+record_serializers = deepcopy(rdm_resources_config.record_serializers)
+record_serializers.update(
+    {"application/vnd.inveniordm.v1+json": ResponseHandler(UIRecordJSONSerializer())}
+)
 
 
 class GEORecordResourceConfig(BaseGEOResourceConfig):
     """Record resource configuration."""
 
     # Resource routes
-    routes = deepcopy(BaseRecordResourceConfig.routes)
+    routes = deepcopy(rdm_resources_config.RDMRecordResourceConfig.routes)
 
     # PIDs endpoints
     routes["item-pids-reserve"] = "/<pid_value>/draft/pids/<scheme>"
@@ -39,3 +47,6 @@ class GEORecordResourceConfig(BaseGEOResourceConfig):
 
     # Draft Packages resources endpoint
     routes["item-draft-resources-search"] = "/packages/<pid_value>/draft/resources"
+
+    # Package context endpoint
+    routes["item-context-resources-search"] = "/packages/context/<pid_value>/resources"

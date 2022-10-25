@@ -20,10 +20,7 @@ from invenio_rdm_records.services.customizations import FromConfig
 from invenio_records_resources.services import ConditionalLink
 from invenio_records_resources.services.base.links import Link
 from invenio_records_resources.services.files.links import FileLink
-from invenio_records_resources.services.records.links import (
-    RecordLink,
-    pagination_links,
-)
+from invenio_records_resources.services.records.links import pagination_links
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.schemas import ParentSchema
@@ -38,6 +35,7 @@ from .components.resources import (
     PackageResourceCommunityComponent,
     PackageResourceIntegrationComponent,
 )
+from .links import RecordLink
 from .permissions import PackagesPermissionPolicy
 from .schemas import GEOPackageRecordSchema
 
@@ -109,6 +107,7 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
                 }
             ),
         ),
+        # IIIF
         "self_iiif_manifest": ConditionalLink(
             cond=is_record,
             if_=RecordLink("{+api}/iiif/package:{id}/manifest"),
@@ -119,10 +118,14 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
             if_=RecordLink("{+api}/iiif/package:{id}/sequence/default"),
             else_=RecordLink("{+api}/iiif/package-draft:{id}/sequence/default"),
         ),
+        # Files
         "files": ConditionalLink(
             cond=is_record,
             if_=RecordLink("{+api}/packages/{id}/files"),
             else_=RecordLink("{+api}/packages/{id}/draft/files"),
+        ),
+        "files_import": RecordLink(
+            "{+api}/packages/{id}/draft/actions/files-import", when=is_draft
         ),
         "latest": RecordLink("{+api}/packages/{id}/versions/latest", when=is_record),
         "latest_html": RecordLink("{+ui}/packages/{id}/latest", when=is_record),
@@ -143,10 +146,24 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
         "access_links": RecordLink("{+api}/packages/{id}/access/links"),
         # TODO: only include link when DOI support is enabled.
         "reserve_doi": RecordLink("{+api}/packages/{id}/draft/pids/doi"),
+        # Package specialized links
+        "context_html": RecordLink("{+ui}/packages/{id}/dashboard"),
+        "context_resources": RecordLink(
+            "{+api}/packages/context/{parent_id}/resources"
+        ),
+        "context_associate": RecordLink(
+            "{+api}/packages/{id}/context/actions/associate"
+        ),
+        "context_dissociate": RecordLink(
+            "{+api}/packages/{id}/context/actions/dissociate"
+        ),
         "resources": ConditionalLink(
             cond=is_record,
             if_=RecordLink("{+api}/packages/{id}/resources"),
             else_=RecordLink("{+api}/packages/{id}/draft/resources"),
+        ),
+        "resources_import": RecordLink(
+            "{+api}/packages/{id}/draft/actions/resources-import", when=is_draft
         ),
     }
 

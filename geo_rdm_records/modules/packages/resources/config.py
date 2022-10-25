@@ -9,10 +9,20 @@
 
 from copy import deepcopy
 
+from flask_resources import ResponseHandler
 from invenio_drafts_resources.resources import RecordResourceConfig
 from invenio_rdm_records.resources import config as rdm_resources_config
 
 from geo_rdm_records.base.resources import BaseGEOResourceConfig
+from geo_rdm_records.base.resources.serializers import UIRecordJSONSerializer
+
+#
+# Response handlers
+#
+record_serializers = deepcopy(rdm_resources_config.record_serializers)
+record_serializers.update(
+    {"application/vnd.inveniordm.v1+json": ResponseHandler(UIRecordJSONSerializer())}
+)
 
 
 #
@@ -23,6 +33,9 @@ class GEOPackageRecordResourceConfig(BaseGEOResourceConfig):
 
     blueprint_name = "packages"
     url_prefix = "/packages"
+
+    # Response handlers
+    response_handlers = record_serializers
 
     # Packages API Routes
     routes = deepcopy(rdm_resources_config.RDMRecordResourceConfig.routes)
@@ -82,6 +95,9 @@ class GEOPackageParentRelationshipConfig(RecordResourceConfig):
 
     blueprint_name = "package_parent_relationship"
     url_prefix = "/packages/<pid_value>/context"
+
+    # Response handlers
+    response_handlers = record_serializers
 
     routes = {
         "context": "",

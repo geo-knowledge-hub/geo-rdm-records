@@ -8,7 +8,7 @@
 """Bibliographic Record Resource for the Packages API."""
 
 from flask import g
-from flask_resources import resource_requestctx, route
+from flask_resources import resource_requestctx, response_handler, route
 from invenio_drafts_resources.resources import RecordResource
 from invenio_rdm_records.resources.resources import (
     RDMParentRecordLinksResource as BaseParentRecordLinksResource,
@@ -18,8 +18,10 @@ from invenio_rdm_records.resources.resources import (
 )
 from invenio_records_resources.resources.records.resource import (
     request_data,
+    request_search_args,
     request_view_args,
 )
+from invenio_records_resources.resources.records.utils import es_preference
 
 
 class GEOPackageParentRecordLinksResource(BaseParentRecordLinksResource):
@@ -125,6 +127,7 @@ class GEOPackageContextResource(RecordResource):
             route("PUT", p(routes["context"]), self.context_update),
             route("POST", p(routes["context-associate"]), self.context_associate),
             route("POST", p(routes["context-dissociate"]), self.context_dissociate),
+            route("GET", self.config.url_prefix, self.context_search),
         ]
 
     #
@@ -162,3 +165,17 @@ class GEOPackageContextResource(RecordResource):
             resource_requestctx.data,
         )
         return "", 204
+
+    @request_view_args
+    @request_data
+    @request_search_args
+    @response_handler(many=True)
+    def context_search(self):
+        """Associate record in a package context."""
+        hits = self.service.context_search(
+            g.identity,
+            resource_requestctx.view_args["pid_value"],
+            params=resource_requestctx.args,
+            es_preference=es_preference(),
+        )
+        return hits.to_dict(), 200
