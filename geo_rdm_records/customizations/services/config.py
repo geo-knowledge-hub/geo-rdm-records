@@ -73,6 +73,10 @@ class GEORecordServiceConfig(BaseGEOServiceConfig):
         "{+api}/packages/{id}/draft/resources{?args*}"
     )
 
+    links_search_package_context = pagination_links(
+        "{+api}/packages/context/{id}/resources{?args*}"
+    )
+
 
 class GEOFileRecordServiceConfig(rdm_config.RDMFileRecordServiceConfig):
     """Configuration for record files."""

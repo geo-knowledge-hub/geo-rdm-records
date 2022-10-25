@@ -14,6 +14,7 @@ from geo_rdm_records.base.services import facets as geo_facets
 # UI Configurations
 # ===================
 GEO_RDM_PACKAGES_ROUTES = {
+    "package-dashboard": "/packages/<pid_value>/dashboard",
     "package-dashboard-versions": "/packages/<pid_value>/dashboard/versions",
     "package-dashboard-resources": "/packages/<pid_value>/dashboard/resources",
     "package-dashboard-settings": "/packages/<pid_value>/dashboard/settings",

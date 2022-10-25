@@ -9,6 +9,7 @@
 
 from invenio_drafts_resources.services.records.components import ServiceComponent
 from invenio_rdm_records.proxies import current_rdm_records_service
+from invenio_records.dictutils import dict_lookup
 
 from geo_rdm_records.base.services.components.constraints import ConstrainedComponent
 from geo_rdm_records.modules.packages.errors import InvalidRelationshipError
@@ -27,7 +28,7 @@ class PackageResourceIntegrationComponent(ConstrainedComponent):
 
     constraints = [
         CommunityRelationshipConstraint,
-        ValidDraftConstraint,
+        # ValidDraftConstraint,
         PackageRelationshipConstraint,
         PublishedPackageConstraint,
     ]
@@ -95,8 +96,18 @@ class PackageResourceIntegrationComponent(ConstrainedComponent):
                     )
                 )
 
-        package.relationship.resources.remove(resource)
-        resource.relationship.packages.remove(package)
+        package_resources = list(
+            map(lambda x: x["id"], dict_lookup(package, "relationship.resources"))
+        )
+        resource_packages = list(
+            map(lambda x: x["id"], dict_lookup(resource, "relationship.packages"))
+        )
+
+        if resource.pid.pid_value in package_resources:
+            package.relationship.resources.remove(resource)
+
+        if package.pid.pid_value in resource_packages:
+            resource.relationship.packages.remove(package)
 
 
 class PackageResourceCommunityComponent(ServiceComponent):

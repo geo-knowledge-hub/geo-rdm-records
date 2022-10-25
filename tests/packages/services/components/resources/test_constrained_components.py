@@ -28,10 +28,12 @@ from geo_rdm_records.modules.packages.services.components.resources.constraints 
 
 
 def test_community_relationship_constraint(
+    db,
     running_app,
     draft_resource_record,
     published_resource_record,
     community_record,
+    minimal_record,
     es_clear,
 ):
     """Test the community relationship constraint."""
@@ -67,14 +69,6 @@ def test_community_relationship_constraint(
             published_resource_record,
             PackageRelationship.RELATED.value,
         )
-
-    pytest.raises(
-        InvalidPackageResourceError,
-        CommunityRelationshipConstraint.check,
-        identity=superuser_identity,
-        resource=draft_resource_record,
-        relationship_type=PackageRelationship.MANAGED.value,
-    )
 
 
 def test_valid_draft_constraint(

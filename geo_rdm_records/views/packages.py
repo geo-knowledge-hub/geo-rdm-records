@@ -50,8 +50,9 @@ def packages_dashboard_versions(pid_value, package, package_ui):
 def packages_dashboard_resources(pid_value, package, package_ui):
     """Resources Dashboard page."""
     permissions = package.has_permissions_to(["update", "read"])
+    package_parent_id = package["parent"]["id"]
 
-    endpoint = f"/api/packages/{pid_value}/resources"
+    endpoint = f"/api/packages/context/{package_parent_id}/resources"
 
     return render_template(
         "geo_rdm_records/packages/dashboard/resources.html",

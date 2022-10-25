@@ -6,5 +6,6 @@
  * under the terms of the MIT License; see LICENSE file for more details.
  */
 
-export { CustomRecordResultsListItem } from "./CustomRecordResultsListItem";
-export { CustomToggleVersion } from "./CustomToggleVersion";
+import React from "react";
+
+export const CustomToggleVersion = () => <></>;

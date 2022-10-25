@@ -25,8 +25,13 @@ class ResourceRelationshipComponent(ServiceComponent):
     #
     def create(self, identity, data=None, record=None, **kwargs):
         """Inject parsed relationship to the record."""
+        # ToDo: Review
         record.parent.relationship = self._read_relationship(data)
 
     def publish(self, identity, draft=None, record=None):
         """Publish handler."""
         record.relationship = draft.get("relationship", {})
+
+    def edit(self, identity, draft=None, record=None):
+        """Edit a record handler."""
+        draft.relationship = record.get("relationship", {})

@@ -27,26 +27,32 @@ class CommunityRelationshipConstraint(BaseComponentConstraint):
         1. Checks if the record is linked to a community. If not linked, then
         the given record is valid. But, if linked, the second rule is executed;
 
-        2. Checks if the relationship type is equal to ``Related``. If not, the
-        record cannot be used, and the constraint will fail.
+        2. Checks if the relationship type is equal to ``Related``. If not, then, the third
+        rule is executed.
+
+        3. Checks if the community associated in the resource is also associated in the package.
+        In this case, the record is valid. If not, the constraint will fail.
+        rule is executed.
     """
 
     @classmethod
     def check(
-        cls,
-        identity,
-        resource=None,
-        relationship_type=None,
-        service=None,
-        package=None,
-        **kwargs
+            cls,
+            identity,
+            resource=None,
+            relationship_type=None,
+            service=None,
+            package=None,
+            **kwargs
     ):
         """Check if the constraint is valid."""
         if (
-            len(resource.parent.communities) != 0
-            and relationship_type != PackageRelationship.RELATED.value
+                len(resource.parent.communities) != 0
+                and relationship_type != PackageRelationship.RELATED.value
         ):
-            raise InvalidPackageResourceError(resource)
+            if package.parent.communities and resource.parent.communities:
+                if package.parent.communities.to_dict() != resource.parent.communities.to_dict():
+                    raise InvalidPackageResourceError(resource)
 
 
 class ValidDraftConstraint(BaseComponentConstraint):
@@ -80,6 +86,7 @@ class ValidDraftConstraint(BaseComponentConstraint):
         relationship_type=None,
         service=None,
         package=None,
+        raise_errors=True,
         **kwargs
     ):
         """Check if the constraint is valid."""
@@ -99,7 +106,7 @@ class ValidDraftConstraint(BaseComponentConstraint):
                 service.schema.load(
                     data=record_item.data,
                     context=dict(identity=identity, pid=resource.pid, record=resource),
-                    raise_errors=True,
+                    raise_errors=raise_errors,
                 )
             except ValidationError as e:
                 raise InvalidPackageResourceError(resource) from e
