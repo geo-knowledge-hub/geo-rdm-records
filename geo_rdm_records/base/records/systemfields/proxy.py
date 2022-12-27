@@ -85,10 +85,8 @@ class BaseRecordProxy:
     def resolve(self):
         """Resolve the record entity (e.g., RDMRecord)."""
         if self._entity is None and self.record_id is not None:
-
             # If parent is used, then return it
             if self.is_parent:
-
                 self._entity = self.record_cls.parent_record_cls.pid.resolve(
                     self.record_id, registered_only=False
                 )
