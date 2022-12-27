@@ -37,21 +37,24 @@ class CommunityRelationshipConstraint(BaseComponentConstraint):
 
     @classmethod
     def check(
-            cls,
-            identity,
-            resource=None,
-            relationship_type=None,
-            service=None,
-            package=None,
-            **kwargs
+        cls,
+        identity,
+        resource=None,
+        relationship_type=None,
+        service=None,
+        package=None,
+        **kwargs
     ):
         """Check if the constraint is valid."""
         if (
-                len(resource.parent.communities) != 0
-                and relationship_type != PackageRelationship.RELATED.value
+            len(resource.parent.communities) != 0
+            and relationship_type != PackageRelationship.RELATED.value
         ):
             if package.parent.communities and resource.parent.communities:
-                if package.parent.communities.to_dict() != resource.parent.communities.to_dict():
+                if (
+                    package.parent.communities.to_dict()
+                    != resource.parent.communities.to_dict()
+                ):
                     raise InvalidPackageResourceError(resource)
 
 

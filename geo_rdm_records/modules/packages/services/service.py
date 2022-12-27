@@ -225,7 +225,6 @@ class GEOPackageRecordService(BaseRDMRecordService):
             relationship_type = "related"
 
             if resource_obj.parent.relationship.managed_by:
-
                 if resource_obj.parent.relationship.managed_by == package_draft.parent:
                     relationship_type = "managed"
 
@@ -234,7 +233,6 @@ class GEOPackageRecordService(BaseRDMRecordService):
             # checking if the loaded resource is draft and if draft is allowed
             if not allow_draft:
                 if resource_obj.is_draft:
-
                     errors.append(
                         dict(
                             record=resource_obj.pid.pid_value,
@@ -296,7 +294,6 @@ class GEOPackageRecordService(BaseRDMRecordService):
                     )
 
                 except ValidationError as e:
-
                     if raise_error:
                         raise e
 
