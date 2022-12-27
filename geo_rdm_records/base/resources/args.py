@@ -30,7 +30,6 @@ class GEOSearchRequestArgsSchema(SearchRequestArgsSchema):
         data["facets"] = {}
         data["filters"] = {}
         for k in set(original_data.keys()) - set(data.keys()):
-
             if k in self.filters:
                 data["filters"][k] = original_data.get(k)
             else:
