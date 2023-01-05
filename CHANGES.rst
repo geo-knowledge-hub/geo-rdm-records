@@ -7,6 +7,21 @@
 Changes
 =======
 
+Version 0.4.0 (2023-01-05)
+--------------------------
+
+- Revised Package structure;
+- Added initial implementation of the Packages API
+  
+  - Metadata management
+  - Files management;
+  - Relationship between packages and resources revised;
+  - Package context to manage resources in a package and its versions.
+
+- Revised customization module for Invenio RDM Records;
+- Introduced Management Dashboard for Knowledge Packages;
+- Introduced a search endpoint to enable users to find Packages and Resources simultaneously.
+
 Version 0.3.1 (2022-07-19)
 --------------------------
 
