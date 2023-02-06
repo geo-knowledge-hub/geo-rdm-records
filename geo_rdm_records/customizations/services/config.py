@@ -8,7 +8,7 @@
 """GEO RDM Records Services configuration."""
 
 from invenio_rdm_records.services import config as rdm_config
-from invenio_rdm_records.services.customizations import (
+from invenio_records_resources.services.base.config import (
     FromConfig,
     FromConfigSearchOptions,
 )
@@ -58,11 +58,17 @@ class GEORecordServiceConfig(BaseGEOServiceConfig):
     # Packages API extension
     #
     search_resource = FromConfigSearchOptions(
-        "RDM_SEARCH_PACKAGE_RESOURCE", search_option_cls=GEOSearchOptions
+        "RDM_SEARCH_PACKAGE_RESOURCE",
+        "RDM_SORT_OPTIONS",
+        "RDM_FACETS",
+        search_option_cls=GEOSearchOptions,
     )
 
     search_resource_drafts = FromConfigSearchOptions(
-        "RDM_SEARCH_PACKAGE_RESOURCE_DRAFTS", search_option_cls=GEOSearchDraftsOptions
+        "RDM_SEARCH_PACKAGE_RESOURCE_DRAFTS",
+        "RDM_SORT_OPTIONS",
+        "RDM_FACETS",
+        search_option_cls=GEOSearchDraftsOptions,
     )
 
     links_search_package_records = pagination_links(

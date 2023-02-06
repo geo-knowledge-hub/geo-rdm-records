@@ -7,16 +7,16 @@
 
 """GEO RDM Records Resource Service."""
 
-from elasticsearch_dsl.query import Q
 from invenio_rdm_records.services import RDMRecordService as BaseRecordService
 from invenio_records_resources.services import LinksTemplate
+from invenio_search.engine import dsl
 
 
 class GEORDMRecordService(BaseRecordService):
     """RDM Record service."""
 
     def search_package_records(
-        self, identity, package_id, params=None, es_preference=None, **kwargs
+        self, identity, package_id, params=None, search_preference=None, **kwargs
     ):
         """Search for records associated with the given Package."""
         self.require_permission(identity, "read")
@@ -28,10 +28,10 @@ class GEORDMRecordService(BaseRecordService):
             "search",
             identity,
             params,
-            es_preference,
+            search_preference,
             record_cls=self.record_cls,
             search_opts=self.config.search_resource,
-            extra_filter=Q("term", **{"relationship.packages.id": str(package_id)}),
+            extra_filter=dsl.Q("term", **{"relationship.packages.id": str(package_id)}),
             permission_action="read",
             **kwargs
         ).execute()
@@ -49,7 +49,7 @@ class GEORDMRecordService(BaseRecordService):
         )
 
     def search_package_drafts(
-        self, identity, package_id, params=None, es_preference=None, **kwargs
+        self, identity, package_id, params=None, search_preference=None, **kwargs
     ):
         """Search for drafts associated with the given Package."""
         self.require_permission(identity, "search_drafts")
@@ -63,10 +63,10 @@ class GEORDMRecordService(BaseRecordService):
             "search_drafts",
             identity,
             params,
-            es_preference,
+            search_preference,
             record_cls=self.draft_cls,
             search_opts=self.config.search_resource_drafts,
-            extra_filter=Q("term", **{"relationship.packages.id": str(package_id)}),
+            extra_filter=dsl.Q("term", **{"relationship.packages.id": str(package_id)}),
             permission_action="read_draft",
             **kwargs
         ).execute()
@@ -84,7 +84,7 @@ class GEORDMRecordService(BaseRecordService):
         )
 
     def search_package_context_versions(
-        self, identity, package_parent_id, params=None, es_preference=None, **kwargs
+        self, identity, package_parent_id, params=None, search_preference=None, **kwargs
     ):
         """Search for records and drafts associated with the given Package Context (Parent ID)."""
         self.require_permission(identity, "search_drafts")
@@ -98,10 +98,10 @@ class GEORDMRecordService(BaseRecordService):
             "search_drafts",
             identity,
             params,
-            es_preference,
+            search_preference,
             record_cls=self.draft_cls,
             search_opts=self.config.search_resource_drafts,
-            extra_filter=Q(
+            extra_filter=dsl.Q(
                 "term", **{"parent.relationship.managed_by.id": str(package_parent_id)}
             ),
             permission_action="read_draft",

@@ -16,8 +16,8 @@ from invenio_rdm_records.services.config import (
     is_iiif_compatible,
     is_record_and_has_doi,
 )
-from invenio_rdm_records.services.customizations import FromConfig
 from invenio_records_resources.services import ConditionalLink
+from invenio_records_resources.services.base.config import FromConfig
 from invenio_records_resources.services.base.links import Link
 from invenio_records_resources.services.files.links import FileLink
 from invenio_records_resources.services.records.links import pagination_links
