@@ -756,6 +756,9 @@
                   },
                   "subtype": {
                     "type": "keyword"
+                  },
+                  "basetype":  {
+                    "type": "keyword"
                   }
                 }
               }
