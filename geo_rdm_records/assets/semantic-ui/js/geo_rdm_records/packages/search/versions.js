@@ -26,11 +26,11 @@ import {
   ContribBucketAggregationValuesElement,
 } from "@js/invenio_search_ui/components";
 
+import { CustomToggleVersion } from "./components";
+
 const ContribSearchAppFacetsWithConfig = parametrize(ContribSearchAppFacets, {
   toogle: true,
 });
-
-import { CustomToggleVersion } from "./components";
 
 createSearchAppInit({
   "BucketAggregation.element": ContribBucketAggregationElement,
