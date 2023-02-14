@@ -232,6 +232,10 @@ def test_permission_levels(
     # 2. Testing the sharing system for the packages
     _assert_permission_levels(view_link, preview_link, edit_link, service, id_)
 
+    # restoring drafts to avoid errors
+    service.edit(identity_simple, id_)
+    resources_service.edit(identity_simple, related_resource_id_)
+
     # 3. Testing the sharing system for the resources (enabled via package).
     _assert_permission_levels(
         view_link, preview_link, edit_link, resources_service, related_resource_id_

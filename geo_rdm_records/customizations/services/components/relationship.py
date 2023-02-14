@@ -9,6 +9,8 @@
 
 from invenio_drafts_resources.services.records.components import ServiceComponent
 
+from geo_rdm_records.proxies import current_geo_packages_service
+
 
 class ResourceRelationshipComponent(ServiceComponent):
     """Service component for the ``relationship`` field."""
@@ -35,3 +37,16 @@ class ResourceRelationshipComponent(ServiceComponent):
     def edit(self, identity, draft=None, record=None):
         """Edit a record handler."""
         draft.relationship = record.get("relationship", {})
+
+    def delete_draft(self, identity, draft=None, record=None, force=False):
+        """Delete draft handler."""
+        if draft:
+            draft_id = draft.get("id")
+            packages = draft.get("relationship", {}).get("packages", [])
+
+            if draft_id and packages:
+                package_id = packages[0]["id"]
+
+                current_geo_packages_service.resource_delete(
+                    identity, package_id, dict(resources=[{"id": draft_id}])
+                )
