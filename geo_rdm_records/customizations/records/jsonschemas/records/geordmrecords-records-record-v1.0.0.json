@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "id": "local://records/geo-package-v1.0.0.json",
-  "title": "GEO Knowledge Package Scheme (Based on InvenioRDM Record Schema v4.0.0)",
+  "id": "local://records/geordmrecords-records-record-v1.0.0.json",
+  "title": "GEO Knowledge Resource Scheme (Based on InvenioRDM Record Schema v5.0.0)",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -12,7 +12,6 @@
       "$ref": "local://definitions-v1.0.0.json#/identifier"
     },
     "pid": {"$ref": "local://definitions-v1.0.0.json#/internal-pid"},
-
     "pids": {
       "type": "object",
       "description": "External persistent identifiers for a record including e.g. OAI-PMH identifier, minted DOIs and more. PIDs are registered in the PIDStore.",
@@ -24,7 +23,6 @@
       },
       "uniqueItems": true
     },
-
     "metadata": {
       "type": "object",
       "description": "Resource metadata.",
@@ -504,11 +502,11 @@
     },
     "relationship": {
       "type": "object",
-      "description": "Record relationship with other records",
+      "description": "Package relationship with other elements (e.g., Packages, Resources)",
       "additionalProperties": false,
       "properties": {
-        "resources": {
-          "description": "List of resources linked to the specific version of the Package.",
+        "packages": {
+          "description": "List of packages linked to the specific version of the Package.",
           "type": "array",
           "uniqueItems": true,
           "items": {"$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"}
