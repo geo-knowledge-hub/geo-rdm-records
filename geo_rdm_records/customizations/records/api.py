@@ -36,7 +36,7 @@ class GEOParent(GEOBaseRecord, BaseRecordParent):
     #
     # System fields
     #
-    type = GEORecordTypes.resource
+    type = ConstantField("type", GEORecordTypes.resource)
 
     schema = ConstantField("$schema", "local://records/geo-parent-v1.0.0.json")
 

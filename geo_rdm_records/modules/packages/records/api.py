@@ -67,7 +67,7 @@ class GEOPackageParent(GEOBaseRecord, BaseRecordParent):
     # relationship = PackageRelationshipField(key="relationship")
     communities = CommunitiesField(GEOPackageParentCommunity)
 
-    type = GEORecordTypes.package
+    type = ConstantField("type", GEORecordTypes.package)
 
 
 #
