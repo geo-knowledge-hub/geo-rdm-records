@@ -7,14 +7,13 @@
 
 """GEO RDM Records Services."""
 
-from elasticsearch_dsl import Q
 from invenio_drafts_resources.services.records.service import (
     RecordService as BaseRecordService,
 )
 from invenio_records_permissions.api import permission_filter
-from invenio_records_resources.config import lt_es7
 from invenio_records_resources.services import LinksTemplate
 from invenio_search import current_search_client
+from invenio_search.engine import dsl
 
 from .links import MutableLinksTemplate
 
@@ -89,8 +88,7 @@ class SearchRecordService(BaseRecordService):
 
         # Extras
         extras = {}
-        if not lt_es7:
-            extras["track_total_hits"] = True
+        extras["track_total_hits"] = True
         search = search.extra(**extras)
 
         return search
@@ -128,7 +126,7 @@ class SearchRecordService(BaseRecordService):
         action,
         identity,
         params,
-        es_preference,
+        search_preference,
         record_cls=None,
         search_opts=None,
         extra_filter=None,
@@ -150,7 +148,7 @@ class SearchRecordService(BaseRecordService):
             params,
             record_cls or self.record_cls,
             search_opts or self.config.search,
-            preference=es_preference,
+            preference=search_preference,
             extra_filter=extra_filter,
             permission_action=permission_action,
             indices=indices,
@@ -165,14 +163,21 @@ class SearchRecordService(BaseRecordService):
     #
     # High-level API
     #
-    def search(self, identity, params=None, es_preference=None, expand=False, **kwargs):
+    def search(
+        self, identity, params=None, search_preference=None, expand=False, **kwargs
+    ):
         """Search for records matching the querystring."""
         self.require_permission(identity, "search")
 
         # Prepare and execute the search
         params = params or {}
         search = self._search(
-            "search", identity, params, es_preference, indices=self.indices, **kwargs
+            "search",
+            identity,
+            params,
+            search_preference,
+            indices=self.indices,
+            **kwargs,
         )
         search_result = search.execute()
 
@@ -188,7 +193,7 @@ class SearchRecordService(BaseRecordService):
         )
 
     def search_drafts(
-        self, identity, params=None, es_preference=None, expand=False, **kwargs
+        self, identity, params=None, search_preference=None, expand=False, **kwargs
     ):
         """Search for drafts records matching the querystring."""
         self.require_permission(identity, "search_drafts")
@@ -200,13 +205,13 @@ class SearchRecordService(BaseRecordService):
             "search_drafts",
             identity,
             params,
-            es_preference,
+            search_preference,
             record_cls=self.draft_cls,
             search_opts=self.config.search_drafts,
             # `has_draft` systemfield is not defined here. This is not ideal
             # but it helps avoid overriding the method. See how is used in
             # https://github.com/inveniosoftware/invenio-rdm-records
-            extra_filter=Q("term", has_draft=False),
+            extra_filter=dsl.Q("term", has_draft=False),
             permission_action="read_draft",
             indices=self.indices_draft,
             **kwargs,
@@ -226,7 +231,7 @@ class SearchRecordService(BaseRecordService):
         )
 
     def search_community_records(
-        self, identity, community_id, params=None, es_preference=None, **kwargs
+        self, identity, community_id, params=None, search_preference=None, **kwargs
     ):
         """Search for records published in the given community."""
         self.require_permission(identity, "read")
@@ -238,9 +243,9 @@ class SearchRecordService(BaseRecordService):
             "search",
             identity,
             params,
-            es_preference,
+            search_preference,
             search_opts=self.config.search,
-            extra_filter=Q("term", **{"parent.communities.ids": str(community_id)}),
+            extra_filter=dsl.Q("term", **{"parent.communities.ids": str(community_id)}),
             permission_action="read",
             indices=self.indices,
             **kwargs,

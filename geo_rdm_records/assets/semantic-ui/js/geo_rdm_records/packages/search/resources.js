@@ -6,29 +6,38 @@
  * under the terms of the MIT License; see LICENSE file for more details.
  */
 
+import { parametrize } from "react-overridable";
+
 import { createSearchAppInit } from "@js/invenio_search_ui";
 import { CustomRecordResultsListItem } from "./components";
 
 import {
-  CommunitiesFacetsValues,
-  CommunityBucketAggregationElement,
   CommunityCountComponent,
   CommunityEmptyResults,
   CommunityErrorComponent,
-  CommunityRecordFacets,
   CommunityRecordResultsGridItem,
   CommunityRecordSearchAppLayout,
   CommunityRecordSearchBarElement,
   CommunityToggleComponent,
 } from "@js/invenio_communities/details_search/components";
 
+import {
+  ContribSearchAppFacets,
+  ContribBucketAggregationElement,
+  ContribBucketAggregationValuesElement,
+} from "@js/invenio_search_ui/components";
+
+const ContribSearchAppFacetsWithConfig = parametrize(ContribSearchAppFacets, {
+  toogle: true,
+});
+
 createSearchAppInit({
-  "BucketAggregation.element": CommunityBucketAggregationElement,
-  "BucketAggregationValues.element": CommunitiesFacetsValues,
+  "BucketAggregation.element": ContribBucketAggregationElement,
+  "BucketAggregationValues.element": ContribBucketAggregationValuesElement,
   "ResultsGrid.item": CommunityRecordResultsGridItem,
   "EmptyResults.element": CommunityEmptyResults,
   "ResultsList.item": CustomRecordResultsListItem,
-  "SearchApp.facets": CommunityRecordFacets,
+  "SearchApp.facets": ContribSearchAppFacetsWithConfig,
   "SearchApp.layout": CommunityRecordSearchAppLayout,
   "SearchBar.element": CommunityRecordSearchBarElement,
   "Count.element": CommunityCountComponent,

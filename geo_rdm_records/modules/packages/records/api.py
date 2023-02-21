@@ -67,7 +67,7 @@ class GEOPackageParent(GEOBaseRecord, BaseRecordParent):
     # relationship = PackageRelationshipField(key="relationship")
     communities = CommunitiesField(GEOPackageParentCommunity)
 
-    type = GEORecordTypes.package
+    type = ConstantField("type", GEORecordTypes.package)
 
 
 #
@@ -80,7 +80,9 @@ class CommonFieldsMixin(BaseGEORecordsFieldsMixin, BaseCommonFieldsMixin):
     parent_record_cls = GEOPackageParent
 
     access = RecordAccessField()
-    schema = ConstantField("$schema", "local://packages/geo-package-v1.0.0.json")
+    schema = ConstantField(
+        "$schema", "local://packages/geordmpackages-records-record-v1.0.0.json"
+    )
 
 
 #

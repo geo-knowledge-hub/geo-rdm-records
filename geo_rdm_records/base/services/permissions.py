@@ -9,6 +9,7 @@
 
 from invenio_rdm_records.services.generators import (
     CommunityAction,
+    IfFileIsLocal,
     IfRestricted,
     RecordOwners,
     SecretLinks,
@@ -71,6 +72,9 @@ class BaseGEOPermissionPolicy(RecordPermissionPolicy):
     can_read_files = [
         IfRestricted("files", then_=can_view, else_=can_all),
     ]
+    can_get_content_files = [
+        IfRestricted("files", then_=can_view, else_=can_all),
+    ]
     # Allow submitting new record
     can_create = can_authenticated
 
@@ -87,6 +91,11 @@ class BaseGEOPermissionPolicy(RecordPermissionPolicy):
     can_update_draft = can_review
     # Allow uploading, updating and deleting files in drafts
     can_draft_create_files = can_review
+
+    can_draft_set_content_files = can_review
+    can_draft_get_content_files = can_preview
+
+    can_draft_commit_files = can_review
     can_draft_update_files = can_review
     can_draft_delete_files = can_review
 
@@ -121,5 +130,7 @@ class BaseGEOPermissionPolicy(RecordPermissionPolicy):
     can_update = [Disable()]
     can_delete = [Disable()]
     can_create_files = [Disable()]
+    can_set_content_files = [Disable()]
+    can_commit_files = [Disable()]
     can_update_files = [Disable()]
     can_delete_files = [Disable()]

@@ -36,7 +36,7 @@ class GEOParent(GEOBaseRecord, BaseRecordParent):
     #
     # System fields
     #
-    type = GEORecordTypes.resource
+    type = ConstantField("type", GEORecordTypes.resource)
 
     schema = ConstantField("$schema", "local://records/geo-parent-v1.0.0.json")
 
@@ -47,7 +47,9 @@ class CommonFieldsMixin(BaseGEORecordsFieldsMixin, BaseCommonFieldsMixin):
     """Common system fields between records and drafts."""
 
     parent_record_cls = GEOParent
-    schema = ConstantField("$schema", "local://records/geo-record-v1.0.0.json")
+    schema = ConstantField(
+        "$schema", "local://records/geordmrecords-records-record-v1.0.0.json"
+    )
 
 
 #

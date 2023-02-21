@@ -28,6 +28,7 @@ class GEORecordResourceConfig(BaseGEOResourceConfig):
     """Record resource configuration."""
 
     # Resource routes
+    response_handlers = record_serializers
     routes = deepcopy(rdm_resources_config.RDMRecordResourceConfig.routes)
 
     # PIDs endpoints

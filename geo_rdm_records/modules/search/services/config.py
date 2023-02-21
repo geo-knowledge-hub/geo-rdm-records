@@ -13,8 +13,8 @@ from invenio_rdm_records.services.config import (
     is_draft_and_has_review,
     is_record_and_has_doi,
 )
-from invenio_rdm_records.services.customizations import FromConfig
 from invenio_records_resources.services import ConditionalLink, pagination_links
+from invenio_records_resources.services.base.config import FromConfig
 from invenio_records_resources.services.base.links import Link
 from invenio_records_resources.services.records.links import RecordLink
 

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "id": "local://records/geo-record-v1.0.0.json",
-  "title": "GEO Knowledge Resource Scheme (Based on InvenioRDM Record Schema v5.0.0)",
+  "id": "local://records/geordmpackages-records-record-v1.0.0.json",
+  "title": "GEO Knowledge Package Scheme (Based on InvenioRDM Record Schema v4.0.0)",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -16,7 +16,9 @@
     "pids": {
       "type": "object",
       "description": "External persistent identifiers for a record including e.g. OAI-PMH identifier, minted DOIs and more. PIDs are registered in the PIDStore.",
-      "additionalProperties": {"$ref": "local://records/definitions-v2.0.0.json#/external-pid"},
+      "additionalProperties": {
+        "$ref": "local://records/definitions-v2.0.0.json#/external-pid"
+      },
       "propertyNames": {
         "pattern": "^[a-z_-][a-z0-9_-]*$"
       },
@@ -28,7 +30,6 @@
       "description": "Resource metadata.",
       "additionalProperties": false,
       "properties": {
-
         "target_audiences": {
           "type": "array",
           "items": {
@@ -36,7 +37,6 @@
           },
           "uniqueItems": true
         },
-
         "geo_work_programme_activity": {
           "type": "object",
           "additionalProperties": false,
@@ -46,7 +46,6 @@
             }
           }
         },
-
         "engagement_priorities": {
           "type": "array",
           "items": {
@@ -55,8 +54,9 @@
           "uniqueItems": true
         },
 
-        "resource_type": {"$ref": "local://records/definitions-v2.0.0.json#/resource_type"},
-
+        "resource_type": {
+          "$ref": "local://records/definitions-v2.0.0.json#/resource_type"
+        },
         "creators": {
           "description": "Creators of the resource.",
           "type": "array",
@@ -64,18 +64,22 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "person_or_org": {"$ref": "local://records/geo-definitions-v1.0.0.json#/person_or_org"},
-              "role": {"$ref": "local://records/definitions-v2.0.0.json#/role"},
-              "affiliations": {"$ref": "local://records/definitions-v2.0.0.json#/affiliations"}
+              "person_or_org": {
+                "$ref": "local://records/geo-definitions-v1.0.0.json#/person_or_org"
+              },
+              "role": {
+                "$ref": "local://records/definitions-v2.0.0.json#/role"
+              },
+              "affiliations": {
+                "$ref": "local://records/definitions-v2.0.0.json#/affiliations"
+              }
             }
           }
         },
-
         "title": {
           "description": "Primary title of the record.",
           "type": "string"
         },
-
         "additional_titles": {
           "description": "Additional record titles.",
           "type": "array",
@@ -87,25 +91,25 @@
                 "description": "Additional title of the record.",
                 "type": "string"
               },
-              "type": {"$ref": "local://records/definitions-v2.0.0.json#/title_type"},
-              "lang": {"$ref": "local://records/definitions-v2.0.0.json#/language"}
+              "type": {
+                "$ref": "local://records/definitions-v2.0.0.json#/title_type"
+              },
+              "lang": {
+                "$ref": "local://records/definitions-v2.0.0.json#/language"
+              }
             }
           }
         },
-
         "publisher": {
           "type": "string"
         },
-
         "publication_date": {
           "description": "Record publication date (EDTF level 0 format).",
           "type": "string"
         },
-
         "subjects": {
           "$ref": "local://records/definitions-v2.0.0.json#/subjects"
         },
-
         "contributors": {
           "description": "Contributors in order of importance.",
           "type": "array",
@@ -113,13 +117,18 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "person_or_org": {"$ref": "local://records/geo-definitions-v1.0.0.json#/person_or_org"},
-              "role": {"$ref": "local://records/definitions-v2.0.0.json#/role"},
-              "affiliations": {"$ref": "local://records/definitions-v2.0.0.json#/affiliations"}
+              "person_or_org": {
+                "$ref": "local://records/geo-definitions-v1.0.0.json#/person_or_org"
+              },
+              "role": {
+                "$ref": "local://records/definitions-v2.0.0.json#/role"
+              },
+              "affiliations": {
+                "$ref": "local://records/definitions-v2.0.0.json#/affiliations"
+              }
             }
           }
         },
-
         "dates": {
           "description": "Date or date interval.",
           "type": "array",
@@ -131,7 +140,9 @@
                 "description": "Date or date interval in EDTF level 0 format",
                 "type": "string"
               },
-              "type": {"$ref": "local://records/definitions-v2.0.0.json#/date_type"},
+              "type": {
+                "$ref": "local://records/definitions-v2.0.0.json#/date_type"
+              },
               "description": {
                 "description": "Description of the date or date interval e.g. 'Accepted' or 'Available' (CV).",
                 "type": "string"
@@ -139,21 +150,22 @@
             }
           }
         },
-
         "languages": {
           "description": "The primary languages of the resource. ISO 639-3 language code.",
           "type": "array",
-          "items": {"$ref": "local://records/definitions-v2.0.0.json#/language"},
+          "items": {
+            "$ref": "local://records/definitions-v2.0.0.json#/language"
+          },
           "uniqueItems": true
         },
-
         "identifiers": {
           "description": "Alternate identifiers for the record.",
           "type": "array",
-          "items": {"$ref": "local://definitions-v1.0.0.json#/identifiers_with_scheme"},
+          "items": {
+            "$ref": "local://definitions-v1.0.0.json#/identifiers_with_scheme"
+          },
           "uniqueItems": true
         },
-
         "related_identifiers": {
           "type": "array",
           "uniqueItems": true,
@@ -176,26 +188,22 @@
             }
           }
         },
-
         "sizes": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-
         "formats": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-
         "version": {
           "description": "Record version tag.",
           "type": "string"
         },
-
         "rights": {
           "description": "Any license or copyright information for this resource.",
           "type": "array",
@@ -203,7 +211,9 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "id": {"$ref": "local://definitions-v1.0.0.json#/identifier"},
+              "id": {
+                "$ref": "local://definitions-v1.0.0.json#/identifier"
+              },
               "title": {
                 "description": "The license name or license itself. Free text.",
                 "type": "object"
@@ -219,12 +229,10 @@
             }
           }
         },
-
         "description": {
           "description": "Description for record (may contain HTML).",
           "type": "string"
         },
-
         "additional_descriptions": {
           "type": "array",
           "items": {
@@ -235,12 +243,15 @@
                 "description": "Description for record.",
                 "type": "string"
               },
-              "type": {"$ref": "local://records/definitions-v2.0.0.json#/description_type"},
-              "lang": {"$ref": "local://records/definitions-v2.0.0.json#/language"}
+              "type": {
+                "$ref": "local://records/definitions-v2.0.0.json#/description_type"
+              },
+              "lang": {
+                "$ref": "local://records/definitions-v2.0.0.json#/language"
+              }
             }
           }
         },
-
         "locations": {
           "description": "Geographical locations relevant to this record.",
           "$comment": "This part of the schema is modelled on GeoJSON, but without the scope to embed arbitrary metadata.\n\nWe nest `features` within `locations` to give scope later to say something about the locations as a whole.",
@@ -251,39 +262,47 @@
               "type": "array",
               "minItems": 1,
               "items": {
-                "allOf": [{
-                  "type": "object",
-                  "additionalProperties": false,
-                  "properties": {
-                    "geometry": {
-                      "allOf": [{
-                        "$ref": "local://records/definitions-v2.0.0.json#/GeoJSON-Geometry"
-                      }, {
-                        "$comment": "Bounding boxes (`bbox`) are forbidden on our geometries, even though they're allowed on GeoJSON geometries",
-                        "properties": {
-                          "type": {},
-                          "coordinates": {}
+                "allOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "geometry": {
+                        "allOf": [
+                          {
+                            "$ref": "local://records/geo-definitions-v1.0.0.json#/GeoJSON-Geometry"
+                          },
+                          {
+                            "$comment": "Bounding boxes (`bbox`) are forbidden on our geometries, even though they're allowed on GeoJSON geometries",
+                            "properties": {
+                              "type": {},
+                              "coordinates": {},
+                              "geometries": {}
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "identifiers": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "local://definitions-v1.0.0.json#/identifiers_with_scheme"
                         },
-                        "additionalProperties": false
-                      }]
-                    },
-                    "identifiers": {
-                      "type": "array",
-                      "items": {"$ref": "local://definitions-v1.0.0.json#/identifiers_with_scheme"},
-                      "uniqueItems": true
-                    },
-                    "place": {
-                      "description": "Place of the location",
-                      "type": "string",
-                      "minLength": 1
-                    },
-                    "description": {
-                      "description": "Description of the location",
-                      "type": "string",
-                      "minLength": 1
+                        "uniqueItems": true
+                      },
+                      "place": {
+                        "description": "Place of the location",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "description": "Description of the location",
+                        "type": "string",
+                        "minLength": 1
+                      }
                     }
                   }
-                }]
+                ]
               }
             }
           }
@@ -341,19 +360,21 @@
                 "type": "string",
                 "description": "A reference string."
               },
-              "identifier": {"$ref": "local://definitions-v1.0.0.json#/identifier"},
-              "scheme": {"$ref": "local://definitions-v1.0.0.json#/scheme"}
+              "identifier": {
+                "$ref": "local://definitions-v1.0.0.json#/identifier"
+              },
+              "scheme": {
+                "$ref": "local://definitions-v1.0.0.json#/scheme"
+              }
             }
           }
         }
       }
     },
-
-    "ext": {
+    "custom_fields": {
       "type": "object",
       "description": "Configured additional metadata"
     },
-
     "tombstone": {
       "type": "object",
       "description": "Tombstone for the record.",
@@ -367,7 +388,9 @@
           "type": "string",
           "description": "Category for the removal."
         },
-        "removed_by": {"$ref": "local://records/definitions-v2.0.0.json#/agent"},
+        "removed_by": {
+          "$ref": "local://records/definitions-v2.0.0.json#/agent"
+        },
         "timestamp": {
           "type": "string",
           "description": "ISO8601 formatted timestamp in UTC.",
@@ -375,35 +398,40 @@
         }
       }
     },
-
     "provenance": {
       "type": "object",
       "description": "Record provenance.",
       "additionalProperties": false,
       "properties": {
-        "created_by": {"$ref": "local://records/definitions-v2.0.0.json#/agent"},
-        "on_behalf_of": {"$ref": "local://records/definitions-v2.0.0.json#/agent"}
+        "created_by": {
+          "$ref": "local://records/definitions-v2.0.0.json#/agent"
+        },
+        "on_behalf_of": {
+          "$ref": "local://records/definitions-v2.0.0.json#/agent"
+        }
       }
     },
-
     "access": {
       "type": "object",
       "description": "Record access control and ownership.",
       "additionalProperties": false,
       "properties": {
-
         "record": {
           "description": "Record visibility (public or restricted)",
           "type": "string",
-          "enum": ["public", "restricted"]
+          "enum": [
+            "public",
+            "restricted"
+          ]
         },
-
         "files": {
           "description": "Files visibility (public or restricted)",
           "type": "string",
-          "enum": ["public", "restricted"]
+          "enum": [
+            "public",
+            "restricted"
+          ]
         },
-
         "embargo": {
           "description": "Description of the embargo on the record.",
           "type": "object",
@@ -411,22 +439,30 @@
           "properties": {
             "active": {
               "description": "Whether or not the embargo is (still) active.",
-              "type": ["boolean", "null"]
+              "type": [
+                "boolean",
+                "null"
+              ]
             },
             "until": {
               "description": "Embargo date of record (ISO8601 formatted date time in UTC). At this time both metadata and files will be made public.",
-              "type": ["string", "null"],
+              "type": [
+                "string",
+                "null"
+              ],
               "format": "date"
             },
             "reason": {
               "description": "The reason why the record is under embargo.",
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           }
         }
       }
     },
-
     "files": {
       "type": "object",
       "description": "Files associated with the record",
@@ -448,28 +484,31 @@
         },
         "entries": {
           "type": "object",
-          "additionalProperties": {"$ref": "local://records/definitions-v2.0.0.json#/file"}
+          "additionalProperties": {
+            "$ref": "local://definitions-v1.0.0.json#/file"
+          }
         },
         "meta": {
           "type": "object",
-          "additionalProperties": {"type": "object"}
+          "additionalProperties": {
+            "type": "object"
+          }
         }
       }
     },
-
     "notes": {
       "type": "array",
-      "items":{
+      "items": {
         "type": "string"
       }
     },
     "relationship": {
       "type": "object",
-      "description": "Package relationship with other elements (e.g., Packages, Resources)",
+      "description": "Record relationship with other records",
       "additionalProperties": false,
       "properties": {
-        "packages": {
-          "description": "List of packages linked to the specific version of the Package.",
+        "resources": {
+          "description": "List of resources linked to the specific version of the Package.",
           "type": "array",
           "uniqueItems": true,
           "items": {"$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"}

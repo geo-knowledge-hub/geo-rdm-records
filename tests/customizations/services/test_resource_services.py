@@ -41,3 +41,18 @@ def test_resource_record_creation(running_app, db, minimal_record, es_clear):
     record_item_published_dict = record_item_published.to_dict()
 
     assert record_item_published_dict.get("id") is not None
+
+
+def test_resource_record_deletion(running_app, db, minimal_record, es_clear):
+    """Test the deletion of a package record (Draft)."""
+    superuser_identity = running_app.superuser_identity
+
+    # 1. Creating a draft.
+    record_item = current_rdm_records_service.create(superuser_identity, minimal_record)
+
+    # 2. Deleting the draft.
+    resource_pid = record_item["id"]
+    res = current_rdm_records_service.delete_draft(superuser_identity, resource_pid)
+
+    # 3. Checking the result
+    assert res

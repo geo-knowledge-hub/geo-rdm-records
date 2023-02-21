@@ -9,7 +9,7 @@
 
 from invenio_drafts_resources.services.records.config import SearchOptions
 from invenio_rdm_records.services import config as rdm_config
-from invenio_rdm_records.services.customizations import FromConfigSearchOptions
+from invenio_records_resources.services.base.config import FromConfigSearchOptions
 
 from .params import BoundingBoxParam, FacetsParam
 
@@ -64,10 +64,21 @@ class BaseGEOServiceConfig(rdm_config.RDMRecordServiceConfig):
     """GEO record draft service config."""
 
     # Search configuration
-    search = FromConfigSearchOptions("RDM_SEARCH", search_option_cls=GEOSearchOptions)
+    search = FromConfigSearchOptions(
+        "RDM_SEARCH",
+        "RDM_SORT_OPTIONS",
+        "RDM_FACETS",
+        search_option_cls=GEOSearchOptions,
+    )
     search_drafts = FromConfigSearchOptions(
-        "RDM_SEARCH_DRAFTS", search_option_cls=GEOSearchDraftsOptions
+        "RDM_SEARCH_DRAFTS",
+        "RDM_SORT_OPTIONS",
+        "RDM_FACETS",
+        search_option_cls=GEOSearchDraftsOptions,
     )
     search_versions = FromConfigSearchOptions(
-        "RDM_SEARCH_VERSIONING", search_option_cls=GEOSearchVersionsOptions
+        "RDM_SEARCH_VERSIONING",
+        "RDM_SORT_OPTIONS",
+        "RDM_FACETS",
+        search_option_cls=GEOSearchVersionsOptions,
     )

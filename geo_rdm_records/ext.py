@@ -95,31 +95,31 @@ class GEORDMRecords(object):
     def init_resource(self, app):
         """Initialize resources."""
         self.package_records_resource = GEOPackageRecordResource(
-            GEOPackageRecordResourceConfig,
+            GEOPackageRecordResourceConfig.build(app),
             self.service,
         )
 
         # Record files resource
         self.package_record_files_resource = FileResource(
             service=self.service.files,
-            config=GEOPackageRecordFilesResourceConfig,
+            config=GEOPackageRecordFilesResourceConfig.build(app),
         )
 
         # Draft files resource
         self.package_draft_files_resource = FileResource(
             service=self.service.draft_files,
-            config=GEOPackageDraftFilesResourceConfig,
+            config=GEOPackageDraftFilesResourceConfig.build(app),
         )
 
         # Parent Records
         self.package_parent_record_links_resource = GEOPackageParentRecordLinksResource(
             service=self.service,
-            config=GEOPackageParentRecordLinksResourceConfig,
+            config=GEOPackageParentRecordLinksResourceConfig.build(app),
         )
 
         # Search
         self.search_resource = SearchRecordResource(
-            service=self.service_search, config=SearchRecordResourceConfig
+            service=self.service_search, config=SearchRecordResourceConfig.build(app)
         )
 
         # Context

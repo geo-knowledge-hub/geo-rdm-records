@@ -8,6 +8,7 @@
 """Test Package API Services."""
 
 import pytest
+from invenio_pidstore.errors import PIDDoesNotExistError
 from invenio_rdm_records.proxies import current_rdm_records_service
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -457,6 +458,84 @@ def test_package_edition_flow(
     # 9. Trying to load the draft again
     with pytest.raises(NoResultFound):
         current_geo_packages_service.read_draft(superuser_identity, package_pid)
+
+
+def test_package_delete_resource_flow(
+    running_app,
+    db,
+    draft_resource_record,
+    published_resource_record,
+    minimal_package,
+    refresh_index,
+    es_clear,
+):
+    """Test the resource deletion flow for Packages."""
+    superuser_identity = running_app.superuser_identity
+
+    # 1. Creating a package draft
+    record_item = current_geo_packages_service.create(
+        superuser_identity, minimal_package
+    )
+
+    package_pid = record_item["id"]
+    resource_draft_pid = draft_resource_record.pid.pid_value
+
+    # 2. Add resources to the package.
+    records = dict(
+        records=[
+            {"id": resource_draft_pid},
+        ]
+    )
+
+    current_geo_packages_service.context_associate(
+        superuser_identity, package_pid, records
+    )
+
+    resources = dict(
+        resources=[
+            {"id": resource_draft_pid},
+            {"id": published_resource_record.pid.pid_value},
+        ]
+    )
+
+    result = current_geo_packages_service.resource_add(
+        superuser_identity, package_pid, resources
+    )
+    assert len(result["errors"]) == 0
+
+    # refreshing the index
+    refresh_index()
+
+    # 3. Delete the draft resource
+
+    # 3.1. Testing package before delete the resource draft
+    package_w_draft = current_geo_packages_service.read_draft(
+        superuser_identity, package_pid
+    ).to_dict()
+    package_relationship = package_w_draft.get("relationship").get("resources")
+    package_relationship = list(map(lambda x: x["id"], package_relationship))
+
+    assert resource_draft_pid in package_relationship
+
+    # 3.2. Deleting the resource draft
+
+    # deleting draft resource
+    current_rdm_records_service.delete_draft(superuser_identity, resource_draft_pid)
+
+    # refreshing the index
+    refresh_index()
+
+    package_without_draft = current_geo_packages_service.read_draft(
+        superuser_identity, package_pid
+    ).to_dict()
+    package_relationship = package_without_draft.get("relationship").get("resources")
+    package_relationship = list(map(lambda x: x["id"], package_relationship))
+
+    assert resource_draft_pid not in package_relationship
+
+    # 4. Trying to load the resource draft
+    with pytest.raises(PIDDoesNotExistError):
+        current_rdm_records_service.read_draft(superuser_identity, resource_draft_pid)
 
 
 def test_package_versioning_flow(
