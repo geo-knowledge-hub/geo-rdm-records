@@ -78,6 +78,15 @@ RDM_FILE_DRAFT_SERVICE_CFG = (
     "geo_rdm_records.customizations.services.config.GEOFileDraftServiceConfig"
 )
 
+# Permissions
+GEO_RDM_RECORDS_PERMISSION_POLICY = (
+    "geo_rdm_records.base.services.permissions.BaseGEOPermissionPolicy"
+)
+
+GEO_RDM_PACKAGE_PERMISSION_POLICY = (
+    "geo_rdm_records.modules.packages.services.permissions.PackagesPermissionPolicy"
+)
+
 #
 # Search configuration
 #

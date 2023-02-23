@@ -172,6 +172,14 @@ def app_config(app_config):
         "RDM_REVIEW_SERVICE"
     ] = "geo_rdm_records.customizations.services.review.service.ReviewService"
 
+    app_config[
+        "GEO_RDM_RECORDS_PERMISSION_POLICY"
+    ] = "geo_rdm_records.base.services.permissions.BaseGEOPermissionPolicy"
+
+    app_config[
+        "GEO_RDM_PACKAGE_PERMISSION_POLICY"
+    ] = "geo_rdm_records.modules.packages.services.permissions.PackagesPermissionPolicy"
+
     #
     # Actions
     #
