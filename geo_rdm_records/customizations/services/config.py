@@ -45,7 +45,9 @@ class GEORecordServiceConfig(BaseGEOServiceConfig):
 
     # Permission policy
     permission_policy_cls = FromConfig(
-        "RDM_PERMISSION_POLICY", default=BaseGEOPermissionPolicy, import_string=True
+        "GEO_RDM_RECORDS_PERMISSION_POLICY",
+        default=BaseGEOPermissionPolicy,
+        import_string=True,
     )
 
     # Components - order matters!

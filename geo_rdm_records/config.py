@@ -79,7 +79,7 @@ RDM_FILE_DRAFT_SERVICE_CFG = (
 )
 
 # Permissions
-RDM_PERMISSION_POLICY = (
+GEO_RDM_RECORDS_PERMISSION_POLICY = (
     "geo_rdm_records.base.services.permissions.BaseGEOPermissionPolicy"
 )
 
