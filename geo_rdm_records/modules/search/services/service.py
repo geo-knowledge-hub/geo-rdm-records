@@ -15,7 +15,7 @@ from invenio_records_resources.services import LinksTemplate
 from invenio_search import current_search_client
 from invenio_search.engine import dsl
 
-from .links import MutableLinksTemplate
+from geo_rdm_records.base.services.links import MutableLinksTemplate
 
 
 class SearchRecordService(BaseRecordService):

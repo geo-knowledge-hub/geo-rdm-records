@@ -54,14 +54,14 @@ class MutableLinksTemplate(BaseLinksTemplate):
 
         self.types_registry = types_registry
 
-    def expand(self, obj):
+    def expand(self, identity, obj):
         """Expand all the link templates."""
         # defining the object type
         obj_type = self.types_registry.guess_type(obj, error=True)
 
         # updating the context with the type
         ctx = deepcopy(self.context)
-        ctx.update(dict(entity=obj_type))
+        ctx.update(dict(entity=obj_type, identity=identity))
 
         # expanding links
         links = {}

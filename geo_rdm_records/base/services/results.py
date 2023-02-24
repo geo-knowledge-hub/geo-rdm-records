@@ -68,6 +68,8 @@ class MutableRecordList(BaseRecordList):
                 ),
             )
             if self._links_item_tpl:
-                projection["links"] = self._links_item_tpl.expand(record)
+                projection["links"] = self._links_item_tpl.expand(
+                    self._identity, record
+                )
 
             yield projection
