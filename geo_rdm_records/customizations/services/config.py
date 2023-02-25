@@ -19,7 +19,9 @@ from geo_rdm_records.base.services.config import (
     GEOSearchDraftsOptions,
     GEOSearchOptions,
 )
+from geo_rdm_records.base.services.links import LinksRegistryType
 from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
+from geo_rdm_records.base.services.results import MutableRecordList, ResultRegistryType
 from geo_rdm_records.customizations.services.schemas import (
     GEOParentSchema,
     GEORecordSchema,
@@ -43,9 +45,18 @@ class GEORecordServiceConfig(BaseGEOServiceConfig):
     schema = GEORecordSchema
     schema_parent = GEOParentSchema
 
+    # Result classes
+    result_list_cls = MutableRecordList
+    results_registry_type = ResultRegistryType
+
+    # Links
+    links_registry_type = LinksRegistryType
+
     # Permission policy
     permission_policy_cls = FromConfig(
-        "RDM_PERMISSION_POLICY", default=BaseGEOPermissionPolicy, import_string=True
+        "GEO_RDM_RECORDS_PERMISSION_POLICY",
+        default=BaseGEOPermissionPolicy,
+        import_string=True,
     )
 
     # Components - order matters!

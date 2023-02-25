@@ -19,7 +19,9 @@ from invenio_records_resources.services.base.links import Link
 from invenio_records_resources.services.records.links import RecordLink
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
+from geo_rdm_records.base.services.links import LinksRegistryType
 from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
+from geo_rdm_records.base.services.results import MutableRecordList, ResultRegistryType
 from geo_rdm_records.base.services.schemas import ParentSchema
 from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 from geo_rdm_records.modules.packages.records.api import (
@@ -27,8 +29,6 @@ from geo_rdm_records.modules.packages.records.api import (
     GEOPackageRecord,
 )
 
-from .links import LinksRegistryType
-from .results import MutableRecordList, ResultRegistryType
 from .schemas import GEORecordSchema
 
 

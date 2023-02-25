@@ -11,10 +11,30 @@ from invenio_rdm_records.services import RDMRecordService as BaseRecordService
 from invenio_records_resources.services import LinksTemplate
 from invenio_search.engine import dsl
 
+from geo_rdm_records.base.services.links import MutableLinksTemplate
+
 
 class GEORDMRecordService(BaseRecordService):
     """RDM Record service."""
 
+    #
+    # Properties
+    #
+    @property
+    def links_item_tpl(self):
+        """Item links template."""
+        return MutableLinksTemplate(
+            self.config.links_item, self.config.links_registry_type
+        )
+
+    @property
+    def results_registry_type(self):
+        """Registry class for records."""
+        return self.config.results_registry_type
+
+    #
+    # High-level API
+    #
     def search_package_records(
         self, identity, package_id, params=None, search_preference=None, **kwargs
     ):
