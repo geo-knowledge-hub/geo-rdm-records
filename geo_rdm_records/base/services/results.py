@@ -22,11 +22,11 @@ class ResultRegistryType:
     """Result types for mutable search results."""
 
     supported_types = {
-        "records": dict(draft=GEODraft, record=GEORecord),
         "packages": dict(
             draft=GEOPackageDraft,
             record=GEOPackageRecord,
         ),
+        "records": dict(draft=GEODraft, record=GEORecord),
     }
 
     @classmethod
