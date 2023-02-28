@@ -39,6 +39,9 @@ class PackageResourceAccessComponent(ServiceComponent):
             for resource in record.relationship.resources:
                 resource_obj = resource.resolve()
 
+                if not resource_obj:
+                    return
+
                 # Modifications must be made only in resources managed by the
                 # package.
                 resource_manager = resource_obj.parent.relationship.managed_by or None

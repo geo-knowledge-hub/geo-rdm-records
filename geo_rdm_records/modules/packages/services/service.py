@@ -225,7 +225,10 @@ class GEOPackageRecordService(BaseRDMRecordService):
             relationship_type = "related"
 
             if resource_obj.parent.relationship.managed_by:
-                if resource_obj.parent.relationship.managed_by == package_draft.parent:
+                if (
+                    resource_obj.parent.relationship.managed_by["id"]
+                    == package_draft.parent["id"]
+                ):
                     relationship_type = "managed"
 
             allow_draft = not (relationship_type == PackageRelationship.RELATED.value)

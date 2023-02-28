@@ -7,6 +7,7 @@
 
 """Record proxy for system fields."""
 
+from invenio_pidstore.errors import PIDDoesNotExistError
 from sqlalchemy.orm.exc import NoResultFound
 
 from geo_rdm_records.class_factory import ClassFactory
@@ -101,6 +102,8 @@ class BaseRecordProxy:
                         self._entity = self.draft_cls.pid.resolve(
                             self.record_id, registered_only=False
                         )
+                except PIDDoesNotExistError:
+                    self._entity = None
 
         return self._entity
 
