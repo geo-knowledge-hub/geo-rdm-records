@@ -17,10 +17,11 @@ class PackagesPermissionPolicy(BaseGEOPermissionPolicy):
     # High-level permissions (used by low-level)
     #
     can_manage = BaseGEOPermissionPolicy.can_manage
+    can_curate = BaseGEOPermissionPolicy.can_curate
 
     #
     # Package Context
     #
-    can_context_update_access = can_manage
-    can_context_associate_resource = can_manage
-    can_context_dissociate_resource = can_manage
+    can_context_update_access = can_curate
+    can_context_associate_resource = can_curate
+    can_context_dissociate_resource = can_curate
