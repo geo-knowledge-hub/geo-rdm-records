@@ -7,8 +7,7 @@
 
 """GEO RDM Records Packages API Secret Links Services."""
 
-from copy import copy
-
+from invenio_rdm_records.proxies import current_rdm_records_service
 from invenio_rdm_records.services.secret_links.service import (
     SecretLinkService as BaseSecretLinkService,
 )
@@ -47,10 +46,19 @@ class SecretLinkService(BaseSecretLinkService):
             #       or test a "classified" relation, where the relations are internally
             #       classified with a "type" tag.
             if resource.parent.relationship.managed_by == package.parent:
-                resource.parent.access.links = copy(package.parent.access.links)
+                # ToDo: (Temporary solution) The previous links are replaced
+                #       by the package links.
+                resource.parent.access.links.clear()
+                resource.parent.access.links.extend(package.parent.access.links)
 
                 uow.register(RecordCommitOp(resource.parent))
-                uow.register(RecordCommitOp(resource))
+                uow.register(
+                    RecordCommitOp(
+                        resource,
+                        indexer=current_rdm_records_service.indexer,
+                        index_refresh=True,
+                    )
+                )
 
     @unit_of_work()
     def create(self, identity, id_, data, links_config=None, uow=None):
