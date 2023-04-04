@@ -59,9 +59,35 @@ class PackageServiceAction(enum.Enum):
 class GEOPackageRecordService(BaseRDMRecordService):
     """GEO Package record service."""
 
+    def __init__(
+        self,
+        config,
+        files_service=None,
+        draft_files_service=None,
+        secret_links_service=None,
+        pids_service=None,
+        review_service=None,
+        request_service=None,
+    ):
+        """Constructor for RecordService."""
+        super().__init__(
+            config,
+            files_service,
+            draft_files_service,
+            secret_links_service,
+            pids_service,
+            review_service,
+        )
+        self._request_service = request_service
+
     #
     # Properties
     #
+    @property
+    def request(self):
+        """Request subservice."""
+        return self._request_service
+
     @property
     def resource_cls(self):
         """Resource record class."""

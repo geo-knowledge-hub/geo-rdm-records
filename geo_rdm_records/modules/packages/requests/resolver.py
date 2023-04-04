@@ -20,8 +20,8 @@ class RecordProxy(BaseRecordProxy):
     draft_cls = GEOPackageDraft
 
 
-class RecordResolver(BaseRecordResolver):
-    """Record entity resolver."""
+class PackageDraftResolver(BaseRecordResolver):
+    """Package draft entity resolver."""
 
     type_id = "packages"
 
@@ -32,3 +32,17 @@ class RecordResolver(BaseRecordResolver):
     service_id = "records_package"
 
     type_key = "package"
+
+
+class PackageRecordResolver(BaseRecordResolver):
+    """Package record entity resolver."""
+
+    type_id = "packages_record"
+
+    record_cls = GEOPackageRecord
+
+    proxy_cls = RecordProxy
+
+    service_id = "records_package"
+
+    type_key = "package_record"

@@ -30,6 +30,7 @@ from .modules.packages.services.config import (
     GEOPackageFileRecordServiceConfig,
     GEOPackageRecordServiceConfig,
 )
+from .modules.packages.services.request.service import PackageBlogRequestService
 from .modules.packages.services.secret_links import SecretLinkService
 from .modules.packages.services.service import GEOPackageRecordService
 from .modules.search.resources.config import SearchRecordResourceConfig
@@ -88,6 +89,7 @@ class GEORDMRecords(object):
                 service_configs.record, PIDManager
             ),  # same used for the records.
             review_service=ReviewService(service_configs.record),
+            request_service=PackageBlogRequestService(service_configs.record),
         )
 
         self.service_search = SearchRecordService(config=service_configs.search)
