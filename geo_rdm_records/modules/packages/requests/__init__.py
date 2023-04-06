@@ -6,3 +6,5 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 """GEO RDM Records Package requests definition."""
+
+from .types import BlogPostCreation

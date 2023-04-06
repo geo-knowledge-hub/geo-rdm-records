@@ -165,6 +165,11 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
         "resources_import": RecordLink(
             "{+api}/packages/{id}/draft/actions/resources-import", when=is_draft
         ),
+        "blog": RecordLink("{+api}/packages/{id}/blog", when=is_record),
+        "blog-review": RecordLink(
+            "{+api}/packages/{id}/actions/submit-blog",
+            when=is_record,  # ToDo: When has blog request
+        ),
     }
 
     links_search_community_records = pagination_links(

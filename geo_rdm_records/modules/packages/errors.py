@@ -22,3 +22,7 @@ class InvalidPackageResourceError(PackageError):
 
 class InvalidRelationshipError(PackageError):
     """Relationship is not valid for the package/resource defined."""
+
+
+class PackageRequestException(PackageError):
+    """Base class for Knowledge Packages request errors."""
