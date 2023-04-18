@@ -55,6 +55,8 @@ class GEOPackageRecordResource(BaseRecordResource):
                 self.package_import_resources,
             ),
             route("POST", p(routes["item-validate"]), self.package_validate),
+            # Requests
+            route("GET", p(routes["request-blog-post"]), self.request_blog_post_read),
             route("PUT", p(routes["request-blog-post"]), self.request_blog_post),
             route(
                 "POST",
@@ -114,6 +116,17 @@ class GEOPackageRecordResource(BaseRecordResource):
             resource_requestctx.view_args["pid_value"],
         )
         return result, 200
+
+    @request_view_args
+    @response_handler()
+    def request_blog_post_read(self):
+        """Read package request."""
+        item = self.service.request.read(
+            g.identity,
+            resource_requestctx.view_args["pid_value"],
+        )
+
+        return item.to_dict(), 200
 
     @request_headers
     @request_view_args

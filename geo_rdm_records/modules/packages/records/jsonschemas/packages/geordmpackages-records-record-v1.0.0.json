@@ -514,6 +514,12 @@
           "items": {"$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"}
         }
       }
+    },
+    "assistance_requests": {
+      "type": "array",
+      "items": {
+        "$ref": "local://requests/request-v1.0.0.json"
+      }
     }
   }
 }

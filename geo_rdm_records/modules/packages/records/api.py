@@ -21,6 +21,7 @@ from invenio_rdm_records.records.systemfields.draft_status import DraftStatus
 from invenio_records.systemfields import ConstantField
 from invenio_records_resources.records.api import FileRecord
 from invenio_records_resources.records.systemfields import FilesField, IndexField
+from invenio_requests.records.api import Request
 
 from geo_rdm_records.base.records.api import GEOBaseRecord
 from geo_rdm_records.base.records.systemfields.common import BaseGEORecordsFieldsMixin
@@ -37,6 +38,7 @@ from .models import (
 )
 from .systemfields.access import ParentRecordAccessField
 from .systemfields.relationship import PackageRelationshipField
+from .systemfields.requests import AssistanceRequests
 
 
 #
@@ -117,6 +119,10 @@ class GEOPackageDraft(CommonFieldsMixin, Draft):
 
     relationship = PackageRelationshipField(key="relationship")
 
+    assistance_requests = AssistanceRequests(
+        Request, keys=["type", "receiver", "status"]
+    )
+
 
 #
 # Record API
@@ -151,6 +157,10 @@ class GEOPackageRecord(CommonFieldsMixin, Record):
     status = DraftStatus()
 
     relationship = PackageRelationshipField(key="relationship")
+
+    assistance_requests = AssistanceRequests(
+        Request, keys=["type", "receiver", "status"]
+    )
 
 
 GEOPackageFileDraft.record_cls = GEOPackageDraft
