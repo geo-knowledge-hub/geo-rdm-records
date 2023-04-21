@@ -8,17 +8,32 @@
 """GEO RDM Records Requests service."""
 
 from flask_babelex import lazy_gettext as _
-from invenio_records_resources.services.uow import unit_of_work
+from invenio_drafts_resources.services.records import RecordService
+from invenio_records_resources.services.uow import RecordCommitOp, unit_of_work
 from invenio_requests import current_request_type_registry, current_requests_service
 from invenio_requests.resolvers.registry import ResolverRegistry
-from invenio_search.engine import dsl
 from marshmallow import ValidationError
 
-from geo_rdm_records.base.services.requests import BaseRequestService
-from geo_rdm_records.modules.packages.errors import PackageRequestException
+from geo_rdm_records.modules.packages.errors import (
+    PackageRequestException,
+    PackageRequestNotFoundError,
+)
 
 
-class PackageBlogRequestService(BaseRequestService):
+#
+# Utility
+#
+def has_blog_requests(record, ctx):
+    """Shortcut for links to determine if record has ."""
+    return any(
+        map(
+            lambda x: x["type"] == PackageBlogRequestService.request_type,
+            record.assistance_requests,
+        )
+    )
+
+
+class PackageBlogRequestService(RecordService):
     """Blog requests class for Packages."""
 
     #
@@ -34,21 +49,36 @@ class PackageBlogRequestService(BaseRequestService):
     #
     # Auxiliary function
     #
-    def _search_record_requests(self, identity, record_pid, extra_filter=None):
+    def _search_record_requests(self, record):
         """Search for record requests."""
         # Search rule: Extra filter to search by the specific request type
-        # ToDo: Should this filter be available in the `search_record_requests` ?
-        extra_filter = dsl.query.Bool(
-            "must", must=[dsl.Q("term", **{"type": self.request_type})]
-        )
+        package_requests = record.assistance_requests
 
-        return super()._search_record_requests(
-            identity, record_pid, extra_filter=extra_filter
-        )
+        for request in package_requests:
+            # checking the type of the request
+            request = request.get_object()
+
+            if self.request_type == request.type.type_id:
+                # Assumes that only one request is available
+                return request
+        return None
 
     #
     # High-Level API
     #
+    def read(self, identity, id_):
+        """Read request."""
+        record = self.record_cls.pid.resolve(id_, registered_only=False)
+        self.require_permission(identity, "manage", record=record)
+
+        # Get package requests
+        request = self._search_record_requests(record)
+
+        if request:
+            return request
+
+        raise PackageRequestNotFoundError()
+
     @unit_of_work()
     def update(self, identity, id_, data, revision_id=None, uow=None):
         """Create or update an existing request."""
@@ -56,17 +86,11 @@ class PackageBlogRequestService(BaseRequestService):
         record = self.record_cls.pid.resolve(id_, registered_only=False)
         self.require_permission(identity, "manage", record=record)
 
-        # Search package requests
-        package_requests = self._search_record_requests(identity, id_)
+        # Get package requests
+        request = self._search_record_requests(record)
 
-        # If an request exists, delete it
-        if package_requests:
-            # Assumes that only one request is available
-            package_request = package_requests[0]
-
-            # Delete request (following the approach defined in the Invenio RDM Records)
-            current_requests_service.delete(identity, package_request["id"], uow=uow)
-
+        if request:
+            current_requests_service.delete(identity, request.id, uow=uow)
         return self.create(identity, data, record, uow=uow)
 
     @unit_of_work()
@@ -89,9 +113,15 @@ class PackageBlogRequestService(BaseRequestService):
         receiver = ResolverRegistry.resolve_entity_proxy(receiver).resolve()
 
         # Delegate to requests service to create the request
-        return current_requests_service.create(
+        request_item = current_requests_service.create(
             identity, data, type_, receiver, topic=record, uow=uow
         )
+
+        # Save request in the record
+        record.assistance_requests.append(request_item._request)
+        uow.register(RecordCommitOp(record))
+
+        return request_item
 
     @unit_of_work()
     def submit(self, identity, id_, data=None, revision_id=None, uow=None):
@@ -101,16 +131,9 @@ class PackageBlogRequestService(BaseRequestService):
         self.require_permission(identity, "manage", record=record)
 
         # Search package requests
-        package_requests = self._search_record_requests(identity, id_)
+        request = self._search_record_requests(record)
 
-        # Assumes that only one request is available
-        package_request = package_requests[0]
-
-        # Submit!
-        request_id = package_request["id"]
-
-        request_item = current_requests_service.execute_action(
-            identity, request_id, "submit", data=data, uow=uow
-        )
-
-        return request_item
+        if request:
+            return current_requests_service.execute_action(
+                identity, request.id, "submit", data=data, uow=uow
+            )
