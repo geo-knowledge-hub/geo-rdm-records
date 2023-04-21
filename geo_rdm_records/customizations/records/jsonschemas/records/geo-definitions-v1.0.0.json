@@ -318,5 +318,16 @@
         "$ref": "#/GeoJSON-GeometryCollection"
       }
     ]
+  },
+  "resource": {
+    "type": "object",
+    "description": "Resource to be associated with a package",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Resource identifier"
+      }
+    }
   }
 }

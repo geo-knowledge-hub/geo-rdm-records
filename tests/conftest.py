@@ -30,6 +30,7 @@ from invenio_communities.communities.records.api import Community
 from invenio_rdm_records.services import facets as rdm_facets
 from invenio_rdm_records.services.pids import providers
 from invenio_records_resources.proxies import current_service_registry
+from invenio_users_resources.resolvers import UserResolver
 from invenio_vocabularies.contrib.affiliations.api import Affiliation
 from invenio_vocabularies.contrib.awards.api import Award
 from invenio_vocabularies.contrib.funders.api import Funder
@@ -40,6 +41,7 @@ from invenio_vocabularies.records.api import Vocabulary
 from geo_rdm_records import config
 from geo_rdm_records.base.services import facets as geo_facets
 from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
+from geo_rdm_records.customizations.requests.resolver import RecordResolver
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     GEOPackageRecord,
@@ -202,6 +204,11 @@ def app_config(app_config):
     app_config[
         "RDM_COMMUNITY_ACTION_EXPIRE"
     ] = "geo_rdm_records.base.requests.ExpireAction"
+
+    #
+    # Entity resolvers
+    #
+    app_config["REQUESTS_ENTITY_RESOLVERS"] = [UserResolver(), RecordResolver()]
 
     #
     # Search (Facets)

@@ -23,7 +23,7 @@ class RecordProxy(BaseRecordProxy):
 class RecordResolver(BaseRecordResolver):
     """Record entity resolver."""
 
-    type_id = "resources"
+    type_id = "record"
 
     record_cls = GEODraft
 

@@ -14,6 +14,7 @@ from invenio_records_resources.services.base.config import (
 )
 from invenio_records_resources.services.records.links import pagination_links
 
+from geo_rdm_records.base.records.types import GEORecordTypes
 from geo_rdm_records.base.services.config import (
     BaseGEOServiceConfig,
     GEOSearchDraftsOptions,
@@ -38,6 +39,7 @@ class GEORecordServiceConfig(BaseGEOServiceConfig):
     """GEO record draft service config."""
 
     # Record and draft classes
+    record_type = GEORecordTypes.resource
     record_cls = GEORecord
     draft_cls = GEODraft
 

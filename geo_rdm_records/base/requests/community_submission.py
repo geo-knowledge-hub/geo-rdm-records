@@ -36,11 +36,11 @@ class ServiceHandler:
 
     services = [
         {
-            "classes": (GEODraft, GEORecord, RDMDraft, RDMRecord),
+            "type": "resource",
             "service": current_rdm_records_service,
         },
         {
-            "classes": (GEOPackageDraft, GEOPackageRecord),
+            "type": "package",
             "service": current_geo_packages_service,
         },
     ]
@@ -52,10 +52,10 @@ class ServiceHandler:
         Select the service based on the ``record`` type.
         """
         for service in self.services:
-            if isinstance(record, tuple(service["classes"])):
+            if record.parent.type == service["type"]:
                 return service["service"]
 
-        raise ValueError(_("Invalid record type."))
+        raise ValueError(_(f"Invalid record type: {record.parent.type}"))
 
 
 #

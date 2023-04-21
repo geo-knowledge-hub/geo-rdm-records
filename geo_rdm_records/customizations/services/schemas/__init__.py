@@ -8,6 +8,7 @@
 """GEO RDM Records Services schema."""
 
 from invenio_rdm_records.services.schemas import RDMRecordSchema as BaseRecordSchema
+from invenio_rdm_records.services.schemas.metadata import VocabularySchema
 from marshmallow import fields
 from marshmallow_utils.fields import NestedAttribute
 
@@ -15,6 +16,11 @@ from geo_rdm_records.base.services.schemas import MetadataSchema, ParentSchema
 
 from .parent import ParentRelationshipSchema
 from .relationship import RelationshipSchema
+
+#
+# Complete metadata schema
+#
+# class MetadataSchema(BaseMetadataSchema):  ## ToDo: Add validation for the Knowledge Package
 
 
 class GEOParentSchema(ParentSchema):

@@ -28,7 +28,7 @@ def init(state):
     rr_ext.registry.register(ext.service.draft_files, service_id="files_package_draft")
 
     # indexers
-    idx_ext.registry.register(ext.service.indexer, indexer_id="records_packages")
+    # idx_ext.registry.register(ext.service.indexer, indexer_id="records_packages")
     # idx_ext.registry.register(
     #     ext.service.members.indexer, indexer_id="members_packages"
     # )

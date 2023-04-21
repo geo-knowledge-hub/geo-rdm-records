@@ -22,6 +22,7 @@ from invenio_records_resources.services.base.links import Link
 from invenio_records_resources.services.files.links import FileLink
 from invenio_records_resources.services.records.links import pagination_links
 
+from geo_rdm_records.base.records.types import GEORecordTypes
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.schemas import ParentSchema
 from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
@@ -48,6 +49,8 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
     service_id = "records_package"
 
     # Record and draft classes
+    record_type = GEORecordTypes.package
+
     record_cls = GEOPackageRecord
     draft_cls = GEOPackageDraft
 
@@ -199,16 +202,14 @@ class GEOPackageFileRecordServiceConfig(rdm_config.RDMFileRecordServiceConfig):
         "content": FileLink("{+api}/packages/{id}/files/{key}/content"),
         # FIXME: filename instead
         "iiif_canvas": FileLink(
-            "{+api}/iiif/package:{id}/canvas/{key}", when=is_iiif_compatible
+            "{+api}/iiif/record:{id}/canvas/{key}", when=is_iiif_compatible
         ),
-        "iiif_base": FileLink(
-            "{+api}/iiif/package:{id}:{key}", when=is_iiif_compatible
-        ),
+        "iiif_base": FileLink("{+api}/iiif/record:{id}:{key}", when=is_iiif_compatible),
         "iiif_info": FileLink(
-            "{+api}/iiif/package:{id}:{key}/info.json", when=is_iiif_compatible
+            "{+api}/iiif/record:{id}:{key}/info.json", when=is_iiif_compatible
         ),
         "iiif_api": FileLink(
-            "{+api}/iiif/package:{id}:{key}/{region=full}"
+            "{+api}/iiif/record:{id}:{key}/{region=full}"
             "/{size=full}/{rotation=0}/{quality=default}.{format=png}",
             when=is_iiif_compatible,
         ),
@@ -242,16 +243,14 @@ class GEOPackageDraftFileServiceConfig(rdm_config.RDMFileDraftServiceConfig):
         "commit": FileLink("{+api}/packages/{id}/draft/files/{key}/commit"),
         # FIXME: filename instead
         "iiif_canvas": FileLink(
-            "{+api}/iiif/package-draft:{id}/canvas/{key}", when=is_iiif_compatible
+            "{+api}/iiif/draft:{id}/canvas/{key}", when=is_iiif_compatible
         ),
-        "iiif_base": FileLink(
-            "{+api}/iiif/package-draft:{id}:{key}", when=is_iiif_compatible
-        ),
+        "iiif_base": FileLink("{+api}/iiif/draft:{id}:{key}", when=is_iiif_compatible),
         "iiif_info": FileLink(
-            "{+api}/iiif/package-draft:{id}:{key}/info.json", when=is_iiif_compatible
+            "{+api}/iiif/draft:{id}:{key}/info.json", when=is_iiif_compatible
         ),
         "iiif_api": FileLink(
-            "{+api}/iiif/package-draft:{id}:{key}/{region=full}"
+            "{+api}/iiif/draft:{id}:{key}/{region=full}"
             "/{size=full}/{rotation=0}/{quality=default}.{format=png}",
             when=is_iiif_compatible,
         ),

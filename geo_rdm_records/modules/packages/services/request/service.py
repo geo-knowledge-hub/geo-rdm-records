@@ -75,7 +75,19 @@ class PackageBlogRequestService(RecordService):
         request = self._search_record_requests(record)
 
         if request:
-            return request
+            # reusing request service to avoid read the same
+            # record many times.
+            return current_requests_service.result_item(
+                current_requests_service,
+                identity,
+                request,
+                schema=current_requests_service._wrap_schema(
+                    request.type.marshmallow_schema()
+                ),
+                links_tpl=current_requests_service.links_item_tpl,
+                expandable_fields=current_requests_service.expandable_fields,
+                expand=False,
+            )
 
         raise PackageRequestNotFoundError()
 

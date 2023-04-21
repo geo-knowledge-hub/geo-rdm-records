@@ -23,6 +23,7 @@
       },
       "uniqueItems": true
     },
+
     "metadata": {
       "type": "object",
       "description": "Resource metadata.",
@@ -502,15 +503,27 @@
     },
     "relationship": {
       "type": "object",
-      "description": "Package relationship with other elements (e.g., Packages, Resources)",
+      "description": "Record relationship with other records",
       "additionalProperties": false,
       "properties": {
         "packages": {
           "description": "List of packages linked to the specific version of the Package.",
           "type": "array",
           "uniqueItems": true,
-          "items": {"$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"}
+          "items": {"$ref": "local://records/geo-definitions-v1.0.0.json#/resource"}
+        },
+        "resources": {
+          "description": "List of resources linked to the specific version of the Package.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "local://records/geo-definitions-v1.0.0.json#/resource"}
         }
+      }
+    },
+    "assistance_requests": {
+      "type": "array",
+      "items": {
+        "$ref": "local://requests/request-v1.0.0.json"
       }
     }
   }

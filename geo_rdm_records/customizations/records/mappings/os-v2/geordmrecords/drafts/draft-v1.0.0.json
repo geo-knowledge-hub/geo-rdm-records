@@ -143,6 +143,12 @@
           },
           "access": {
             "properties" : {
+              "member_policy": {
+                "type": "keyword"
+              },
+              "record_policy": {
+                "type": "keyword"
+              },
               "owned_by" : {
                 "properties": {
                   "user": {
@@ -238,8 +244,14 @@
             "type": "keyword"
           },
           "relationship": {
-            "type": "object",
             "properties": {
+              "resources": {
+                "properties": {
+                  "id": {
+                    "type": "keyword"
+                  }
+                }
+              },
               "managed_by": {
                 "type": "object",
                 "properties": {
@@ -438,6 +450,9 @@
               },
               "person_or_org": {
                 "properties": {
+                  "email": {
+                    "type": "keyword"
+                  },
                   "family_name" : {
                     "type" : "text"
                   },
@@ -926,6 +941,13 @@
       "relationship": {
         "properties": {
           "packages": {
+            "properties": {
+              "id": {
+                "type": "keyword"
+              }
+            }
+          },
+          "resources": {
             "properties": {
               "id": {
                 "type": "keyword"

@@ -78,13 +78,13 @@
           }
         }
       },
-      "access": {
-        "properties": {
-          "record": {
-            "type": "keyword"
+      "access" : {
+        "properties" : {
+          "record" : {
+            "type" : "keyword"
           },
-          "files": {
-            "type": "keyword"
+          "files" : {
+            "type" : "keyword"
           },
           "embargo": {
             "properties": {
@@ -99,14 +99,10 @@
               }
             }
           },
-          "status": {
+          "status" : {
             "type": "keyword"
           }
         }
-      },
-      "custom_fields": {
-        "type": "object",
-        "dynamic": true
       },
       "parent" : {
         "properties": {
@@ -142,8 +138,14 @@
             }
           },
           "access": {
-            "properties": {
-              "owned_by": {
+            "properties" : {
+              "member_policy": {
+                "type": "keyword"
+              },
+              "record_policy": {
+                "type": "keyword"
+              },
+              "owned_by" : {
                 "properties": {
                   "user": {
                     "type": "keyword"
@@ -198,8 +200,14 @@
             "type": "keyword"
           },
           "relationship": {
-            "type": "object",
             "properties": {
+              "resources": {
+                "properties": {
+                  "id": {
+                    "type": "keyword"
+                  }
+                }
+              },
               "managed_by": {
                 "type": "object",
                 "properties": {
@@ -207,6 +215,49 @@
                     "type": "keyword"
                   }
                 }
+              }
+            }
+          },
+          "assistance_requests": {
+            "type": "object",
+            "properties": {
+              "$schema": {
+                "type": "keyword",
+                "index": false
+              },
+              "id": {
+                "type": "keyword"
+              },
+              "type": {
+                "type": "keyword"
+              },
+              "title": {
+                "type": "text"
+              },
+              "description": {
+                "type": "text"
+              },
+              "status": {
+                "type": "keyword"
+              },
+              "payload": {
+                "type": "object",
+                "dynamic": true
+              },
+              "topic": {
+                "type": "object",
+                "dynamic": true
+              },
+              "receiver": {
+                "type": "object",
+                "dynamic": true
+              },
+              "created_by": {
+                "type": "object",
+                "dynamic": true
+              },
+              "@v": {
+                "type": "keyword"
               }
             }
           }
@@ -762,17 +813,17 @@
             "type": "keyword",
             "ignore_above": 256
           },
-          "subjects": {
+          "subjects" : {
             "type": "object",
-            "properties": {
-              "@v": {
-                "type": "keyword"
+            "properties" : {
+              "@v" : {
+                "type" : "keyword"
               },
-              "id": {
-                "type": "keyword"
+              "id" : {
+                "type" : "keyword"
               },
-              "subject": {
-                "type": "text",
+              "subject" : {
+                "type" : "text",
                 "fields": {
                   "keyword": {
                     "type": "keyword"
@@ -869,9 +920,27 @@
           }
         }
       },
+      "files": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "default_preview": {
+            "type": "keyword"
+          }
+        }
+      },
       "relationship": {
         "properties": {
           "packages": {
+            "properties": {
+              "id": {
+                "type": "keyword"
+              }
+            }
+          },
+          "resources": {
             "properties": {
               "id": {
                 "type": "keyword"
