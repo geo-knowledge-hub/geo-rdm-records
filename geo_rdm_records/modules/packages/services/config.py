@@ -256,3 +256,11 @@ class GEOPackageDraftFileServiceConfig(rdm_config.RDMFileDraftServiceConfig):
             when=is_iiif_compatible,
         ),
     }
+
+
+class GEOPackageRequestServiceConfig(GEOPackageRecordServiceConfig):
+    """GEO Package request service config."""
+
+    request_default_receiver = FromConfig(
+        "GEO_RDM_RECORDS_REQUESTS_DEFAULT_RECEIVER", import_string=False
+    )

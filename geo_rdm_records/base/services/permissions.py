@@ -7,6 +7,7 @@
 
 """Permissions for GEO RDM Records (Packages API)."""
 
+from geo_config.security.generators import GeoSecretariat
 from invenio_rdm_records.services.generators import (
     CommunityAction,
     IfFileIsLocal,
@@ -57,6 +58,11 @@ class BaseGEOPermissionPolicy(RecordPermissionPolicy):
 
     can_authenticated = [AuthenticatedUser(), SystemProcess()]
     can_all = [AnyUser(), SystemProcess()]
+
+    #
+    # Requests
+    #
+    can_accept_request = [GeoSecretariat()]
 
     #
     #  Records
