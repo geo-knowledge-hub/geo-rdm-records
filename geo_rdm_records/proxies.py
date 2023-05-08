@@ -17,3 +17,8 @@ current_geo_packages_service = LocalProxy(
     lambda: current_app.extensions["geo-rdm-records"].service
 )
 """Helper proxy to get the current Packages API service."""
+
+current_cms_service = LocalProxy(
+    lambda: current_app.extensions["geo-rdm-records"].service_cms
+)
+"""Helper proxy to get the current CMS service."""

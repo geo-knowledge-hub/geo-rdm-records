@@ -27,24 +27,31 @@ def has_blog_requests(record, ctx):
     """Shortcut for links to determine if record has ."""
     return any(
         map(
-            lambda x: x["type"] == PackageBlogRequestService.request_type,
+            lambda x: x["type"] == PackageFeedRequestService.request_type,
             record.assistance_requests,
         )
     )
 
 
-class PackageBlogRequestService(RecordService):
-    """Blog requests class for Packages."""
+class PackageFeedRequestService(RecordService):
+    """Feed requests class for Packages."""
 
     #
     # Request type
     #
-    request_type = "blog-post-creation"
+    request_type = "feed-post-creation"
 
     #
     # Topic type
     #
     request_topic_type = "package_record"
+
+    #
+    # Properties
+    #
+    @property
+    def _default_receiver(self):
+        return self.config.request_default_receiver
 
     #
     # Auxiliary function
@@ -75,7 +82,19 @@ class PackageBlogRequestService(RecordService):
         request = self._search_record_requests(record)
 
         if request:
-            return request
+            # reusing request service to avoid read the same
+            # record many times.
+            return current_requests_service.result_item(
+                current_requests_service,
+                identity,
+                request,
+                schema=current_requests_service._wrap_schema(
+                    request.type.marshmallow_schema()
+                ),
+                links_tpl=current_requests_service.links_item_tpl,
+                expandable_fields=current_requests_service.expandable_fields,
+                expand=False,
+            )
 
         raise PackageRequestNotFoundError()
 
@@ -109,7 +128,8 @@ class PackageBlogRequestService(RecordService):
             raise ValidationError(_("Invalid request type."), field_name="type")
 
         # Receiver
-        receiver = data.pop("receiver", None)
+        # ToDo: Can we add groups as default ?
+        receiver = {"user": self._default_receiver}
         receiver = ResolverRegistry.resolve_entity_proxy(receiver).resolve()
 
         # Delegate to requests service to create the request
