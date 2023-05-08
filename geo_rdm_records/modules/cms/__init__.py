@@ -5,9 +5,4 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""GEO RDM Records configuration module for GEO Knowledge Hub."""
-
-from .ext import GEORDMRecords
-
-__version__ = "0.6.0.dev0"
-__all__ = ("__version__", "GEORDMRecords")
+"""GEO RDM Records CMS module."""

@@ -13,6 +13,8 @@ from invenio_records_resources.resources.files import FileResource
 from invenio_records_resources.services import FileService
 
 from . import config
+from .modules.cms.services.config import CMSServiceConfig
+from .modules.cms.services.service import CMSService
 from .modules.packages.resources.config import (
     GEOPackageDraftFilesResourceConfig,
     GEOPackageParentRecordLinksResourceConfig,
@@ -29,7 +31,9 @@ from .modules.packages.services.config import (
     GEOPackageDraftFileServiceConfig,
     GEOPackageFileRecordServiceConfig,
     GEOPackageRecordServiceConfig,
+    GEOPackageRequestServiceConfig,
 )
+from .modules.packages.services.request.service import PackageFeedRequestService
 from .modules.packages.services.secret_links import SecretLinkService
 from .modules.packages.services.service import GEOPackageRecordService
 from .modules.search.resources.config import SearchRecordResourceConfig
@@ -71,6 +75,8 @@ class GEORDMRecords(object):
             file = GEOPackageFileRecordServiceConfig.build(app)
             file_draft = GEOPackageDraftFileServiceConfig.build(app)
             search = SearchRecordServiceConfig.build(app)
+            cms = CMSServiceConfig.build(app)
+            requests = GEOPackageRequestServiceConfig.build(app)
 
         return ServiceConfigs
 
@@ -88,9 +94,14 @@ class GEORDMRecords(object):
                 service_configs.record, PIDManager
             ),  # same used for the records.
             review_service=ReviewService(service_configs.record),
+            request_service=PackageFeedRequestService(service_configs.requests),
         )
 
+        # Search service (Packages and records)
         self.service_search = SearchRecordService(config=service_configs.search)
+
+        # CMS service
+        self.service_cms = CMSService(config=service_configs.cms)
 
     def init_resource(self, app):
         """Initialize resources."""

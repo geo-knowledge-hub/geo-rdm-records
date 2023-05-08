@@ -18,6 +18,7 @@ from invenio_rdm_records.resources.resources import (
 )
 from invenio_records_resources.resources.records.resource import (
     request_data,
+    request_headers,
     request_search_args,
     request_view_args,
 )
@@ -53,7 +54,15 @@ class GEOPackageRecordResource(BaseRecordResource):
                 p(routes["item-resources-import"]),
                 self.package_import_resources,
             ),
-            route("POST", p(routes["item-validate"]), self.package_validate)
+            route("POST", p(routes["item-validate"]), self.package_validate),
+            # Requests
+            route("GET", p(routes["request-blog-post"]), self.request_blog_post_read),
+            route("PUT", p(routes["request-blog-post"]), self.request_blog_post),
+            route(
+                "POST",
+                p(routes["request-blog-post-action"]),
+                self.request_blog_action_submit,
+            )
             # route("PUT", p(routes["item-draft-resources"]), self.resource_update_draft)
         ]
 
@@ -107,6 +116,46 @@ class GEOPackageRecordResource(BaseRecordResource):
             resource_requestctx.view_args["pid_value"],
         )
         return result, 200
+
+    @request_view_args
+    @response_handler()
+    def request_blog_post_read(self):
+        """Read package request."""
+        item = self.service.request.read(
+            g.identity,
+            resource_requestctx.view_args["pid_value"],
+        )
+
+        return item.to_dict(), 200
+
+    @request_headers
+    @request_view_args
+    @request_data
+    @response_handler()
+    def request_blog_post(self):
+        """Request a blog post for a package."""
+        item = self.service.request.update(
+            g.identity,
+            resource_requestctx.view_args["pid_value"],
+            resource_requestctx.data,
+            revision_id=resource_requestctx.headers.get("if_match"),
+        )
+
+        return item.to_dict(), 200
+
+    @request_headers
+    @request_view_args
+    @request_data
+    @response_handler()
+    def request_blog_action_submit(self):
+        """Submit a blog post request."""
+        item = self.service.request.submit(
+            g.identity,
+            resource_requestctx.view_args["pid_value"],
+            resource_requestctx.data,
+        )
+
+        return item.to_dict(), 202
 
 
 class GEOPackageContextResource(RecordResource):

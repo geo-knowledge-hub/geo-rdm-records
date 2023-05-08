@@ -37,6 +37,7 @@ from .components.resources import (
 )
 from .links import RecordLink
 from .permissions import PackagesPermissionPolicy
+from .request.service import has_blog_requests
 from .schemas import GEOPackageRecordSchema
 
 
@@ -165,6 +166,11 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
         "resources_import": RecordLink(
             "{+api}/packages/{id}/draft/actions/resources-import", when=is_draft
         ),
+        "blog": RecordLink("{+api}/packages/{id}/blog", when=is_record),
+        "blog-submit": RecordLink(
+            "{+api}/packages/{id}/actions/submit-blog",
+            when=has_blog_requests,
+        ),
     }
 
     links_search_community_records = pagination_links(
@@ -250,3 +256,11 @@ class GEOPackageDraftFileServiceConfig(rdm_config.RDMFileDraftServiceConfig):
             when=is_iiif_compatible,
         ),
     }
+
+
+class GEOPackageRequestServiceConfig(GEOPackageRecordServiceConfig):
+    """GEO Package request service config."""
+
+    request_default_receiver = FromConfig(
+        "GEO_RDM_RECORDS_REQUESTS_DEFAULT_RECEIVER", import_string=False
+    )

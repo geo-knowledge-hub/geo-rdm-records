@@ -7,6 +7,8 @@
 
 """GEO RDM Records Packages API errors."""
 
+from flask_babelex import lazy_gettext as _
+
 
 class PackageError(Exception):
     """Base Package error class."""
@@ -22,3 +24,15 @@ class InvalidPackageResourceError(PackageError):
 
 class InvalidRelationshipError(PackageError):
     """Relationship is not valid for the package/resource defined."""
+
+
+class PackageRequestException(PackageError):
+    """Base class for Knowledge Packages request errors."""
+
+
+class PackageRequestNotFoundError(PackageError):
+    """Review was not found for the selected package."""
+
+    def __init__(self, *args, **kwargs):
+        """Initializer."""
+        super().__init__(_("Review not found."), *args, **kwargs)

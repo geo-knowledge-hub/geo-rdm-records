@@ -30,6 +30,7 @@ from invenio_communities.communities.records.api import Community
 from invenio_rdm_records.services import facets as rdm_facets
 from invenio_rdm_records.services.pids import providers
 from invenio_records_resources.proxies import current_service_registry
+from invenio_requests.records.api import RequestEvent
 from invenio_vocabularies.contrib.affiliations.api import Affiliation
 from invenio_vocabularies.contrib.awards.api import Award
 from invenio_vocabularies.contrib.funders.api import Funder
@@ -280,6 +281,17 @@ def app_config(app_config):
 
     app_config["FILES_REST_DEFAULT_STORAGE_CLASS"] = "L"
 
+    #
+    # CMS
+    #
+    app_config["GEO_RDM_RECORDS_CMS_API_ADDRESS"] = "http://cms.service.local/api/posts"
+    app_config["GEO_RDM_RECORDS_CMS_API_TOKEN"] = "mock-token"
+
+    #
+    # Requests
+    #
+    app_config["GEO_RDM_RECORDS_REQUESTS_DEFAULT_RECEIVER"] = 1
+
     return app_config
 
 
@@ -392,6 +404,8 @@ def refresh_index():
         GEOPackageDraft.index.refresh()
         GEODraft.index.refresh()
         GEORecord.index.refresh()
+
+        RequestEvent.index.refresh()
 
     return _wrapper
 
