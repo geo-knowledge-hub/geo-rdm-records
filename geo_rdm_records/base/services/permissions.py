@@ -10,7 +10,6 @@
 from geo_config.security.generators import GeoSecretariat
 from invenio_rdm_records.services.generators import (
     CommunityAction,
-    IfFileIsLocal,
     IfRestricted,
     RecordOwners,
     SecretLinks,
@@ -23,6 +22,8 @@ from invenio_records_permissions.generators import (
     SystemProcess,
 )
 from invenio_records_permissions.policies.records import RecordPermissionPolicy
+
+from .generators import IfPackage
 
 
 class BaseGEOPermissionPolicy(RecordPermissionPolicy):
@@ -62,6 +63,7 @@ class BaseGEOPermissionPolicy(RecordPermissionPolicy):
     #
     # Requests
     #
+    can_request = [IfPackage(then_=can_manage, else_=[])]
     can_accept_request = [GeoSecretariat()]
 
     #
