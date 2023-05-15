@@ -5,7 +5,7 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""GEO RDM Records blog post requests."""
+"""GEO RDM Records feed post requests."""
 
 from flask_babelex import lazy_gettext as _
 from invenio_requests.customizations import RequestType, actions
