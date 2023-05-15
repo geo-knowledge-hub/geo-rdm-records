@@ -51,9 +51,9 @@ class GEOPackageRecordResourceConfig(BaseGEOResourceConfig):
     # Community endpoints
     routes["community-records"] = "/communities/<pid_value>/packages"
 
-    # Requests (Blog Post)
-    routes["request-blog-post"] = "/<pid_value>/blog"
-    routes["request-blog-post-action"] = "/<pid_value>/actions/submit-blog"
+    # Requests (Feed Post)
+    routes["request-feed-post"] = "/<pid_value>/feed"
+    routes["request-feed-post-action"] = "/<pid_value>/actions/submit-feed"
 
 
 #

@@ -56,12 +56,12 @@ class GEOPackageRecordResource(BaseRecordResource):
             ),
             route("POST", p(routes["item-validate"]), self.package_validate),
             # Requests
-            route("GET", p(routes["request-blog-post"]), self.request_blog_post_read),
-            route("PUT", p(routes["request-blog-post"]), self.request_blog_post),
+            route("GET", p(routes["request-feed-post"]), self.request_feed_post_read),
+            route("PUT", p(routes["request-feed-post"]), self.request_feed_post),
             route(
                 "POST",
-                p(routes["request-blog-post-action"]),
-                self.request_blog_action_submit,
+                p(routes["request-feed-post-action"]),
+                self.request_feed_action_submit,
             )
             # route("PUT", p(routes["item-draft-resources"]), self.resource_update_draft)
         ]
@@ -119,7 +119,7 @@ class GEOPackageRecordResource(BaseRecordResource):
 
     @request_view_args
     @response_handler()
-    def request_blog_post_read(self):
+    def request_feed_post_read(self):
         """Read package request."""
         item = self.service.request.read(
             g.identity,
@@ -132,8 +132,8 @@ class GEOPackageRecordResource(BaseRecordResource):
     @request_view_args
     @request_data
     @response_handler()
-    def request_blog_post(self):
-        """Request a blog post for a package."""
+    def request_feed_post(self):
+        """Request a feed post for a package."""
         item = self.service.request.update(
             g.identity,
             resource_requestctx.view_args["pid_value"],
@@ -147,8 +147,8 @@ class GEOPackageRecordResource(BaseRecordResource):
     @request_view_args
     @request_data
     @response_handler()
-    def request_blog_action_submit(self):
-        """Submit a blog post request."""
+    def request_feed_action_submit(self):
+        """Submit a feed post request."""
         item = self.service.request.submit(
             g.identity,
             resource_requestctx.view_args["pid_value"],
