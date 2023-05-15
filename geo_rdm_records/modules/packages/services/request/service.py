@@ -23,7 +23,7 @@ from geo_rdm_records.modules.packages.errors import (
 #
 # Utility
 #
-def has_blog_requests(record, ctx):
+def has_feed_requests(record, ctx):
     """Shortcut for links to determine if record has ."""
     return any(
         map(
@@ -101,7 +101,7 @@ class PackageFeedRequestService(RecordService):
     @unit_of_work()
     def update(self, identity, id_, data, revision_id=None, uow=None):
         """Create or update an existing request."""
-        # To create a blog post, user must be able to manage the record
+        # To create a feed post, user must be able to manage the record
         record = self.record_cls.pid.resolve(id_, registered_only=False)
         self.require_permission(identity, "manage", record=record)
 
@@ -117,7 +117,7 @@ class PackageFeedRequestService(RecordService):
         """Submit a request for a Knowledge Package action."""
         if not record.is_published or not (record.versions.index >= 1):
             raise PackageRequestException(
-                _("You can only create a blog post for published packages.")
+                _("You can only create a feed post for published packages.")
             )
 
         # Validate the request type
@@ -145,8 +145,8 @@ class PackageFeedRequestService(RecordService):
 
     @unit_of_work()
     def submit(self, identity, id_, data=None, revision_id=None, uow=None):
-        """Submit blog post request."""
-        # To create a blog post, user must be able to manage the record
+        """Submit feed post request."""
+        # To create a feed post, user must be able to manage the record
         record = self.record_cls.pid.resolve(id_, registered_only=False)
         self.require_permission(identity, "manage", record=record)
 
