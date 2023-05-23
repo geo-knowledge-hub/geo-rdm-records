@@ -7,8 +7,19 @@
 
 """GEO RDM Records Packages API Service configuration."""
 
+from invenio_drafts_resources.services.records.components import (
+    DraftFilesComponent,
+    PIDComponent,
+    RelationsComponent,
+)
 from invenio_drafts_resources.services.records.config import is_record
 from invenio_rdm_records.services import config as rdm_config
+from invenio_rdm_records.services.components import (
+    AccessComponent,
+    CustomFieldsComponent,
+    MetadataComponent,
+    ReviewComponent,
+)
 from invenio_rdm_records.services.config import (
     has_doi,
     is_draft,
@@ -28,6 +39,7 @@ from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 
 from ..records.api import GEOPackageDraft, GEOPackageRecord
 from .components.context import PackageContextComponent
+from .components.pids import PIDsComponent
 from .components.relationship import PackageRelationshipComponent
 from .components.resource_type import PackageResourceTypeComponent
 from .components.resources import (
@@ -74,7 +86,17 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
         PackageResourceCommunityComponent,
         PackageResourceTypeComponent,
         PackageContextComponent,
-    ] + rdm_config.RDMRecordServiceConfig.components
+        MetadataComponent,
+        CustomFieldsComponent,
+        AccessComponent,
+        DraftFilesComponent,
+        # for the internal `pid` field
+        PIDComponent,
+        # for the `pids` field (external PIDs)
+        PIDsComponent,
+        RelationsComponent,
+        ReviewComponent,
+    ]
 
     # Links
     links_item = {
