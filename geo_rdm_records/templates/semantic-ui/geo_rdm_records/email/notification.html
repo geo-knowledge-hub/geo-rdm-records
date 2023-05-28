@@ -41,17 +41,18 @@
       line-height: 1.5;
     }
 
-    .main-content {
+    .btn-container {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      justify-content: flex-end;
+      margin-top: 20px;
     }
 
     .btn {
-      display: block;
+      flex: 1;
       color: #FFF;
       background-color: #2185D0;
       text-align: center;
+      vertical-align: middle;
       padding: .65em 1.5em .65em;
       border-radius: .35rem;
       text-decoration: none;
@@ -158,24 +159,26 @@
               id="path46" inkscape:connector-curvature="0" style="fill:#526479;fill-opacity:1"/></g></g></g></svg>
       </svg>
     </div>
-    <h1>New Record Request</h1>
+    <h1>New request</h1>
   </div>
   <div class="main-content">
     <div>
       <p>
-        We have received a request to add a new record to the CMS system.
+        We have received a request to add a new Knowledge Package to the GEO Knowledge Hub Feed.
       </p>
     </div>
     <div class="card">
       <div class="card-header">Record Details</div>
       <h2>{{ record_title }}</h2>
-      <a href="{{ record_url }}" class="link">View Record Details</a>
+      <a href="{{ record_url }}" class="link">View record</a>
     </div>
     <div>
       <p>
         You can review the request details and add the record by clicking the button below:
       </p>
-      <a href="{{ request_url }}" class="btn">Review Request</a>
+      <div class="btn-container">
+        <a href="{{ request_url }}" class="btn">Review Request</a>
+      </div>
     </div>
   </div>
   <div class="footer">
