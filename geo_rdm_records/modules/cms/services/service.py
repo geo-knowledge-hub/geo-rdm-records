@@ -9,47 +9,26 @@
 
 from invenio_records_resources.services.base import Service
 from invenio_records_resources.services.uow import TaskOp, unit_of_work
-from invenio_requests.proxies import current_events_service
 
-from geo_rdm_records.modules.cms.tasks import create_feed_post
+from geo_rdm_records.modules.cms.tasks import notify_feed
 
 
 class CMSService(Service):
     """CMS Service."""
-
-    #
-    # Properties
-    #
-    @property
-    def _cms_api(self):
-        """CMS API."""
-        return self.config.cms_api_address
-
-    @property
-    def _cms_token(self):
-        """CMS API Token."""
-        return self.config.cms_api_token
 
     @unit_of_work()
     def create_feed_post(self, identity, request, uow):
         """Create a feed post."""
         self.require_permission(identity, "accept_request")
 
-        # Searching for the basics body of the field
-        search_result = current_events_service.search(identity, request.id)
-        search_result = search_result.to_dict()
+        # Preparing data to create the notification task
+        record = request.topic.resolve()
 
-        # Temporary approach: Assuming that the event is the body of the feed.
-        # ToDo: Review this approach to something more general
-        feed_body = search_result["hits"]["hits"][0]
-        feed_body = feed_body["payload"]["content"]
+        request_id = str(request.id)
+        record_id = str(record.pid.pid_value)
 
-        # Preparing the feed post
-        data = dict(title=request["title"].replace("Feed: ", ""), description=feed_body)
-
-        # Registering tasks
-        # ToDo: Include e-mail task to notify the GEO Secretariat users.
-        uow.register(TaskOp(create_feed_post, self._cms_api, self._cms_token, data))
+        # Sending notification e-mail
+        uow.register(TaskOp(notify_feed, request_id, record_id))
 
         # ToDo: Improve this return to provide more
         #       details of the operation performed.

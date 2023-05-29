@@ -17,11 +17,8 @@ from geo_rdm_records.proxies import current_geo_packages_service
 #
 # Tests
 #
-def test_simple_flow(running_app, refresh_index, published_package, requests_mock):
+def test_simple_flow(running_app, refresh_index, published_package):
     """Test simple usage workflow for package requests."""
-    # Mock cms service
-    requests_mock.post("http://cms.service.local/api/posts", status_code=201)
-
     # Creating request
     package_id = published_package["id"]
 

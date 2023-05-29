@@ -163,6 +163,20 @@ RDM_SEARCH_PACKAGE_RESOURCE_DRAFTS = {
     "sort": ["bestmatch", "updated-desc", "updated-asc", "newest", "oldest", "version"],
 }
 
+#
+# Requests
+#
+
+# Default receiver
+GEO_RDM_RECORDS_REQUESTS_DEFAULT_RECEIVER = None
+
+#
+# Notification configuration
+#
+
+# E-mail configuration
+GEO_RDM_NOTIFICATION_DEFAULT_RECEIVER_EMAILS = []
+
 # OAI-PMH
 # =======
 # See https://github.com/inveniosoftware/invenio-oaiserver/blob/master/invenio_oaiserver/config.py

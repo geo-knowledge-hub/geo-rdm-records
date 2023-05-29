@@ -282,15 +282,12 @@ def app_config(app_config):
     app_config["FILES_REST_DEFAULT_STORAGE_CLASS"] = "L"
 
     #
-    # CMS
-    #
-    app_config["GEO_RDM_RECORDS_CMS_API_ADDRESS"] = "http://cms.service.local/api/posts"
-    app_config["GEO_RDM_RECORDS_CMS_API_TOKEN"] = "mock-token"
-
-    #
     # Requests
     #
     app_config["GEO_RDM_RECORDS_REQUESTS_DEFAULT_RECEIVER"] = 1
+
+    # Notifications
+    app_config["GEO_RDM_NOTIFICATION_DEFAULT_RECEIVER_EMAILS"] = []
 
     return app_config
 
