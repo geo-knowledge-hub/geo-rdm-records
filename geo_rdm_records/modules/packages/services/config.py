@@ -189,7 +189,7 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
             "{+api}/packages/{id}/draft/actions/resources-import", when=is_draft
         ),
         "feed": RecordLink("{+api}/packages/{id}/feed", when=is_record),
-        "feed-submit": RecordLink(
+        "feed_submit": RecordLink(
             "{+api}/packages/{id}/actions/submit-feed",
             when=has_feed_requests,
         ),
