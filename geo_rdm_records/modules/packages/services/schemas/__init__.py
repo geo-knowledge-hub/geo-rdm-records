@@ -17,6 +17,7 @@ from geo_rdm_records.base.services.schemas import ParentSchema
 from geo_rdm_records.base.services.schemas.validator import ResourceType
 
 from .relationship import RelationshipSchema
+from .requests import RequestSchema
 
 
 class MetadataSchema(BaseMetadataSchema):
@@ -43,3 +44,5 @@ class GEOPackageRecordSchema(BaseRecordSchema):
     parent = NestedAttribute(ParentSchema)
 
     metadata = NestedAttribute(MetadataSchema)
+
+    assistance_requests = fields.List(fields.Nested(RequestSchema), dump_only=True)
