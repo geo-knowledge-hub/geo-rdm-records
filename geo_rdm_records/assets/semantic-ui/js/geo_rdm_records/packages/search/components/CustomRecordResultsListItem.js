@@ -19,7 +19,36 @@ import { i18next } from "@translations/geo_rdm_records/i18next";
 
 import { extractProgrammeActivityAcronym } from "../../../utils";
 
+
+/**
+ * Generate record links based on parent type.
+ *
+ * @param {string} recordId Record Identifier (PID)
+ * @param {string} recordType Record type (e.g., package, resource)
+ * @returns {object} Object with the links created.
+ */
+export const recordTypeLinksFactory = (recordId, recordType) => {
+  const recordLinks = {
+    package: {
+      published: `/packages/${recordId}`,
+      draft: `/uploads/packages/${recordId}`,
+    },
+    resource: {
+      published: `/records/${recordId}`,
+      draft: `/uploads/${recordId}`,
+    },
+  };
+
+  return recordLinks[recordType];
+};
+
+
+/**
+ * Custom result item.
+ */
 export const CustomRecordResultsListItem = ({ result }) => {
+  const recordLinks = recordTypeLinksFactory(result.id, result.parent.type);
+
   const accessStatusId = _get(result, "ui.access_status.id", "open");
   const accessStatus = _get(result, "ui.access_status.title_l10n", "Open");
   const accessStatusIcon = _get(result, "ui.access_status.icon", "unlock");
@@ -57,9 +86,7 @@ export const CustomRecordResultsListItem = ({ result }) => {
 
   // Derivatives
   const isDraft = _get(result, "status") === "draft";
-  const viewLink = isDraft
-    ? `/uploads/${result.id}`
-    : `/records/${result.id}`;
+  const viewLink = isDraft ? recordLinks.draft : recordLinks.published;
 
   return (
     <Item>
