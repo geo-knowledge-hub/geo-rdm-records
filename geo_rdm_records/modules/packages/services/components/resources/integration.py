@@ -15,6 +15,7 @@ from geo_rdm_records.base.services.components.constraints import ConstrainedComp
 from geo_rdm_records.modules.packages.errors import InvalidRelationshipError
 from geo_rdm_records.modules.packages.records.api import PackageRelationship
 
+from ...service import get_context_manager
 from .constraints import (
     CommunityRelationshipConstraint,
     PackageRelationshipConstraint,
@@ -117,9 +118,11 @@ class PackageResourceCommunityComponent(ServiceComponent):
         self, identity, package=None, resource=None, relationship_type=None, **kwargs
     ):
         """Add resource to a package."""
+        record_manager = get_context_manager(resource).get("id")
+
         if (
             relationship_type == PackageRelationship.MANAGED.value
-            and package.parent == resource.parent.relationship.managed_by
+            and package.parent["id"] == record_manager
         ):
             if package.parent.communities:
                 # ToDo: Probably, we need to review and improve this. What we are

@@ -15,6 +15,7 @@ from geo_rdm_records.modules.packages.errors import (
     InvalidRelationshipError,
 )
 from geo_rdm_records.modules.packages.records.api import PackageRelationship
+from geo_rdm_records.modules.packages.services.service import get_context_manager
 
 
 class CommunityRelationshipConstraint(BaseComponentConstraint):
@@ -140,9 +141,10 @@ class PackageRelationshipConstraint(BaseComponentConstraint):
         **kwargs
     ):
         """Check if the constraint is valid."""
-        managed_by = resource.parent.relationship.managed_by
+        managed_by = get_context_manager(resource).get("id")
+
         is_related_to_package = managed_by is not None and not (
-            managed_by.pid.pid_value == package.parent.pid.pid_value
+            managed_by == package.parent.pid.pid_value
         )
 
         if (
