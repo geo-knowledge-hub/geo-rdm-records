@@ -29,6 +29,14 @@ from .schemas.resources import RecordsParentSchema, RecordsSchema, ResourcesSche
 
 
 #
+# Utility
+#
+def get_context_manager(record):
+    """Get record's context manager."""
+    return record.parent.get("relationship", {}).get("managed_by", {"id": None})
+
+
+#
 # Enum
 #
 class PackageServiceAction(enum.Enum):
@@ -182,9 +190,11 @@ class GEOPackageRecordService(BaseRDMRecordService):
 
             # only record without association with a package context
             # can be added to a context.
+            resource_manager = get_context_manager(record)
+
             if (
                 action == PackageServiceAction.ASSOCIATE
-                and record.parent.relationship.managed_by
+                and resource_manager.get("id") is not None
             ):
                 errors.append(
                     dict(
@@ -250,11 +260,11 @@ class GEOPackageRecordService(BaseRDMRecordService):
             #   - ``managed``: It can be loaded as a draft (it is in the package context).
             relationship_type = "related"
 
-            if resource_obj.parent.relationship.managed_by:
-                if (
-                    resource_obj.parent.relationship.managed_by["id"]
-                    == package_draft.parent["id"]
-                ):
+            # Reading record manager
+            record_manager = get_context_manager(resource_obj)
+
+            if record_manager:
+                if record_manager["id"] == package_draft.parent["id"]:
                     relationship_type = "managed"
 
             allow_draft = not (relationship_type == PackageRelationship.RELATED.value)
@@ -365,7 +375,10 @@ class GEOPackageRecordService(BaseRDMRecordService):
         """Publish a package resource."""
         if resource_draft.is_draft:
             # Avoiding errors with ``Related`` and ``Managed`` resources.
-            if resource_draft.parent.relationship.managed_by == package.parent:
+            record_manager = get_context_manager(resource_draft)
+            record_manager_id = record_manager.get("id")
+
+            if record_manager_id == package.parent["id"]:
                 resource_pid = resource_draft.pid.pid_value
 
                 return current_rdm_records_service.publish(

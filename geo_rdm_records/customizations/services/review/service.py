@@ -28,6 +28,8 @@ from invenio_requests import current_request_type_registry, current_requests_ser
 from invenio_requests.resolvers.registry import ResolverRegistry
 from marshmallow import ValidationError
 
+from geo_rdm_records.modules.packages.services.service import get_context_manager
+
 from ...records.api import GEODraft, GEORecord
 from .errors import ReviewInconsistentResourceRestrictions
 
@@ -41,7 +43,9 @@ class ReviewService(BaseReviewService):
     def _validate_record_association(self, record):
         """Check if a record is associated with a package."""
         if isinstance(record, (GEODraft, GEORecord)):
-            if record.parent.relationship.managed_by:
+            record_manager = get_context_manager(record).get("id")
+
+            if record_manager:
                 raise ReviewInconsistentResourceRestrictions()
 
     #
