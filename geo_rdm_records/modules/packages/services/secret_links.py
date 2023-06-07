@@ -13,6 +13,8 @@ from invenio_rdm_records.services.secret_links.service import (
 )
 from invenio_records_resources.services.uow import RecordCommitOp, unit_of_work
 
+from .service import get_context_manager
+
 
 class SecretLinkService(BaseSecretLinkService):
     """GEO RDM Secret Link service."""
@@ -45,7 +47,9 @@ class SecretLinkService(BaseSecretLinkService):
             #       In a future version, we need to validate if this is the best approach
             #       or test a "classified" relation, where the relations are internally
             #       classified with a "type" tag.
-            if resource.parent.relationship.managed_by == package.parent:
+            resource_manager = get_context_manager(resource)
+
+            if resource_manager["id"] == package.parent["id"]:
                 # ToDo: (Temporary solution) The previous links are replaced
                 #       by the package links.
                 resource.parent.access.links.clear()

@@ -12,6 +12,7 @@ from invenio_rdm_records.proxies import current_rdm_records_service
 from invenio_records_resources.services.uow import RecordCommitOp, RecordIndexOp
 
 from geo_rdm_records.modules.packages.records.api import PackageRelationship
+from geo_rdm_records.modules.packages.services.service import get_context_manager
 
 
 class PackageResourceAccessComponent(ServiceComponent):
@@ -44,10 +45,10 @@ class PackageResourceAccessComponent(ServiceComponent):
 
                 # Modifications must be made only in resources managed by the
                 # package.
-                resource_manager = resource_obj.parent.relationship.managed_by or None
+                resource_manager = get_context_manager(resource_obj).get("id")
 
                 if resource_manager:
-                    if resource_manager.pid.pid_value == record.parent.pid.pid_value:
+                    if resource_manager == record.parent.pid.pid_value:
                         # preparing the access object
                         if not resource_obj.is_published:
                             # We must not change published resources! So, in
