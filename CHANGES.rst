@@ -7,13 +7,61 @@
 Changes
 =======
 
+Version 0.6.0 (2023-06-08)
+--------------------------
+
+- Packages API
+
+  - Fixed Context Manager references in the service layer;
+
+  - Added tasks to register PID (External) in the Knowledge Packages;
+
+  - Fixed broken links on the Packages Dashboard page.
+
+- Requests for Packages API
+
+  - Added request service for `feed posts <https://gkhub.earthobservations.org/feed>`_. System based on `Invenio Requests <https://inveniordm.docs.cern.ch/develop/architecture/requests/>`_ module;
+
+  - Requests implemented with basic e-mail support;
+
+- Security
+
+  - Added ``IfPackage`` generator
+
+
+Version 0.5.0 (2023-03-01)
+--------------------------
+
+- Updated to be compatible with `InvenioRDM 11 <https://inveniordm.docs.cern.ch/releases/versions/version-v11.0.0/>`_;
+
+- Packages API
+
+  - Updated Funders/Awards schema (`#119 <https://github.com/geo-knowledge-hub/geo-rdm-records/issues/119>`_);
+  - Added improvements on the Package management (create, update, delete, associate resources, share).
+
+- Invenio RDM Records customization layer
+
+  - Upgrading Records API to be compatible with new the OAI-PMH server version (InvenioRDM 11 compatible);
+  - Fixed missing values in the Record serialization (`#132 <https://github.com/geo-knowledge-hub/geo-rdm-records/issues/132>`_).
+
+- Search API
+
+  - Mapping documents reviewed (`#124 <https://github.com/geo-knowledge-hub/geo-rdm-records/issues/124>`_).
+
+- Security
+
+  - Reviewed file permissions to work with Invenio S3.
+
+- Elasticsearch mapping and structure replaced by OpenSearch.
+
+
 Version 0.4.0 (2023-01-05)
 --------------------------
 
 - Revised Package structure;
 - Added initial implementation of the Packages API
   
-  - Metadata management
+  - Metadata management;
   - Files management;
   - Relationship between packages and resources revised;
   - Package context to manage resources in a package and its versions.
