@@ -26,7 +26,7 @@ Version 0.6.0 (2023-06-08)
 
 - Security
 
-  - Added `IfPackage` generator
+  - Added ``IfPackage`` generator
 
 
 Version 0.5.0 (2023-03-01)
