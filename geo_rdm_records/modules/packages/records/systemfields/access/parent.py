@@ -18,7 +18,6 @@ class ParentRecordAccess:
     links_cls = Links
     owners_cls = Owners
 
-    MEMBER_POLICY_LEVELS = ("open", "closed")
     RECORD_POLICY_LEVELS = ("open", "closed")
 
     def __init__(
@@ -26,7 +25,6 @@ class ParentRecordAccess:
         owned_by=None,
         grants=None,
         links=None,
-        member_policy=None,
         record_policy=None,
         owners_cls=None,
         grants_cls=None,
@@ -52,7 +50,6 @@ class ParentRecordAccess:
         self.grants = grants if grants else grants_cls()
         self.links = links if links else links_cls()
 
-        self.member_policy = member_policy or "open"
         self.record_policy = record_policy or "open"
 
         self.errors = []
@@ -60,27 +57,12 @@ class ParentRecordAccess:
     #
     # Auxiliary methods
     #
-    def _validate_member_policy_level(self, level):
-        return level in self.MEMBER_POLICY_LEVELS
-
     def _validate_record_policy_level(self, level):
         return level in self.RECORD_POLICY_LEVELS
 
     #
     # Properties
     #
-    @property
-    def member_policy(self):
-        """Get the member policy level."""
-        return self._member_policy
-
-    @member_policy.setter
-    def member_policy(self, value):
-        """Set the member policy level."""
-        if not self._validate_member_policy_level(value):
-            raise ValueError(f"Unknown member policy level: {value}")
-        self._member_policy = value
-
     @property
     def record_policy(self):
         """Get the record policy level."""
@@ -103,7 +85,6 @@ class ParentRecordAccess:
         access = {
             "owned_by": self.owned_by.dump(),
             "links": self.links.dump(),
-            "member_policy": self.member_policy,
             "record_policy": self.record_policy,
             # "grants": self.grants.dump(),  # TODO enable again when ready
         }
@@ -119,7 +100,6 @@ class ParentRecordAccess:
         self.grants = new_access.grants
         self.links = new_access.links
 
-        self.member_policy = new_access.member_policy
         self.record_policy = new_access.record_policy
 
     @classmethod
@@ -171,7 +151,6 @@ class ParentRecordAccess:
             owned_by=owners,
             grants=grants,
             links=links,
-            member_policy=access_dict.get("member_policy"),
             record_policy=access_dict.get("record_policy"),
         )
         access.errors = errors
@@ -179,11 +158,10 @@ class ParentRecordAccess:
 
     def __repr__(self):
         """Return repr(self)."""
-        return "<{} (owners: {}, grants: {}, links: {}, member_policy: {}, record_policy: {})>".format(
+        return "<{} (owners: {}, grants: {}, links: {}, record_policy: {})>".format(
             type(self).__name__,
             len(self.owners or []),
             len(self.grants or []),
             len(self.links or []),
-            self.member_policy,
             self.record_policy,
         )

@@ -54,7 +54,7 @@ class GEORDMRecords(object):
         """Flask application initialization."""
         self.init_config(app)
 
-        # Packages API and Members API
+        # Packages API
         self.init_services(app)
         self.init_resource(app)
 

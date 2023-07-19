@@ -230,6 +230,8 @@ def test_package_resource_integration_service(
     assert package_draft_relationship is not None
     assert len(package_draft_relationship.keys()) == 1
     assert len(package_draft_relationship["resources"]) == 2
+    assert len(package_draft._record.relationship.relations("related")) == 1
+    assert len(package_draft._record.relationship.relations("managed")) == 1
 
     # checking the resource updated
     resource_updated = current_rdm_records_service.read_draft(
@@ -242,6 +244,7 @@ def test_package_resource_integration_service(
     assert resource_updated_relationship is not None
     assert len(resource_updated_relationship.keys()) == 1
     assert len(resource_updated_relationship["packages"]) == 1
+    assert len(resource_updated._record.relationship.relations("managed")) == 1
 
     # 3. Testing the ``delete resource`` operation.
     resources_to_be_deleted = dict(

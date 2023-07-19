@@ -16,8 +16,8 @@ from geo_rdm_records.base.records.systemfields import (
 )
 
 
-class RecordParentProxy(BaseRecordProxy):
-    """Class to proxy record parent access from the database."""
+class BaseProxy(BaseRecordProxy):
+    """Base proxy for records."""
 
     record_cls = "GEOPackageRecord"
     """Record API class."""
@@ -25,14 +25,25 @@ class RecordParentProxy(BaseRecordProxy):
     draft_cls = "GEOPackageDraft"
     """Draft Record API class."""
 
+
+class RecordParentProxy(BaseProxy):
+    """Class to proxy record parent access from the database."""
+
     is_parent = True
+    """Flag indicating if the searched record is a parent."""
+
+
+class RecordProxy(BaseProxy):
+    """Class to proxy record parent access from the database."""
+
+    is_parent = False
     """Flag indicating if the searched record is a parent."""
 
 
 class RecordsProxy(BaseRecordsProxy):
     """A list of records."""
 
-    record_proxy_cls = RecordParentProxy
+    record_proxy_cls = RecordProxy
     """Class used to proxy the records from the database."""
 
 
@@ -118,7 +129,7 @@ class RecordParentRelationship:
     def __repr__(self):
         """Return repr(self)."""
         return "<{} (is_managed: {})>".format(
-            type(self).__name__, self._record_manager is None
+            type(self).__name__, self._record_manager is not None
         )
 
 
@@ -161,6 +172,12 @@ class PackageRelationship:
     def packages(self):
         """An alias for the ``packages`` property."""
         return self._packages
+
+    def relations(self, relation_type):
+        """Record relations."""
+        return list(
+            filter(lambda x: x["relation_type"] == relation_type, self.packages.dump())
+        )
 
     def dump(self):
         """Dump the field values as dictionary."""

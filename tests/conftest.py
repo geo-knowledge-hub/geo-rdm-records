@@ -182,29 +182,6 @@ def app_config(app_config):
     ] = "geo_rdm_records.modules.packages.services.permissions.PackagesPermissionPolicy"
 
     #
-    # Actions
-    #
-    app_config[
-        "RDM_COMMUNITY_ACTION_SUBMIT"
-    ] = "geo_rdm_records.base.requests.SubmitAction"
-
-    app_config[
-        "RDM_COMMUNITY_ACTION_ACCEPT"
-    ] = "geo_rdm_records.base.requests.AcceptAction"
-
-    app_config[
-        "RDM_COMMUNITY_ACTION_DECLINE"
-    ] = "geo_rdm_records.base.requests.DeclineAction"
-
-    app_config[
-        "RDM_COMMUNITY_ACTION_CANCEL"
-    ] = "geo_rdm_records.base.requests.CancelAction"
-
-    app_config[
-        "RDM_COMMUNITY_ACTION_EXPIRE"
-    ] = "geo_rdm_records.base.requests.ExpireAction"
-
-    #
     # Search (Facets)
     #
     app_config["RDM_FACETS"] = {

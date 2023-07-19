@@ -22,14 +22,19 @@
       "description": "Access control and ownership for all versions of a record.",
       "additionalProperties": false,
       "properties": {
-
+        "record_policy": {
+          "description": "Package record policy.",
+          "enum": [
+            "open",
+            "closed"
+          ]
+        },
         "owned_by": {
           "description": "List of owners of the child records.",
           "type": "array",
           "uniqueItems": true,
           "items": {"$ref": "local://records/definitions-v1.0.0.json#/agent"}
         },
-
         "grants": {
           "description": "Access grants for the child records.",
           "type": "array",
@@ -83,11 +88,16 @@
       "additionalProperties": false,
       "properties": {
         "managed_by": {
-          "$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"
+          "$ref": "local://records/geo-definitions-v1.0.0.json#/resource"
+        },
+        "resources": {
+          "description": "List of resources linked to the specific version of the Package.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "local://records/geo-definitions-v1.0.0.json#/resource"}
         }
       }
     },
-
     "type": {
       "type": "string",
       "description": "Type of the entity represented by the Record in the System.",

@@ -15,6 +15,7 @@ class ResourceEntitySchema(Schema):
     """Represents a single resource entity."""
 
     id = fields.String(required=True)
+    relation_type = fields.Str(required=False)
 
 
 class ResourcesSchema(Schema):

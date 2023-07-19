@@ -50,11 +50,7 @@ class AcceptAction(actions.AcceptAction):
 # Request
 #
 class FeedPostRequest(RequestType):
-    """Feed post creation request for a Knowledge Package.
-
-    ToDos
-        - Review the ``needs_context`` and how it can be used
-    """
+    """Feed post creation request for a Knowledge Package."""
 
     type_id = "feed-post-creation"
     name = _("Feed post creation")
@@ -64,7 +60,7 @@ class FeedPostRequest(RequestType):
 
     allowed_creator_ref_types = ["user"]
     allowed_receiver_ref_types = ["user"]
-    allowed_topic_ref_types = ["package_record"]
+    allowed_topic_ref_types = ["geo_package_record"]
 
     available_actions = {
         "create": actions.CreateAction,

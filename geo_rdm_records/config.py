@@ -9,6 +9,9 @@
 
 from invenio_rdm_records.services import facets as rdm_facets
 
+from geo_rdm_records.base.requests.community_submission import (
+    CommunitySubmissionConfiguration,
+)
 from geo_rdm_records.base.services import facets as geo_facets
 
 # UI Configurations
@@ -63,8 +66,6 @@ RDM_REVIEW_SERVICE = (
     "geo_rdm_records.customizations.services.review.service.ReviewService"
 )
 
-RDM_IIIF_SERVICE = "geo_rdm_records.customizations.services.iiif.service.IIIFService"
-
 # Configuration
 RDM_RECORD_SERVICE_CFG = (
     "geo_rdm_records.customizations.services.config.GEORecordServiceConfig"
@@ -86,6 +87,12 @@ GEO_RDM_RECORDS_PERMISSION_POLICY = (
 GEO_RDM_PACKAGE_PERMISSION_POLICY = (
     "geo_rdm_records.modules.packages.services.permissions.PackagesPermissionPolicy"
 )
+
+#
+# Review configuration
+#
+RDM_COMMUNITY_SUBMISSION_OVERRIDE_CONFIG = CommunitySubmissionConfiguration
+
 
 #
 # Search configuration

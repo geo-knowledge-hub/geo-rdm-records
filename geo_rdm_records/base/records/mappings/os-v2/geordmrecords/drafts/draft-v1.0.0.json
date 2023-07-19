@@ -247,6 +247,56 @@
                     "type": "keyword"
                   }
                 }
+              },
+              "resources": {
+                "properties": {
+                  "id": {
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          },
+          "assistance_requests": {
+            "type": "object",
+            "properties": {
+              "$schema": {
+                "type": "keyword",
+                "index": false
+              },
+              "id": {
+                "type": "keyword"
+              },
+              "type": {
+                "type": "keyword"
+              },
+              "title": {
+                "type": "text"
+              },
+              "description": {
+                "type": "text"
+              },
+              "status": {
+                "type": "keyword"
+              },
+              "payload": {
+                "type": "object",
+                "dynamic": true
+              },
+              "topic": {
+                "type": "object",
+                "dynamic": true
+              },
+              "receiver": {
+                "type": "object",
+                "dynamic": true
+              },
+              "created_by": {
+                "type": "object",
+                "dynamic": true
+              },
+              "@v": {
+                "type": "keyword"
               }
             }
           }
@@ -438,6 +488,9 @@
               },
               "person_or_org": {
                 "properties": {
+                  "email": {
+                    "type": "keyword"
+                  },
                   "family_name" : {
                     "type" : "text"
                   },
@@ -926,6 +979,13 @@
       "relationship": {
         "properties": {
           "packages": {
+            "properties": {
+              "id": {
+                "type": "keyword"
+              }
+            }
+          },
+          "resources": {
             "properties": {
               "id": {
                 "type": "keyword"

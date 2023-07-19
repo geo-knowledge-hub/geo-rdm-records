@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2022 Geo Secretariat.
+# Copyright (C) 2023 Geo Secretariat.
 #
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""GEO RDM Records Community submission."""
+"""GEO RDM Records Requests Resolver."""
 
 from flask_babelex import lazy_gettext as _
 from invenio_rdm_records.proxies import current_rdm_records_service
@@ -199,3 +199,20 @@ class ExpireAction(actions.CancelAction, ServiceHandler):
         uow.register(RecordCommitOp(draft.parent))
         # update draft to reflect the new status
         uow.register(RecordIndexOp(draft, indexer=service.indexer))
+
+
+#
+# Configuration for the Community Submission class.
+#
+CommunitySubmissionConfiguration = {
+    "allowed_topic_ref_types": ["record", "geo_package"],
+    "available_actions": {
+        "create": actions.CreateAction,
+        "submit": SubmitAction,
+        "delete": actions.DeleteAction,
+        "accept": AcceptAction,
+        "cancel": CancelAction,
+        "decline": DeclineAction,
+        "expire": ExpireAction,
+    },
+}

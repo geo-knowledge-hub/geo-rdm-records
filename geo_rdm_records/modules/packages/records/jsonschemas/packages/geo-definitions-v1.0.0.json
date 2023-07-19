@@ -7,6 +7,10 @@
       "id": {
         "type": "string",
         "description": "Resource identifier"
+      },
+      "relation_type": {
+        "type": "string",
+        "description": "Relation type between the two records (package and resource)"
       }
     }
   }

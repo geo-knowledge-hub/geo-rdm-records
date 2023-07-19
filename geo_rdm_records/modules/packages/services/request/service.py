@@ -28,7 +28,7 @@ def has_feed_requests(record, ctx):
     return any(
         map(
             lambda x: x["type"] == PackageFeedRequestService.request_type,
-            record.assistance_requests,
+            record.assistance_requests or [],
         )
     )
 

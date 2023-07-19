@@ -15,3 +15,4 @@ class RelationshipElementSchema(Schema):
     """Schema for the Element used in the RelationshipSchema."""
 
     id = SanitizedUnicode(required=True)
+    relation_type = fields.Str(required=True)

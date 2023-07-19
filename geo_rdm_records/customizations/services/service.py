@@ -7,14 +7,14 @@
 
 """GEO RDM Records Resource Service."""
 
-from invenio_rdm_records.services import RDMRecordService as BaseRecordService
 from invenio_records_resources.services import LinksTemplate
 from invenio_search.engine import dsl
 
 from geo_rdm_records.base.services.links import MutableLinksTemplate
+from geo_rdm_records.base.services.service import BaseRDMService
 
 
-class GEORDMRecordService(BaseRecordService):
+class GEORDMRecordService(BaseRDMService):
     """RDM Record service."""
 
     #

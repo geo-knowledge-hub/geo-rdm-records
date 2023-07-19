@@ -18,7 +18,10 @@ from geo_rdm_records.modules.packages.services.schemas import RelationshipSchema
 @pytest.fixture()
 def basic_relationship():
     return dict(
-        resources=[{"id": "abcd-1234"}, {"id": "abcd-1234"}],
+        resources=[
+            {"id": "abcd-1234", "relation_type": "related"},
+            {"id": "abcd-1234", "relation_type": "managed"},
+        ],
     )
 
 

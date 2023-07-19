@@ -23,7 +23,7 @@ class RecordProxy(BaseRecordProxy):
 class PackageDraftResolver(BaseRecordResolver):
     """Package draft entity resolver."""
 
-    type_id = "packages"
+    type_id = "geo_package"
 
     record_cls = GEOPackageDraft
 
@@ -31,13 +31,13 @@ class PackageDraftResolver(BaseRecordResolver):
 
     service_id = "records_package"
 
-    type_key = "package"
+    type_key = "geo_package"
 
 
 class PackageRecordResolver(BaseRecordResolver):
     """Package record entity resolver."""
 
-    type_id = "packages_record"
+    type_id = "geo_package_record"
 
     record_cls = GEOPackageRecord
 
@@ -45,4 +45,4 @@ class PackageRecordResolver(BaseRecordResolver):
 
     service_id = "records_package"
 
-    type_key = "package_record"
+    type_key = "geo_package_record"

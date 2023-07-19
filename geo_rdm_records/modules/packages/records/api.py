@@ -9,14 +9,11 @@
 
 import enum
 
-from invenio_communities.records.records.systemfields import CommunitiesField
+import invenio_rdm_records.records.models as rdm_models
 from invenio_drafts_resources.records import Draft, Record
 from invenio_rdm_records.records.api import CommonFieldsMixin as BaseCommonFieldsMixin
 from invenio_rdm_records.records.api import RDMParent as BaseRecordParent
-from invenio_rdm_records.records.systemfields import (
-    HasDraftCheckField,
-    RecordAccessField,
-)
+from invenio_rdm_records.records.systemfields import HasDraftCheckField
 from invenio_rdm_records.records.systemfields.draft_status import DraftStatus
 from invenio_records.systemfields import ConstantField
 from invenio_records_resources.records.api import FileRecord
@@ -27,15 +24,6 @@ from geo_rdm_records.base.records.api import GEOBaseRecord
 from geo_rdm_records.base.records.systemfields.common import BaseGEORecordsFieldsMixin
 from geo_rdm_records.base.records.types import GEORecordTypes
 
-from .models import (
-    GEOPackageDraftMetadata,
-    GEOPackageFileDraftMetadata,
-    GEOPackageFileRecordMetadata,
-    GEOPackageParentCommunity,
-    GEOPackageParentMetadata,
-    GEOPackageRecordMetadata,
-    GEOPackageVersionsState,
-)
 from .systemfields.access import ParentRecordAccessField
 from .systemfields.relationship import PackageRelationshipField
 from .systemfields.requests import AssistanceRequests
@@ -61,13 +49,8 @@ class GEOPackageParent(GEOBaseRecord, BaseRecordParent):
     """Parent record."""
 
     # Configuration
-    model_cls = GEOPackageParentMetadata
-
     access = ParentRecordAccessField()
-    schema = ConstantField("$schema", "local://packages/geo-parent-v1.0.0.json")
-
-    # relationship = PackageRelationshipField(key="relationship")
-    communities = CommunitiesField(GEOPackageParentCommunity)
+    schema = ConstantField("$schema", "local://records/geo-parent-v1.0.0.json")
 
     type = ConstantField("type", GEORecordTypes.package)
 
@@ -78,13 +61,10 @@ class GEOPackageParent(GEOBaseRecord, BaseRecordParent):
 class CommonFieldsMixin(BaseGEORecordsFieldsMixin, BaseCommonFieldsMixin):
     """Common system fields between published and draft packages."""
 
-    versions_model_cls = GEOPackageVersionsState
+    # versions_model_cls = GEOPackageVersionsState
     parent_record_cls = GEOPackageParent
 
-    access = RecordAccessField()
-    schema = ConstantField(
-        "$schema", "local://packages/geordmpackages-records-record-v1.0.0.json"
-    )
+    schema = ConstantField("$schema", "local://records/geo-record-v1.0.0.json")
 
 
 #
@@ -93,17 +73,17 @@ class CommonFieldsMixin(BaseGEORecordsFieldsMixin, BaseCommonFieldsMixin):
 class GEOPackageFileDraft(FileRecord):
     """Record (Draft) File abstraction class."""
 
-    model_cls = GEOPackageFileDraftMetadata
+    model_cls = rdm_models.RDMFileDraftMetadata
     records_cls = None
 
 
 class GEOPackageDraft(CommonFieldsMixin, Draft):
     """Record (Draft) Metadata manipulation class API."""
 
-    model_cls = GEOPackageDraftMetadata
+    model_cls = rdm_models.RDMDraftMetadata
 
     index = IndexField(
-        "geordmpackages-drafts-draft-v1.0.0", search_alias="geordmpackages"
+        "geordmrecords-drafts-draft-v1.0.0", search_alias="geordmrecords"
     )
 
     files = FilesField(
@@ -130,17 +110,17 @@ class GEOPackageDraft(CommonFieldsMixin, Draft):
 class GEOPackageFileRecord(FileRecord):
     """Record File abstraction class."""
 
-    model_cls = GEOPackageFileRecordMetadata
+    model_cls = rdm_models.RDMFileRecordMetadata
     records_cls = None
 
 
 class GEOPackageRecord(CommonFieldsMixin, Record):
     """Record Metadata manipulation class API."""
 
-    model_cls = GEOPackageRecordMetadata
+    model_cls = rdm_models.RDMRecordMetadata
 
     index = IndexField(
-        "geordmpackages-records-record-v1.0.0", search_alias="geordmpackages-records"
+        "geordmrecords-records-record-v1.0.0", search_alias="geordmrecords-records"
     )
 
     files = FilesField(

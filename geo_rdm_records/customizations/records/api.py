@@ -7,15 +7,10 @@
 
 """GEO RDM Records Records API."""
 
-import invenio_rdm_records.records.models as rdm_models
-from invenio_drafts_resources.records import Draft, Record
-from invenio_rdm_records.records.api import CommonFieldsMixin as BaseCommonFieldsMixin
-from invenio_rdm_records.records.api import RDMParent as BaseRecordParent
+import invenio_rdm_records.records.api as rdm_api
 from invenio_rdm_records.records.systemfields import HasDraftCheckField
-from invenio_rdm_records.records.systemfields.draft_status import DraftStatus
 from invenio_records.systemfields import ConstantField
-from invenio_records_resources.records.api import FileRecord
-from invenio_records_resources.records.systemfields import FilesField, IndexField
+from invenio_records_resources.records.systemfields import IndexField
 
 from geo_rdm_records.base.records.api import GEOBaseRecord
 from geo_rdm_records.base.records.systemfields.common import BaseGEORecordsFieldsMixin
@@ -30,7 +25,7 @@ from .systemfields.relationship import (
 #
 # Parent record API
 #
-class GEOParent(GEOBaseRecord, BaseRecordParent):
+class GEOParent(GEOBaseRecord, rdm_api.RDMParent):
     """Record parent."""
 
     #
@@ -38,49 +33,28 @@ class GEOParent(GEOBaseRecord, BaseRecordParent):
     #
     type = ConstantField("type", GEORecordTypes.resource)
 
+    # ToDo: Move the `jsonschemas` to the `base` module
     schema = ConstantField("$schema", "local://records/geo-parent-v1.0.0.json")
 
     relationship = RecordParentRelationshipField(key="relationship")
 
 
-class CommonFieldsMixin(BaseGEORecordsFieldsMixin, BaseCommonFieldsMixin):
+class CommonFieldsMixin(BaseGEORecordsFieldsMixin, rdm_api.CommonFieldsMixin):
     """Common system fields between records and drafts."""
 
     parent_record_cls = GEOParent
-    schema = ConstantField(
-        "$schema", "local://records/geordmrecords-records-record-v1.0.0.json"
-    )
+    schema = ConstantField("$schema", "local://records/geo-record-v1.0.0.json")
 
 
 #
 # Draft API
 #
-class GEOFileDraft(FileRecord):
-    """Record (Draft) File abstraction class."""
-
-    model_cls = rdm_models.RDMFileDraftMetadata
-    records_cls = None
-
-
-class GEODraft(CommonFieldsMixin, Draft):
+class GEODraft(CommonFieldsMixin, rdm_api.RDMDraft):
     """Record (Draft) Metadata manipulation class API."""
-
-    model_cls = rdm_models.RDMDraftMetadata
 
     index = IndexField(
         "geordmrecords-drafts-draft-v1.0.0", search_alias="geordmrecords"
     )
-
-    files = FilesField(
-        store=False,
-        file_cls=GEOFileDraft,
-        # Don't delete, we'll manage in the service
-        delete=False,
-    )
-
-    has_draft = HasDraftCheckField()
-
-    status = DraftStatus()
 
     relationship = PackageRelationshipField(key="relationship")
 
@@ -88,36 +62,12 @@ class GEODraft(CommonFieldsMixin, Draft):
 #
 # Record API
 #
-class GEOFileRecord(FileRecord):
-    """Record File abstraction class."""
-
-    model_cls = rdm_models.RDMFileRecordMetadata
-    records_cls = None
-
-
-class GEORecord(CommonFieldsMixin, Record):
+class GEORecord(CommonFieldsMixin, rdm_api.RDMRecord):
     """Record Metadata manipulation class API."""
-
-    model_cls = rdm_models.RDMRecordMetadata
 
     index = IndexField(
         "geordmrecords-records-record-v1.0.0", search_alias="geordmrecords-records"
     )
 
-    files = FilesField(
-        store=False,
-        file_cls=GEOFileRecord,
-        # Don't create
-        create=False,
-        # Don't delete, we'll manage in the service
-        delete=False,
-    )
-
     has_draft = HasDraftCheckField(GEODraft)
-
-    status = DraftStatus()
     relationship = PackageRelationshipField(key="relationship")
-
-
-GEOFileDraft.record_cls = GEODraft
-GEOFileRecord.record_cls = GEORecord

@@ -66,8 +66,12 @@ class PackageResourceIntegrationComponent(ConstrainedComponent):
                 )
 
         # now, it is possible to link the package/resource
-        package.relationship.resources.append(resource)
-        resource.relationship.packages.append(package)
+        package.relationship.resources.append(
+            dict(record=resource, relation_type=relationship_type)
+        )
+        resource.relationship.packages.append(
+            dict(record=package, relation_type=relationship_type)
+        )
 
     def package_delete_resource(
         self,

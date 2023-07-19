@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "id": "local://records/geordmrecords-records-record-v1.0.0.json",
+  "id": "local://records/geo-record-v1.0.0.json",
   "title": "GEO Knowledge Resource Scheme (Based on InvenioRDM Record Schema v5.0.0)",
   "type": "object",
   "additionalProperties": false,
@@ -509,8 +509,20 @@
           "description": "List of packages linked to the specific version of the Package.",
           "type": "array",
           "uniqueItems": true,
-          "items": {"$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"}
+          "items": {"$ref": "local://records/geo-definitions-v1.0.0.json#/resource"}
+        },
+        "resources": {
+          "description": "List of resources linked to the specific version of the Package.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "local://records/geo-definitions-v1.0.0.json#/resource"}
         }
+      }
+    },
+    "assistance_requests": {
+      "type": "array",
+      "items": {
+        "$ref": "local://requests/request-v1.0.0.json"
       }
     }
   }

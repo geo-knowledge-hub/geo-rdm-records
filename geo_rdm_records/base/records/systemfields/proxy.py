@@ -42,6 +42,7 @@ class BaseRecordProxy:
         self._entity = None  # record cache
 
         self.record_id = None
+        self.relation_type = None
         self.allow_drafts = allow_drafts
 
         # we are using the instance bellow to get the ``record_cls`` and
@@ -71,7 +72,14 @@ class BaseRecordProxy:
         elif isinstance(
             record, dict
         ):  # record id into a dict (e.g., { 'id': '0pfec-m8509' })
-            self.record_id = record["id"]
+            if "record" in record:
+                self.record_id = record["record"]["id"]
+
+            if "relation_type" in record:
+                self.relation_type = record["relation_type"]
+
+            if "id" in record:
+                self.record_id = record["id"]
 
         elif isinstance(record, BaseRecordProxy):
             self.record_id = record.record_id
@@ -112,7 +120,10 @@ class BaseRecordProxy:
         res = {}
 
         if self.record_id:
-            res = {"id": self.record_id}
+            res["id"] = self.record_id
+
+        if self.relation_type:
+            res["relation_type"] = self.relation_type
 
         return res
 

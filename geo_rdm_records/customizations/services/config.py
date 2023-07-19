@@ -27,6 +27,7 @@ from geo_rdm_records.customizations.services.schemas import (
     GEORecordSchema,
 )
 
+from ...base.records.types import GEORecordTypes
 from ..records.api import GEODraft, GEORecord
 from .components import (
     PackageResourceCommunitiesComponent,
@@ -44,6 +45,9 @@ class GEORecordServiceConfig(BaseGEOServiceConfig):
     # Schemas
     schema = GEORecordSchema
     schema_parent = GEOParentSchema
+
+    # Search configuration
+    search_type = GEORecordTypes.resource
 
     # Result classes
     result_list_cls = MutableRecordList

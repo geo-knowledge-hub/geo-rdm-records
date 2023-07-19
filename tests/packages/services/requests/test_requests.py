@@ -37,7 +37,7 @@ def test_simple_flow(running_app, refresh_index, published_package):
     assert request["is_open"] is False
     assert request["status"] == "created"
     assert request["type"] == "feed-post-creation"
-    assert "package_record" in request["topic"]
+    assert "geo_package_record" in request["topic"]
 
     # Submitting request
     request = current_geo_packages_service.request.submit(

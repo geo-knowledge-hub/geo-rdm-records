@@ -52,6 +52,12 @@ class PackageRelationship:
         """An alias for the ``resources`` property."""
         return self._resources
 
+    def relations(self, relation_type):
+        """Record relations."""
+        return list(
+            filter(lambda x: x["relation_type"] == relation_type, self.resources.dump())
+        )
+
     def dump(self):
         """Dump the field values as dictionary."""
         relationship = {
@@ -79,6 +85,7 @@ class PackageRelationship:
         if relationship_dict:
             # Resources
             for resource in relationship_dict.get("resources", []):
+                # Assuming that `resource` is a dict
                 try:
                     resources.add(resource)
                 except Exception as e:

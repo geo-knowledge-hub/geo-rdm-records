@@ -24,10 +24,6 @@ from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
 from geo_rdm_records.base.services.results import MutableRecordList, ResultRegistryType
 from geo_rdm_records.base.services.schemas import ParentSchema
 from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
-from geo_rdm_records.modules.packages.records.api import (
-    GEOPackageDraft,
-    GEOPackageRecord,
-)
 
 from .schemas import GEORecordSchema
 
@@ -38,13 +34,9 @@ class SearchRecordServiceConfig(BaseGEOServiceConfig):
     # Common configuration
     service_id = "records_search"
 
-    # Indices used to do the search
-    indices = [
-        GEORecord.index.search_alias,
-        GEOPackageRecord.index.search_alias,
-    ]
-
-    indices_draft = [GEODraft.index.search_alias, GEOPackageDraft.index.search_alias]
+    # Record and draft classes
+    record_cls = GEORecord
+    draft_cls = GEODraft
 
     # Schemas
     schema = GEORecordSchema
