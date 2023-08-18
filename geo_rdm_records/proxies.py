@@ -18,7 +18,7 @@ current_geo_packages_service = LocalProxy(
 )
 """Helper proxy to get the current Packages API service."""
 
-current_cms_service = LocalProxy(
-    lambda: current_app.extensions["geo-rdm-records"].service_cms
+current_assistance_requests_service = LocalProxy(
+    lambda: current_app.extensions["geo-rdm-records"].service_assistance_requests
 )
-"""Helper proxy to get the current CMS service."""
+"""Helper proxy to get the current Assistance Requests service."""

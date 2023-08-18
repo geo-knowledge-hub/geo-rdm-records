@@ -49,7 +49,7 @@ from .components.resources import (
 )
 from .links import RecordLink
 from .permissions import PackagesPermissionPolicy
-from .request.service import has_feed_requests
+from .request.service import has_assistance_requests
 from .schemas import GEOPackageRecordSchema
 
 
@@ -188,10 +188,10 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
         "resources_import": RecordLink(
             "{+api}/packages/{id}/draft/actions/resources-import", when=is_draft
         ),
-        "feed": RecordLink("{+api}/packages/{id}/feed", when=is_record),
-        "feed_submit": RecordLink(
-            "{+api}/packages/{id}/actions/submit-feed",
-            when=has_feed_requests,
+        "requests": RecordLink("{+api}/packages/{id}/requests", when=is_record),
+        "requests_submit": RecordLink(
+            "{+api}/packages/{id}/actions/submit-request",
+            when=has_assistance_requests,
         ),
     }
 

@@ -23,11 +23,11 @@ from geo_rdm_records.modules.packages.errors import (
 #
 # Utility
 #
-def has_feed_requests(record, ctx):
+def has_assistance_requests(record, ctx):
     """Shortcut for links to determine if record has ."""
     return any(
         map(
-            lambda x: x["type"] == PackageFeedRequestService.request_type,
+            lambda x: x["type"] in PackageFeedRequestService.request_type,
             record.assistance_requests,
         )
     )
@@ -39,7 +39,10 @@ class PackageFeedRequestService(RecordService):
     #
     # Request type
     #
-    request_type = "feed-post-creation"
+    request_type = [
+        "requests-assistance-feed-creation",
+        "requests-assistance-training-creation",
+    ]
 
     #
     # Topic type
@@ -65,8 +68,9 @@ class PackageFeedRequestService(RecordService):
             # checking the type of the request
             request = request.get_object()
 
-            if self.request_type == request.type.type_id:
-                # Assumes that only one request is available
+            if request.type.type_id in self.request_type:
+                # ToDo: Assumes that only one request is available
+                #       Remove this on version 1.7.0 with the InvenioRDM requests endpoint.
                 return request
         return None
 

@@ -5,7 +5,7 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""GEO RDM Records feed post requests."""
+"""GEO RDM Records Package requests definition."""
 
 from flask_babelex import lazy_gettext as _
 from invenio_requests.customizations import RequestType, actions
@@ -17,18 +17,14 @@ from geo_rdm_records.proxies import current_assistance_requests_service
 # Actions
 #
 class SubmitAction(actions.SubmitAction):
-    """Submit action.
-
-    ToDos:
-        - Submit action can send an e-mail to a pre-configured address (secretariat, admins, or receivers)
-    """
+    """Submit action."""
 
     def execute(self, identity, uow):
-        """Execute the submit action."""
+        """Execute submit action."""
         record = self.request.topic.resolve()
         # Create a custom title for the request
         record_title = record["metadata"]["title"]
-        request_title = f"Feed: {record_title}"
+        request_title = f"Training request: {record_title}"
         # Defining the custom title for the request
         self.request["title"] = request_title
         super().execute(identity, uow)
@@ -39,7 +35,7 @@ class AcceptAction(actions.AcceptAction):
 
     def execute(self, identity, uow):
         """Accept feed post creation."""
-        # Use the CMS service to manage the feed post.
+        # Use the Assistance requests service to manage the training session.
         current_assistance_requests_service.create_request(
             identity, self.request, uow=uow
         )
@@ -51,15 +47,11 @@ class AcceptAction(actions.AcceptAction):
 #
 # Request
 #
-class FeedPostRequest(RequestType):
-    """Feed post creation request for a Knowledge Package.
+class TrainingSessionRequest(RequestType):
+    """Training session request for a Knowledge Package."""
 
-    ToDos
-        - Review the ``needs_context`` and how it can be used
-    """
-
-    type_id = "requests-assistance-feed-creation"
-    name = _("Feed post creation")
+    type_id = "requests-assistance-training-creation"
+    name = _("Training session request")
 
     creator_can_be_none = False
     topic_can_be_none = False

@@ -7,6 +7,16 @@
 Changes
 =======
 
+Version 0.6.1 (To be released)
+------------------------------
+
+- Requests for Packages API
+
+  - Generalized from Feed request to assistance requests;
+
+  - Added support to a new type of request: ``Training session``.
+
+
 Version 0.6.0 (2023-06-08)
 --------------------------
 
@@ -60,7 +70,7 @@ Version 0.4.0 (2023-01-05)
 
 - Revised Package structure;
 - Added initial implementation of the Packages API
-  
+
   - Metadata management;
   - Files management;
   - Relationship between packages and resources revised;
@@ -90,7 +100,7 @@ Version 0.3.0 (2022-07-17)
     - `LineString <https://tools.ietf.org/html/rfc7946#section-3.1.4>`_ (New feature);
     - `MultiLineString <https://tools.ietf.org/html/rfc7946#section-3.1.5>`_ (New feature);
     - `GeometryCollection <https://tools.ietf.org/html/rfc7946#section-3.1.8>`_ (New feature).
-    
+
   - Added Geographic Identifiers vocabularies via integration with the `Invenio Geographic Identifiers <https://github.com/geo-knowledge-hub/invenio-geographic-identifiers>`_ module.
 
 Version 0.2.0 (2022-04-24)

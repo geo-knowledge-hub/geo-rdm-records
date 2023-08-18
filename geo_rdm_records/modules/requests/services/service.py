@@ -10,15 +10,15 @@
 from invenio_records_resources.services.base import Service
 from invenio_records_resources.services.uow import TaskOp, unit_of_work
 
-from geo_rdm_records.modules.cms.tasks import notify_feed
+from geo_rdm_records.modules.requests.tasks import notify_request
 
 
-class CMSService(Service):
-    """CMS Service."""
+class AssistanceRequestsService(Service):
+    """Assistance requests Service."""
 
     @unit_of_work()
-    def create_feed_post(self, identity, request, uow):
-        """Create a feed post."""
+    def create_request(self, identity, request, uow):
+        """Create an assistance request."""
         self.require_permission(identity, "accept_request")
 
         # Preparing data to create the notification task
@@ -27,8 +27,8 @@ class CMSService(Service):
         request_id = str(request.id)
         record_id = str(record.pid.pid_value)
 
-        # Sending notification e-mail
-        uow.register(TaskOp(notify_feed, request_id, record_id))
+        # Sending e-mail notification
+        uow.register(TaskOp(notify_request, request_id, record_id))
 
         # ToDo: Improve this return to provide more
         #       details of the operation performed.
