@@ -48,7 +48,7 @@ from .components.resources import (
     PackageResourceIntegrationComponent,
 )
 from .links import RecordLink
-from .permissions import PackagesPermissionPolicy
+from .permissions import PackagesPermissionPolicy, PackagesRequestsPermissionPolicy
 from .request.service import has_assistance_requests
 from .schemas import GEOPackageRecordSchema
 
@@ -286,3 +286,5 @@ class GEOPackageRequestServiceConfig(GEOPackageRecordServiceConfig):
     request_default_receiver = FromConfig(
         "GEO_RDM_RECORDS_REQUESTS_DEFAULT_RECEIVER", import_string=False
     )
+
+    permission_policy_cls = PackagesRequestsPermissionPolicy

@@ -31,11 +31,11 @@ from .modules.packages.services.config import (
     GEOPackageRecordServiceConfig,
     GEOPackageRequestServiceConfig,
 )
-from .modules.packages.services.request.service import PackageFeedRequestService
+from .modules.packages.services.request.service import PackageRequestsService
 from .modules.packages.services.secret_links import SecretLinkService
 from .modules.packages.services.service import GEOPackageRecordService
-from .modules.requests.services.config import AssistanceRequestsServiceConfig
-from .modules.requests.services.service import AssistanceRequestsService
+from .modules.requests.services.config import RequestNotificationServiceConfig
+from .modules.requests.services.service import RequestNotificationService
 from .modules.search.resources.config import SearchRecordResourceConfig
 from .modules.search.resources.resource import SearchRecordResource
 from .modules.search.services.config import SearchRecordServiceConfig
@@ -76,7 +76,7 @@ class GEORDMRecords(object):
             file_draft = GEOPackageDraftFileServiceConfig.build(app)
             search = SearchRecordServiceConfig.build(app)
             requests = GEOPackageRequestServiceConfig.build(app)
-            assistance_requests = AssistanceRequestsServiceConfig.build(app)
+            assistance_requests = RequestNotificationServiceConfig.build(app)
 
         return ServiceConfigs
 
@@ -94,14 +94,14 @@ class GEORDMRecords(object):
                 service_configs.record, PIDManager
             ),  # same used for the records.
             review_service=ReviewService(service_configs.record),
-            request_service=PackageFeedRequestService(service_configs.requests),
+            request_service=PackageRequestsService(service_configs.requests),
         )
 
         # Search service (Packages and records)
         self.service_search = SearchRecordService(config=service_configs.search)
 
         # Assistance requests service
-        self.service_assistance_requests = AssistanceRequestsService(
+        self.service_requests_notification = RequestNotificationService(
             config=service_configs.assistance_requests
         )
 

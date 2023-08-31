@@ -10,7 +10,7 @@
 from flask_babelex import lazy_gettext as _
 from invenio_requests.customizations import RequestType, actions
 
-from geo_rdm_records.proxies import current_assistance_requests_service
+from geo_rdm_records.proxies import current_requests_notification_service
 
 
 #
@@ -40,7 +40,7 @@ class AcceptAction(actions.AcceptAction):
     def execute(self, identity, uow):
         """Accept feed post creation."""
         # Use the CMS service to manage the feed post.
-        current_assistance_requests_service.create_request(
+        current_requests_notification_service.notify_creation(
             identity, self.request, uow=uow
         )
 
@@ -73,7 +73,7 @@ class FeedPostRequest(RequestType):
         "submit": SubmitAction,
         "delete": actions.DeleteAction,
         "accept": AcceptAction,
-        "cancel": actions.CreateAction,
+        "cancel": actions.CancelAction,
         "decline": actions.DeclineAction,
         "expire": actions.ExpireAction,
     }

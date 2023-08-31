@@ -18,7 +18,7 @@ current_geo_packages_service = LocalProxy(
 )
 """Helper proxy to get the current Packages API service."""
 
-current_assistance_requests_service = LocalProxy(
-    lambda: current_app.extensions["geo-rdm-records"].service_assistance_requests
+current_requests_notification_service = LocalProxy(
+    lambda: current_app.extensions["geo-rdm-records"].service_requests_notification
 )
-"""Helper proxy to get the current Assistance Requests service."""
+"""Helper proxy to get the current Requests notification service."""

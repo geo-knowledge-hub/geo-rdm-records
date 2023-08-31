@@ -12,12 +12,12 @@ from invenio_records_resources.services.base.config import (
     ServiceConfig,
 )
 
-from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
+from .permissions import RequestNotificationPermissionPolicy
 
 
-class AssistanceRequestsServiceConfig(ServiceConfig, ConfiguratorMixin):
+class RequestNotificationServiceConfig(ServiceConfig, ConfiguratorMixin):
     """Assistance Requests for Packages Service config."""
 
     # Common configuration
-    service_id = "assistance-requests"
-    permission_policy_cls = BaseGEOPermissionPolicy
+    service_id = "requests-notification"
+    permission_policy_cls = RequestNotificationPermissionPolicy
