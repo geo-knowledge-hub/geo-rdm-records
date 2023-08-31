@@ -13,8 +13,6 @@ from invenio_records_resources.resources.files import FileResource
 from invenio_records_resources.services import FileService
 
 from . import config
-from .modules.cms.services.config import CMSServiceConfig
-from .modules.cms.services.service import CMSService
 from .modules.packages.resources.config import (
     GEOPackageDraftFilesResourceConfig,
     GEOPackageParentRecordLinksResourceConfig,
@@ -33,9 +31,11 @@ from .modules.packages.services.config import (
     GEOPackageRecordServiceConfig,
     GEOPackageRequestServiceConfig,
 )
-from .modules.packages.services.request.service import PackageFeedRequestService
+from .modules.packages.services.request.service import PackageRequestsService
 from .modules.packages.services.secret_links import SecretLinkService
 from .modules.packages.services.service import GEOPackageRecordService
+from .modules.requests.services.config import RequestNotificationServiceConfig
+from .modules.requests.services.service import RequestNotificationService
 from .modules.search.resources.config import SearchRecordResourceConfig
 from .modules.search.resources.resource import SearchRecordResource
 from .modules.search.services.config import SearchRecordServiceConfig
@@ -75,8 +75,8 @@ class GEORDMRecords(object):
             file = GEOPackageFileRecordServiceConfig.build(app)
             file_draft = GEOPackageDraftFileServiceConfig.build(app)
             search = SearchRecordServiceConfig.build(app)
-            cms = CMSServiceConfig.build(app)
             requests = GEOPackageRequestServiceConfig.build(app)
+            assistance_requests = RequestNotificationServiceConfig.build(app)
 
         return ServiceConfigs
 
@@ -94,14 +94,16 @@ class GEORDMRecords(object):
                 service_configs.record, PIDManager
             ),  # same used for the records.
             review_service=ReviewService(service_configs.record),
-            request_service=PackageFeedRequestService(service_configs.requests),
+            request_service=PackageRequestsService(service_configs.requests),
         )
 
         # Search service (Packages and records)
         self.service_search = SearchRecordService(config=service_configs.search)
 
-        # CMS service
-        self.service_cms = CMSService(config=service_configs.cms)
+        # Assistance requests service
+        self.service_requests_notification = RequestNotificationService(
+            config=service_configs.assistance_requests
+        )
 
     def init_resource(self, app):
         """Initialize resources."""

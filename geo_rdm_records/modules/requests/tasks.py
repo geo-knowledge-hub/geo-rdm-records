@@ -19,12 +19,12 @@ from geo_rdm_records.proxies import current_geo_packages_service
 # Tasks
 #
 @shared_task
-def notify_feed(
+def notify_request(
     request_id,
     record_id,
     notification_template="geo_rdm_records/email/notification.html",
 ):
-    """Create a Feed Post in the GEO Knowledge Hub CMS."""
+    """Create a notification about a new request."""
     # Preparing package data to the notification
     record = current_geo_packages_service.read(system_identity, record_id).to_dict()
 
@@ -46,7 +46,7 @@ def notify_feed(
     if notification_emails:
         # Preparing notification
         message = TemplatedMessage(
-            subject="Feed: New Knowledge Package",
+            subject="GEO Knowledge Hub: New request",
             template_html=notification_template,
             recipients=notification_emails,
             ctx=dict(

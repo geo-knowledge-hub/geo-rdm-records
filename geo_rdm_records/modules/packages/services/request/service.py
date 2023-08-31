@@ -23,23 +23,34 @@ from geo_rdm_records.modules.packages.errors import (
 #
 # Utility
 #
-def has_feed_requests(record, ctx):
+def has_assistance_requests(record, ctx):
     """Shortcut for links to determine if record has ."""
     return any(
         map(
-            lambda x: x["type"] == PackageFeedRequestService.request_type,
+            lambda x: x["type"] in PackageRequestsService.request_type,
             record.assistance_requests,
         )
     )
 
 
-class PackageFeedRequestService(RecordService):
+class PackageRequestsService(RecordService):
     """Feed requests class for Packages."""
 
     #
     # Request type
     #
-    request_type = "feed-post-creation"
+    request_type = [
+        "requests-assistance-feed-creation",
+        "requests-assistance-training-creation",
+    ]
+
+    #
+    # Request permissions
+    #
+    request_permissions = {
+        "requests-assistance-feed-creation": "manage",
+        "requests-assistance-training-creation": "create",
+    }
 
     #
     # Topic type
@@ -56,8 +67,10 @@ class PackageFeedRequestService(RecordService):
     #
     # Auxiliary function
     #
-    def _search_record_requests(self, record):
+    def _search_record_requests(self, record, identity, exclude=None):
         """Search for record requests."""
+        exclude = exclude or []
+
         # Search rule: Extra filter to search by the specific request type
         package_requests = record.assistance_requests
 
@@ -65,10 +78,20 @@ class PackageFeedRequestService(RecordService):
             # checking the type of the request
             request = request.get_object()
 
-            if self.request_type == request.type.type_id:
-                # Assumes that only one request is available
-                return request
+            if request.type.type_id in self.request_type:
+                # ToDo: Assumes that only one request is available per user.
+                #       Remove this on version 1.7.0 with the InvenioRDM requests endpoint.
+                is_request_creator = request.created_by.resolve().id == identity.id
+                is_cancelled = request.status == "cancelled"
+                is_valid = request.status not in exclude
+
+                if is_request_creator and not is_cancelled and is_valid:
+                    return request
         return None
+
+    def _define_permission(self, request_type):
+        """Define the permission required based on ``Request Type``."""
+        return self.request_permissions.get(request_type)
 
     #
     # High-Level API
@@ -76,10 +99,9 @@ class PackageFeedRequestService(RecordService):
     def read(self, identity, id_):
         """Read request."""
         record = self.record_cls.pid.resolve(id_, registered_only=False)
-        self.require_permission(identity, "manage", record=record)
+        request = self._search_record_requests(record, identity)
 
-        # Get package requests
-        request = self._search_record_requests(record)
+        self.require_permission(identity, "read", request=request)
 
         if request:
             # reusing request service to avoid read the same
@@ -101,31 +123,34 @@ class PackageFeedRequestService(RecordService):
     @unit_of_work()
     def update(self, identity, id_, data, revision_id=None, uow=None):
         """Create or update an existing request."""
-        # To create a feed post, user must be able to manage the record
         record = self.record_cls.pid.resolve(id_, registered_only=False)
-        self.require_permission(identity, "manage", record=record)
-
-        # Get package requests
-        request = self._search_record_requests(record)
+        request = self._search_record_requests(record, identity, exclude=["submitted"])
 
         if request:
-            current_requests_service.delete(identity, request.id, uow=uow)
+            return current_requests_service.update(
+                identity, request.id, data=data, revision_id=revision_id, uow=uow
+            )
         return self.create(identity, data, record, uow=uow)
 
     @unit_of_work()
     def create(self, identity, data, record, uow=None):
         """Submit a request for a Knowledge Package action."""
+        # Validate the request type
+        type_name = data.pop("type", None)
+        type_object = current_request_type_registry.lookup(type_name, quiet=True)
+
+        if type_object is None:
+            raise ValidationError(_("Invalid request type."), field_name="type")
+
+        # Validate permission
+        permission = self._define_permission(type_name)
+        self.require_permission(identity, permission, record=record)
+
+        # Validate package status
         if not record.is_published or not (record.versions.index >= 1):
             raise PackageRequestException(
                 _("You can only create a feed post for published packages.")
             )
-
-        # Validate the request type
-        type_ = data.pop("type", None)
-        type_ = current_request_type_registry.lookup(type_, quiet=True)
-
-        if type_ is None:
-            raise ValidationError(_("Invalid request type."), field_name="type")
 
         # Receiver
         # ToDo: Can we add groups as default ?
@@ -134,7 +159,7 @@ class PackageFeedRequestService(RecordService):
 
         # Delegate to requests service to create the request
         request_item = current_requests_service.create(
-            identity, data, type_, receiver, topic=record, uow=uow
+            identity, data, type_object, receiver, topic=record, uow=uow
         )
 
         # Save request in the record
@@ -148,10 +173,9 @@ class PackageFeedRequestService(RecordService):
         """Submit feed post request."""
         # To create a feed post, user must be able to manage the record
         record = self.record_cls.pid.resolve(id_, registered_only=False)
-        self.require_permission(identity, "manage", record=record)
+        request = self._search_record_requests(record, identity, exclude=["submitted"])
 
-        # Search package requests
-        request = self._search_record_requests(record)
+        self.require_permission(identity, "action_submit", request=request)
 
         if request:
             return current_requests_service.execute_action(

@@ -8,7 +8,6 @@
 """Test Requests Service for packages."""
 
 import pytest
-import requests
 from invenio_requests import current_requests_service
 
 from geo_rdm_records.proxies import current_geo_packages_service
@@ -27,7 +26,7 @@ def test_simple_flow(running_app, refresh_index, published_package):
         package_id,
         {
             "topic": {"package_record": package_id},
-            "type": "feed-post-creation",
+            "type": "requests-assistance-training-creation",
         },
     )
 
@@ -36,7 +35,7 @@ def test_simple_flow(running_app, refresh_index, published_package):
     # Validating request
     assert request["is_open"] is False
     assert request["status"] == "created"
-    assert request["type"] == "feed-post-creation"
+    assert request["type"] == "requests-assistance-training-creation"
     assert "package_record" in request["topic"]
 
     # Submitting request
@@ -52,7 +51,6 @@ def test_simple_flow(running_app, refresh_index, published_package):
 
     # Validating request
     assert request["status"] == "submitted"
-    assert request["title"] == f"Feed: {published_package.metadata['title']}"
 
     # Accepting request
     request = current_requests_service.execute_action(

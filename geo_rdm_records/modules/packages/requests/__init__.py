@@ -8,3 +8,4 @@
 """GEO RDM Records Package requests definition."""
 
 from .feed import FeedPostRequest
+from .training import TrainingSessionRequest

@@ -48,8 +48,8 @@ from .components.resources import (
     PackageResourceIntegrationComponent,
 )
 from .links import RecordLink
-from .permissions import PackagesPermissionPolicy
-from .request.service import has_feed_requests
+from .permissions import PackagesPermissionPolicy, PackagesRequestsPermissionPolicy
+from .request.service import has_assistance_requests
 from .schemas import GEOPackageRecordSchema
 
 
@@ -188,10 +188,10 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
         "resources_import": RecordLink(
             "{+api}/packages/{id}/draft/actions/resources-import", when=is_draft
         ),
-        "feed": RecordLink("{+api}/packages/{id}/feed", when=is_record),
-        "feed_submit": RecordLink(
-            "{+api}/packages/{id}/actions/submit-feed",
-            when=has_feed_requests,
+        "requests": RecordLink("{+api}/packages/{id}/requests", when=is_record),
+        "requests_submit": RecordLink(
+            "{+api}/packages/{id}/actions/submit-request",
+            when=has_assistance_requests,
         ),
     }
 
@@ -286,3 +286,5 @@ class GEOPackageRequestServiceConfig(GEOPackageRecordServiceConfig):
     request_default_receiver = FromConfig(
         "GEO_RDM_RECORDS_REQUESTS_DEFAULT_RECEIVER", import_string=False
     )
+
+    permission_policy_cls = PackagesRequestsPermissionPolicy
