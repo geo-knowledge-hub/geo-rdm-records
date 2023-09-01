@@ -7,12 +7,12 @@
 Changes
 =======
 
-Version 0.6.1 (To be released)
+Version 0.7.0 (2023-09-01)
 ------------------------------
 
 - Requests for Packages API
 
-  - Generalized from Feed request to assistance requests;
+  - Generalized from ``Feed request`` to ``Assistance requests``;
 
   - Added support to a new type of request: ``Training session``.
 
