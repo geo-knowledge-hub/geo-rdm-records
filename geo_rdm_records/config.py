@@ -177,6 +177,21 @@ GEO_RDM_RECORDS_REQUESTS_DEFAULT_RECEIVER = None
 # E-mail configuration
 GEO_RDM_NOTIFICATION_DEFAULT_RECEIVER_EMAILS = []
 
+#
+# Checker configuration
+#
+GEO_RDM_CHECKER_RETRY_CONFIG = {"retries": 5, "backoff_factor": 0.3}
+"""Retry configurations (based on retry-requests library)."""
+
+GEO_RDM_CHECKER_REQUEST_CONFIG = {"timeout": 10}
+"""Request configuration (based on requests (get method) library."""
+
+GEO_RDM_CHECKER_CHUNK_SIZE = 10
+"""Chunk size used by the checker."""
+
+GEO_RDM_CHECKER_SLEEP_TIME = 5
+"""Sleep time to be applied between chunks (in seconds)."""
+
 # OAI-PMH
 # =======
 # See https://github.com/inveniosoftware/invenio-oaiserver/blob/master/invenio_oaiserver/config.py
