@@ -15,6 +15,9 @@ from invenio_mail.api import TemplatedMessage
 from invenio_users_resources.proxies import current_users_service
 
 
+#
+# Utilities
+#
 def _check_owner_can_receive_report(owner_profile):
     """Check if an owner can receive a report.
 
@@ -40,8 +43,8 @@ def _build_report_message(
     """Build a report message.
 
     Args:
-        records (list): List containing status of the links from the
-                        records (Knowledge Packages and Knowledge Resources).
+        records (dict): Object containing records with extra information
+                        (e.g., link status, record update status).
 
         records_owner_profile (dict): Dict with the profile of the records' owner.
 
@@ -65,12 +68,15 @@ def _build_report_message(
     )
 
 
+#
+# High-level functions.
+#
 def send_report(records, records_owner, report_configuration):
     """Send a report to Knowledge Provider.
 
     Args:
-        records (list): List containing status of the links from the
-                        records (Knowledge Packages and Knowledge Resources).
+        records (dict): Object containing records with extra information
+                        (e.g., link status, record update status).
 
         records_owner (int): Record owner's ID.
 

@@ -9,16 +9,28 @@
 
 from celery import shared_task
 
-from geo_rdm_records.modules.checker.links.service import config
+from geo_rdm_records.modules.checker import config
 from geo_rdm_records.modules.checker.links.validation import validate_records_links
+from geo_rdm_records.modules.checker.records.validation import validate_records_outdated
 
 
 @shared_task(ignore_result=True)
 def check_records_links():
     """Check records links."""
     # reading configurations
-    report_configuration = config.get_report_config()
-    checker_configuration = config.get_checker_config()
+    report_configuration = config.get_links_report_config()
+    checker_configuration = config.get_links_checker_config()
 
-    # validating links!
+    # validating links
     validate_records_links(checker_configuration, report_configuration)
+
+
+@shared_task(ignore_result=True)
+def check_records_outdated():
+    """Check for outdated records."""
+    # reading configurations
+    report_configuration = config.get_outdated_report_config()
+    outdated_criteria_configuration = config.get_outdated_records_checker_config()
+
+    # checking records
+    validate_records_outdated(outdated_criteria_configuration, report_configuration)

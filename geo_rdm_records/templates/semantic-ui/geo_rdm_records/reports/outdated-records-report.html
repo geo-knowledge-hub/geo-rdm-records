@@ -1,0 +1,869 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns="http://www.w3.org/1999/xhtml"
+  style="color-scheme: light dark; supported-color-schemes: light dark"
+>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
+  <title></title>
+  <style type="text/css" rel="stylesheet" media="all">
+    /* Base ------------------------------ */
+
+    @import url("https://fonts.googleapis.com/css?family=Nunito+Sans:400,700&amp;display=swap");
+
+    body {
+      width: 100% !important;
+      height: 100%;
+      margin: 0;
+      -webkit-text-size-adjust: none;
+    }
+
+    a {
+      color: #3869d4;
+    }
+
+    a img {
+      border: none;
+    }
+
+    td {
+      word-break: break-word;
+    }
+
+    .preheader {
+      display: none !important;
+      visibility: hidden;
+      mso-hide: all;
+      font-size: 1px;
+      line-height: 1px;
+      max-height: 0;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    /* Type ------------------------------ */
+
+    body,
+    td,
+    th {
+      font-family: "Nunito Sans", Helvetica, Arial, sans-serif;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #333333;
+      font-size: 22px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #333333;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    h3 {
+      margin-top: 0;
+      color: #333333;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    td,
+    th {
+      font-size: 16px;
+    }
+
+    p,
+    ul,
+    ol,
+    blockquote {
+      margin: 0.4em 0 1.1875em;
+      font-size: 16px;
+      line-height: 1.625;
+    }
+
+    p.sub {
+      font-size: 13px;
+    }
+
+    /* Utilities ------------------------------ */
+
+    .align-right {
+      text-align: right;
+    }
+
+    .align-left {
+      text-align: left;
+    }
+
+    .align-center {
+      text-align: center;
+    }
+
+    .u-margin-bottom-none {
+      margin-bottom: 0;
+    }
+
+    /* Data table ------------------------------ */
+
+    body {
+      background-color: #f4f4f7;
+      color: #51545e;
+    }
+
+    p {
+      color: #51545e;
+    }
+
+    p.sub {
+      color: #6b6e76;
+    }
+
+    .email-wrapper {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #f4f4f7;
+    }
+
+    .email-content {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+
+    /* Masthead ----------------------- */
+
+    .email-masthead {
+      padding: 25px 0;
+      text-align: center;
+    }
+
+    .email-masthead_logo {
+      width: 94px;
+    }
+
+    .email-masthead_name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #a8aaaf;
+      text-decoration: none;
+      text-shadow: 0 1px 0 white;
+    }
+
+    /* Body ------------------------------ */
+
+    .email-body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #ffffff;
+    }
+
+    .email-body_inner {
+      width: 620px;
+      margin: 0 auto;
+      padding: 0;
+      -premailer-width: 620px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #ffffff;
+    }
+
+    .email-footer {
+      width: 620px;
+      margin: 0 auto;
+      padding: 0;
+      -premailer-width: 620px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      text-align: center;
+    }
+
+    .email-footer p {
+      color: #6b6e76;
+    }
+
+    .body-action {
+      width: 100%;
+      margin: 30px auto;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      text-align: center;
+    }
+
+    .body-sub {
+      margin-top: 25px;
+      padding-top: 25px;
+      border-top: 1px solid #eaeaec;
+    }
+
+    .content-cell {
+      padding: 35px;
+    }
+
+    /*Media Queries ------------------------------ */
+
+    @media only screen and (max-width: 600px) {
+      .email-body_inner,
+      .email-footer {
+        width: 100% !important;
+      }
+    }
+
+    :root {
+      color-scheme: light dark;
+      supported-color-schemes: light dark;
+    }
+  </style>
+  <!--[if mso]>
+  <style type="text/css">
+    .f-fallback {
+      font-family: Arial, sans-serif;
+    }
+  </style>
+  <![endif]-->
+  <style type="text/css" rel="stylesheet" media="all">
+    body {
+      width: 100% !important;
+      height: 100%;
+      margin: 0;
+      -webkit-text-size-adjust: none;
+    }
+
+    body {
+      font-family: "Nunito Sans", Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f4f4f7;
+      color: #51545e;
+    }
+  </style>
+</head>
+
+<body
+  style="
+      width: 100% !important;
+      height: 100%;
+      -webkit-text-size-adjust: none;
+      font-family: 'Nunito Sans', Helvetica, Arial, sans-serif;
+      background-color: #f4f4f7;
+      color: #51545e;
+      margin: 0;
+    "
+  bgcolor="#F4F4F7"
+>
+<span
+  class="preheader"
+  style="
+        display: none !important;
+        visibility: hidden;
+        mso-hide: all;
+        font-size: 1px;
+        line-height: 1px;
+        max-height: 0;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+      "
+>Your records status report is here.</span
+>
+<table
+  class="email-wrapper"
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  role="presentation"
+  style="
+        width: 100%;
+        -premailer-width: 100%;
+        -premailer-cellpadding: 0;
+        -premailer-cellspacing: 0;
+        background-color: #f4f4f7;
+        margin: 0;
+        padding: 0;
+      "
+  bgcolor="#F4F4F7"
+>
+  <tr>
+    <td
+      align="center"
+      style="
+            word-break: break-word;
+            font-family: 'Nunito Sans', Helvetica, Arial, sans-serif;
+            font-size: 16px;
+          "
+    >
+      <table
+        class="email-content"
+        width="100%"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="
+              width: 100%;
+              -premailer-width: 100%;
+              -premailer-cellpadding: 0;
+              -premailer-cellspacing: 0;
+              margin: 0;
+              padding: 0;
+            "
+      >
+        <tr>
+          <td
+            class="email-masthead"
+            style="
+                  word-break: break-word;
+                  font-family: 'Nunito Sans', Helvetica, Arial, sans-serif;
+                  font-size: 16px;
+                  text-align: center;
+                  padding: 25px 0;
+                "
+            align="center"
+          >
+            <a
+              href="https://gkhub.earthobservations.org/"
+              class="f-fallback email-masthead_name"
+              style="
+                    color: #a8aaaf;
+                    font-size: 16px;
+                    font-weight: bold;
+                    text-decoration: none;
+                    text-shadow: 0 1px 0 white;
+                  "
+            >
+              GEO Knowledge Hub
+            </a>
+          </td>
+        </tr>
+        <!-- Email Body -->
+        <tr>
+          <td
+            class="email-body"
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            style="
+                  word-break: break-word;
+                  font-family: 'Nunito Sans', Helvetica, Arial, sans-serif;
+                  font-size: 16px;
+                  width: 100%;
+                  -premailer-width: 100%;
+                  -premailer-cellpadding: 0;
+                  -premailer-cellspacing: 0;
+                  background-color: #ffffff;
+                  margin: 0;
+                  padding: 0;
+                "
+            bgcolor="#FFFFFF"
+          >
+            <table
+              class="email-body_inner"
+              align="center"
+              width="570"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="
+                    width: 620px;
+                    -premailer-width: 620px;
+                    -premailer-cellpadding: 0;
+                    -premailer-cellspacing: 0;
+                    background-color: #ffffff;
+                    margin: 0 auto;
+                    padding: 0;
+                  "
+              bgcolor="#FFFFFF"
+            >
+              <!-- Body content -->
+              <tr>
+                <td
+                  class="content-cell"
+                  style="
+                        word-break: break-word;
+                        font-family: 'Nunito Sans', Helvetica, Arial, sans-serif;
+                        font-size: 16px;
+                        padding: 35px;
+                      "
+                >
+                  <div class="f-fallback">
+                    <h1
+                      style="
+                            margin-top: 0;
+                            color: #333333;
+                            font-size: 22px;
+                            font-weight: bold;
+                            text-align: center;
+                          "
+                      align="center"
+                    >
+                      Your records status report
+                    </h1>
+                    <p
+                      style="
+                        font-size: 16px;
+                        line-height: 1.625;
+                        color: #51545e;
+                        margin: 0.4em 0 1.1875em;
+                      "
+                    >
+                      This report presents your Knowledge Packages and Knowledge Resources
+                      that are <b>outdated</b> in the GEO Knowledge Hub. We encourage you to <b>keep them updated</b> as
+                      many members of the GEO Community can benefit from it.
+
+
+                    </p>
+                    <p
+                      style="
+                        font-size: 16px;
+                        line-height: 1.625;
+                        color: #51545e;
+                        margin: 0.4em 0 1.1875em;
+                      "
+                    >
+                      <b>Note</b>: Records without any update in the last 6 months are defined
+                      as outdated.
+                    </p>
+
+                    <!-- Start: Number of records X Outdated records -->
+                    <div style="margin-bottom: 35px">
+                      <h2
+                        style="
+                              font-size: 22px;
+                              margin-top: 28px;
+                              margin-bottom: 10px;
+                              font-weight: normal;
+                              text-align: center;
+                            "
+                      >
+                        Status of all your active records
+                      </h2>
+                      <table
+                        style="
+                              width: 100%;
+                              table-layout: fixed;
+                              font-size: 15px;
+                            "
+                        cellspacing="0"
+                        cellpadding="0"
+                        border="0"
+                      >
+                        <tbody>
+                        <tr>
+                          <!-- Start: Total number of records -->
+                          <td
+                            style="
+                                    padding: 2%;
+                                    border: 2px solid #c5c5c5;
+                                    border-right-width: 0;
+                                    width: 50%;
+                                    background-color: #f5f5f5;
+                                  "
+                            valign="top"
+                          >
+                            <table style="width: 100%">
+                              <tbody>
+                              <tr>
+                                <td
+                                  style="
+                                            padding: 0;
+                                            margin: 0;
+                                            line-height: 1.1;
+                                          "
+                                >
+                                  <center
+                                    style="
+                                              font-size: 30px;
+                                              text-align: center;
+                                              display: block;
+                                              margin-bottom: 0;
+                                              font-weight: normal;
+                                            "
+                                  >
+                                    {{ total_records }}
+                                  </center>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <center
+                                    style="
+                                              margin-bottom: 8px;
+                                              line-height: 1.1;
+                                            "
+                                  >
+                                    packages and resources
+                                  </center>
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                          <!-- End: Total number of records -->
+
+                          <!-- Start: Total number of records outdated -->
+                          <td
+                            style="
+                                    text-align: center;
+                                    padding: 2%;
+                                    border: 2px solid #c5c5c5;
+                                    width: 50%;
+                                  "
+                            valign="middle"
+                          >
+                            <table style="width: 100%">
+                              <tbody>
+                              <tr>
+                                <td
+                                  style="
+                                            padding: 0;
+                                            margin: 0;
+                                            line-height: 1.1;
+                                          "
+                                >
+                                  <center
+                                    style="
+                                              font-size: 30px;
+                                              text-align: center;
+                                              display: block;
+                                              margin-bottom: 0;
+                                              font-weight: normal;
+                                            "
+                                  >
+                                    {{ total_resources_outdated }}
+                                  </center>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <center
+                                    style="
+                                              margin-bottom: 8px;
+                                              line-height: 1.1;
+                                            "
+                                  >
+                                    outdated records
+                                  </center>
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                          <!-- End: Total number of outdated records -->
+                        </tr>
+                        </tbody>
+                      </table>
+                      <table
+                        style="
+                              width: 100%;
+
+                              font-size: 15px;
+                            "
+                        cellspacing="0"
+                        cellpadding="0"
+                        border="0"
+                      >
+                        <tbody>
+                        <tr>
+                          <!-- Start: Total number of records -->
+                          <td
+                            style="padding: 2%; border: 1px solid #c5c5c5"
+                            valign="top"
+                          >
+                            <table style="width: 100%">
+                              <tbody>
+                              <tr>
+                                <td
+                                  style="
+                                            padding: 0;
+                                            margin: 0;
+                                            line-height: 1.1;
+                                          "
+                                >
+                                  <center
+                                    style="
+                                              font-size: 15px;
+                                              text-align: center;
+                                              display: block;
+                                              margin-bottom: 0;
+                                              font-weight: normal;
+                                            "
+                                  >
+                                    Records verified on
+                                    <b>{{ report_date }}</b>
+                                  </center>
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                          <!-- End: Total number of records -->
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- End: Number of records X Outdated records -->
+
+                    <!-- Start: Records evaluation (Packages) -->
+                    {% if total_packages_outdated > 0 %}
+                      <div style="margin-bottom: 35px">
+                        <h2
+                          style="
+                              font-size: 22px;
+                              margin-top: 28px;
+                              margin-bottom: 10px;
+                              font-weight: normal;
+                              text-align: center;
+                            "
+                        >
+                          Outdated Knowledge Packages
+                        </h2>
+
+                        <table style="width: 100%">
+                          <tbody>
+                          {% for package in packages %}
+                          {% if package.is_outdated %}
+                            <tr>
+                              <td>
+                                <div
+                                  style="
+                                      border: 2px solid #c5c5c5;
+                                      margin-bottom: 5px;
+                                      border-radius: 3px;
+                                    "
+                                >
+                                  <table
+                                    width="100%"
+                                    cellspacing="0"
+                                    cellpadding="0"
+                                    border="0"
+                                  >
+                                    <tbody>
+                                    <tr>
+                                      <td
+                                        colspan="2"
+                                        style="padding: 5px 10px 0 10px"
+                                      >
+                                        <div
+                                          style="
+                                                padding-bottom: 5px;
+                                                float: left;
+                                                width: 100%;
+                                                margin-bottom: 8px;
+                                              "
+                                        >
+                                          <h1
+                                            style="
+                                                  margin: 0;
+                                                  padding: 0;
+                                                  font-weight: 600;
+                                                  font-size: 17px;
+                                                  line-height: 1.3;
+                                                  float: left;
+                                                "
+                                          >
+                                            {{ package.package.metadata.title | safe }}
+                                          </h1>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </td>
+                            </tr>
+                          {% endif %}
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    {% endif %}
+                    <!-- End: Records evaluation (Packages) -->
+
+                    <!-- Start: Records evaluation (Resources) -->
+                    {% if total_resources_outdated > 0 %}
+                      <div style="margin-bottom: 35px">
+                        <h2
+                          style="
+                              font-size: 22px;
+                              margin-top: 28px;
+                              margin-bottom: 10px;
+                              font-weight: normal;
+                              text-align: center;
+                            "
+                        >
+                          Individual resources outdated
+                        </h2>
+                        <table style="width: 100%">
+                          <tbody>
+                          {% for resource in resources %}
+                          {% if resource.is_outdated %}
+                            <tr>
+                              <td>
+                                <div
+                                  style="
+                                      border: 2px solid #c5c5c5;
+                                      border-radius: 3px;
+                                      margin-bottom: 5px;
+                                    "
+                                >
+                                  <table
+                                    width="100%"
+                                    cellspacing="0"
+                                    cellpadding="0"
+                                    border="0"
+                                  >
+                                    <tbody>
+                                    <tr>
+                                      <td
+                                        colspan="2"
+                                        style="padding: 5px 10px 0 10px"
+                                      >
+                                        <div
+                                          style="
+                                                padding-bottom: 5px;
+                                                float: left;
+                                                width: 100%;
+                                                margin-bottom: 8px;
+                                              "
+                                        >
+                                          <h1
+                                            style="
+                                                  margin: 0;
+                                                  padding: 0;
+                                                  font-weight: 600;
+                                                  font-size: 20px;
+                                                  line-height: 1.3;
+                                                  float: left;
+                                                "
+                                          >
+                                            {{ resource.metadata.title |  safe }}
+                                          </h1>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </td>
+                            </tr>
+                          {% endif %}
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    {% endif %}
+                    <!-- End: Records evaluation (Resources) -->
+
+                    <!-- Start: Other details -->
+                    <p
+                      style="
+                            font-size: 16px;
+                            line-height: 1.625;
+                            color: #51545e;
+                            margin: 0.4em 0 1.1875em;
+                          "
+                    >
+                      If you have any questions about this report, feel free
+                      to
+                      <a
+                        href="mailto:secretariat@geosec.org"
+                        style="color: #3869d4"
+                      >email us</a
+                      >. (We're lightning quick at replying). We also have a
+                      <a href="https://discord.gg/wfPQHWNRkV"
+                      >Discord group</a
+                      >
+                      where you can find community help.
+                    </p>
+                    <!-- End: Other details -->
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td
+            style="
+                  word-break: break-word;
+                  font-family: 'Nunito Sans', Helvetica, Arial, sans-serif;
+                  font-size: 16px;
+                "
+          >
+            <table
+              class="email-footer"
+              align="center"
+              width="570"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="
+                    width: 620px;
+                    -premailer-width: 620px;
+                    -premailer-cellpadding: 0;
+                    -premailer-cellspacing: 0;
+                    text-align: center;
+                    margin: 0 auto;
+                    padding: 0;
+                  "
+            >
+              <tr>
+                <td
+                  class="content-cell"
+                  align="center"
+                  style="
+                        word-break: break-word;
+                        font-family: 'Nunito Sans', Helvetica, Arial, sans-serif;
+                        font-size: 16px;
+                        padding: 35px;
+                      "
+                >
+                  <p
+                    class="f-fallback sub align-center"
+                    style="
+                          font-size: 13px;
+                          line-height: 1.625;
+                          text-align: center;
+                          color: #6b6e76;
+                          margin: 0.4em 0 1.1875em;
+                        "
+                    align="center"
+                  >
+                    This email was sent by
+                    <strong>GEO Knowledge Hub</strong>
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

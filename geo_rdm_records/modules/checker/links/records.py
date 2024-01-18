@@ -7,14 +7,10 @@
 
 """Records manipulation utility module."""
 
-from invenio_access.permissions import system_identity
-from invenio_rdm_records.proxies import current_rdm_records_service
-
 from geo_rdm_records.base.records.types import GEORecordTypes
-from geo_rdm_records.customizations.records.api import GEORecord
+from geo_rdm_records.modules.checker.base import stats as checker_stats
+from geo_rdm_records.modules.checker.base.metadata import expand_record_metadata
 from geo_rdm_records.modules.checker.schema import EmailRecordJSONSerializer
-from geo_rdm_records.modules.packages.records.api import GEOPackageRecord
-from geo_rdm_records.proxies import current_geo_packages_service
 
 
 #
@@ -41,25 +37,6 @@ def _calculate_links_with_errors(record):
         int: Number of links with an error.
     """
     return len(list(filter(lambda x: not x["is_available"], record["links_status"])))
-
-
-def _summarize_records_total(packages, resources):
-    """Summarize total number of records (packages and resources).
-
-    Args:
-        packages (list): List of packages
-
-        resources (list): List of individual resources (not associated with packages).
-    Returns:
-        int: Total number of records.
-    """
-    nrecords = len(resources)
-
-    for package in packages:
-        # 1 package + n resources
-        nrecords += 1 + len(package["resources"])
-
-    return nrecords
 
 
 def _summarize(records, key):
@@ -152,38 +129,6 @@ def _enrich_package(package):
     )
 
 
-def _read_record_metadata(rid_, cache_, type_):
-    """Read metadata of a record.
-
-    Args:
-        rid_ (str): Record ID.
-
-        cache_ (dict): Dict containing already loaded metadata.
-
-        type_ (str): Type of record.
-
-    Returns:
-        dict: Record metadata.
-    """
-    result_data = list(filter(lambda x: x["id"] == rid_, cache_))
-
-    if not result_data:
-        if type_ == GEORecordTypes.package:
-            result_data = current_geo_packages_service.read(
-                identity=system_identity, id_=rid_
-            ).to_dict()
-
-        else:
-            result_data = current_rdm_records_service.read(
-                identity=system_identity, id_=rid_
-            ).to_dict()
-
-    else:
-        result_data = result_data[0]
-
-    return result_data
-
-
 def _merge_metadata(records, cache):
     """Merge metadata inside record link status objects.
 
@@ -198,7 +143,7 @@ def _merge_metadata(records, cache):
     for record in records:
         if "package" in record:
             # preparing package metadata
-            package_metadata = _read_record_metadata(
+            package_metadata = expand_record_metadata(
                 record["package"]["id"], cache["packages"], GEORecordTypes.package
             )
             package_metadata = {**record["package"], **package_metadata}
@@ -207,7 +152,7 @@ def _merge_metadata(records, cache):
             resources_metadata = []
 
             for resource in record["resources"]:
-                resource_metadata = _read_record_metadata(
+                resource_metadata = expand_record_metadata(
                     resource["id"], cache["resources"], GEORecordTypes.resource
                 )
 
@@ -216,7 +161,7 @@ def _merge_metadata(records, cache):
             yield dict(package=package_metadata, resources=resources_metadata)
 
         else:
-            individual_resource_metadata = _read_record_metadata(
+            individual_resource_metadata = expand_record_metadata(
                 record["id"], cache["resources"], GEORecordTypes.resource
             )
 
@@ -226,7 +171,7 @@ def _merge_metadata(records, cache):
 #
 # Records high-level functions.
 #
-def enrich_status_objects(records_status_object, metadata_cache):
+def enrich_results(records_status_object, metadata_cache):
     """Inject extra metadata in the links status object.
 
     Args:
@@ -235,7 +180,7 @@ def enrich_status_objects(records_status_object, metadata_cache):
         metadata_cache (dict): Already loaded metadata.
 
     Returns:
-        list: Records with extra metadata.
+        dict: Records with extra metadata.
     """
     packages = []
     resources = []
@@ -252,7 +197,7 @@ def enrich_status_objects(records_status_object, metadata_cache):
             resources.append(_enrich_resource(record_status_object))
 
     # summarizing some metrics
-    number_of_records = _summarize_records_total(packages, resources)
+    number_of_records = checker_stats.count_records(**metadata_cache)
     number_of_errors = _summarize(packages, "nerrors") + _summarize(
         resources, "nerrors"
     )
@@ -268,32 +213,3 @@ def enrich_status_objects(records_status_object, metadata_cache):
         total_packages_links=packages_links,
         total_resources_links=resources_links,
     )
-
-
-def get_records_by_owner(owner_id):
-    """Get all records associated with an owner.
-
-    Args:
-        owner_id (int): Owner ID
-
-    Returns:
-        tuple: Tuple containing a list of records and its metadata.
-    """
-    search_params = {"q": f"parent.access.owned_by.user: {owner_id}"}
-
-    # searching all records (packages and resources) and its metadata
-    packages_metadata = list(
-        current_geo_packages_service.search(system_identity, params=search_params).hits
-    )
-
-    resources_metadata = list(
-        current_rdm_records_service.search(system_identity, params=search_params).hits
-    )
-
-    # reading reference from database
-    records_obj = [
-        *list(map(lambda x: GEOPackageRecord.pid.resolve(x["id"]), packages_metadata)),
-        *list(map(lambda x: GEORecord.pid.resolve(x["id"]), resources_metadata)),
-    ]
-
-    return records_obj, dict(packages=packages_metadata, resources=resources_metadata)

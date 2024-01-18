@@ -8,9 +8,12 @@
 """Validation links module."""
 
 from invenio_access.models import User
+from invenio_search.engine import dsl
 
+from geo_rdm_records.modules.checker.base import records as checker_records
+from geo_rdm_records.modules.checker.base import report as checker_reports
+from geo_rdm_records.modules.checker.links import records as record_utils
 from geo_rdm_records.modules.checker.links.checker import check
-from geo_rdm_records.modules.checker.links.service import records, report
 
 
 def _validate_packages_links(packages, checker_configuration):
@@ -109,16 +112,20 @@ def validate_records_links(checker_configuration, report_configuration):
         records_owner_id = user.id
 
         # reading records associated with the current author (packages and resources)
-        records_obj, records_metadata = records.get_records_by_owner(records_owner_id)
+        records_obj, records_metadata = checker_records.get_records_by_owner(
+            records_owner_id, extra_filter=dsl.Q("term", **{"versions.is_latest": True})
+        )
 
         if not len(records_obj):
             continue
 
         # checking links
         validation_results = _validate_records_links(records_obj, checker_configuration)
-        validation_results = records.enrich_status_objects(
+        validation_results = record_utils.enrich_results(
             validation_results, metadata_cache=records_metadata
         )
 
         # reporting results
-        report.send_report(validation_results, records_owner_id, report_configuration)
+        checker_reports.send_report(
+            validation_results, records_owner_id, report_configuration
+        )
