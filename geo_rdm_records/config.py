@@ -7,6 +7,7 @@
 
 """GEO RDM Records module configurations."""
 
+from flask_babelex import lazy_gettext as _
 from invenio_rdm_records.services import facets as rdm_facets
 
 from geo_rdm_records.base.services import facets as geo_facets
@@ -176,6 +177,21 @@ GEO_RDM_RECORDS_REQUESTS_DEFAULT_RECEIVER = None
 
 # E-mail configuration
 GEO_RDM_NOTIFICATION_DEFAULT_RECEIVER_EMAILS = []
+
+#
+# Checker configuration
+#
+GEO_RDM_CHECKER_RETRY_CONFIG = {"retries": 5, "backoff_factor": 0.3}
+"""Retry configurations (based on retry-requests library)."""
+
+GEO_RDM_CHECKER_REQUEST_CONFIG = {"timeout": 10}
+"""Request configuration (based on requests (get method) library."""
+
+GEO_RDM_CHECKER_REPORT_TITLE = _("GEO Knowledge Hub - Links status from your records")
+"""Report title."""
+
+GEO_RDM_CHECKER_REPORT_TEMPLATE = "geo_rdm_records/reports/records-report.html"
+"""Report jinja2 template."""
 
 # OAI-PMH
 # =======
