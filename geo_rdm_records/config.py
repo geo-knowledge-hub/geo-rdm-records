@@ -7,6 +7,7 @@
 
 """GEO RDM Records module configurations."""
 
+from flask_babelex import lazy_gettext as _
 from invenio_rdm_records.services import facets as rdm_facets
 
 from geo_rdm_records.base.services import facets as geo_facets
@@ -176,6 +177,27 @@ GEO_RDM_RECORDS_REQUESTS_DEFAULT_RECEIVER = None
 
 # E-mail configuration
 GEO_RDM_NOTIFICATION_DEFAULT_RECEIVER_EMAILS = []
+
+#
+# Checker configuration
+#
+GEO_RDM_CHECKER_LINKS_RETRY_CONFIG = {"retries": 5, "backoff_factor": 0.3}
+"""Retry configurations (based on retry-requests library)."""
+
+GEO_RDM_CHECKER_LINKS_REQUEST_CONFIG = {"timeout": 10}
+"""Request configuration (based on requests (get method) library."""
+
+GEO_RDM_CHECKER_LINKS_REPORT_TITLE = _(
+    "GEO Knowledge Hub - Links status from your records"
+)
+"""Links status report title."""
+
+GEO_RDM_CHECKER_OUTDATED_REPORT_TITLE = _("GEO Knowledge Hub - Your records status")
+"""Outdated records report title."""
+
+GEO_RDM_CHECKER_OUTDATED_CRITERIA = 6 * 365 / 12
+"""Criteria used to set if a record is outdated."""
+
 
 # OAI-PMH
 # =======
