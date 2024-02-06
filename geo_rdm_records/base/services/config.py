@@ -21,9 +21,11 @@ class GEOSearchOptionsMixin:
     # changes on `SearchOptions.params_interpreters_cls`.
     params_interpreters_cls = list(
         map(
-            lambda x: FacetsParam  # replacing the `FacetsParams` by the custom one.
-            if getattr(x, "__name__", None) and x.__name__ == "FacetsParam"
-            else x,
+            lambda x: (
+                FacetsParam  # replacing the `FacetsParams` by the custom one.
+                if getattr(x, "__name__", None) and x.__name__ == "FacetsParam"
+                else x
+            ),
             [
                 *SearchOptions.params_interpreters_cls,
                 BoundingBoxParam.factory("metadata.locations.features.geometry"),
