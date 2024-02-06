@@ -58,7 +58,7 @@ def is_link_available(
     session = retry(session, **retry_config)
 
     try:
-        session.get(url, **requests_config)
+        session.head(url, **requests_config)
         # nothing to do
     except requests.RequestException as e:
         # If there is any request-related error, the link is not available
