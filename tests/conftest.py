@@ -84,12 +84,12 @@ def app_config(app_config):
     for config_key in supported_configurations:
         app_config[config_key] = getattr(config, config_key, None)
 
-    app_config["RECORDS_REFRESOLVER_CLS"] = (
-        "invenio_records.resolver.InvenioRefResolver"
-    )
-    app_config["RECORDS_REFRESOLVER_STORE"] = (
-        "invenio_jsonschemas.proxies.current_refresolver_store"
-    )
+    app_config[
+        "RECORDS_REFRESOLVER_CLS"
+    ] = "invenio_records.resolver.InvenioRefResolver"
+    app_config[
+        "RECORDS_REFRESOLVER_STORE"
+    ] = "invenio_jsonschemas.proxies.current_refresolver_store"
 
     # OAI Server
     app_config["OAISERVER_ID_PREFIX"] = "oai:inveniosoftware.org:recid/"
@@ -145,64 +145,64 @@ def app_config(app_config):
     ]
 
     # GEO RDM Records Configurations
-    app_config["RDM_RECORD_RESOURCE"] = (
-        "geo_rdm_records.customizations.resources.resource.GEORDMRecordResource"
-    )
+    app_config[
+        "RDM_RECORD_RESOURCE"
+    ] = "geo_rdm_records.customizations.resources.resource.GEORDMRecordResource"
 
-    app_config["RDM_RECORD_RESOURCE_CFG"] = (
-        "geo_rdm_records.customizations.resources.config.GEORecordResourceConfig"
-    )
+    app_config[
+        "RDM_RECORD_RESOURCE_CFG"
+    ] = "geo_rdm_records.customizations.resources.config.GEORecordResourceConfig"
 
-    app_config["RDM_RECORD_SERVICE"] = (
-        "geo_rdm_records.customizations.services.service.GEORDMRecordService"
-    )
+    app_config[
+        "RDM_RECORD_SERVICE"
+    ] = "geo_rdm_records.customizations.services.service.GEORDMRecordService"
 
-    app_config["RDM_RECORD_SERVICE_CFG"] = (
-        "geo_rdm_records.customizations.services.config.GEORecordServiceConfig"
-    )
+    app_config[
+        "RDM_RECORD_SERVICE_CFG"
+    ] = "geo_rdm_records.customizations.services.config.GEORecordServiceConfig"
 
-    app_config["RDM_FILE_SERVICE_CFG"] = (
-        "geo_rdm_records.customizations.services.config.GEOFileRecordServiceConfig"
-    )
+    app_config[
+        "RDM_FILE_SERVICE_CFG"
+    ] = "geo_rdm_records.customizations.services.config.GEOFileRecordServiceConfig"
 
-    app_config["RDM_FILE_DRAFT_SERVICE_CFG"] = (
-        "geo_rdm_records.customizations.services.config.GEOFileDraftServiceConfig"
-    )
+    app_config[
+        "RDM_FILE_DRAFT_SERVICE_CFG"
+    ] = "geo_rdm_records.customizations.services.config.GEOFileDraftServiceConfig"
 
-    app_config["RDM_REVIEW_SERVICE"] = (
-        "geo_rdm_records.customizations.services.review.service.ReviewService"
-    )
+    app_config[
+        "RDM_REVIEW_SERVICE"
+    ] = "geo_rdm_records.customizations.services.review.service.ReviewService"
 
-    app_config["GEO_RDM_RECORDS_PERMISSION_POLICY"] = (
-        "geo_rdm_records.base.services.permissions.BaseGEOPermissionPolicy"
-    )
+    app_config[
+        "GEO_RDM_RECORDS_PERMISSION_POLICY"
+    ] = "geo_rdm_records.base.services.permissions.BaseGEOPermissionPolicy"
 
-    app_config["GEO_RDM_PACKAGE_PERMISSION_POLICY"] = (
-        "geo_rdm_records.modules.packages.services.permissions.PackagesPermissionPolicy"
-    )
+    app_config[
+        "GEO_RDM_PACKAGE_PERMISSION_POLICY"
+    ] = "geo_rdm_records.modules.packages.services.permissions.PackagesPermissionPolicy"
 
     #
     # Actions
     #
-    app_config["RDM_COMMUNITY_ACTION_SUBMIT"] = (
-        "geo_rdm_records.base.requests.SubmitAction"
-    )
+    app_config[
+        "RDM_COMMUNITY_ACTION_SUBMIT"
+    ] = "geo_rdm_records.base.requests.SubmitAction"
 
-    app_config["RDM_COMMUNITY_ACTION_ACCEPT"] = (
-        "geo_rdm_records.base.requests.AcceptAction"
-    )
+    app_config[
+        "RDM_COMMUNITY_ACTION_ACCEPT"
+    ] = "geo_rdm_records.base.requests.AcceptAction"
 
-    app_config["RDM_COMMUNITY_ACTION_DECLINE"] = (
-        "geo_rdm_records.base.requests.DeclineAction"
-    )
+    app_config[
+        "RDM_COMMUNITY_ACTION_DECLINE"
+    ] = "geo_rdm_records.base.requests.DeclineAction"
 
-    app_config["RDM_COMMUNITY_ACTION_CANCEL"] = (
-        "geo_rdm_records.base.requests.CancelAction"
-    )
+    app_config[
+        "RDM_COMMUNITY_ACTION_CANCEL"
+    ] = "geo_rdm_records.base.requests.CancelAction"
 
-    app_config["RDM_COMMUNITY_ACTION_EXPIRE"] = (
-        "geo_rdm_records.base.requests.ExpireAction"
-    )
+    app_config[
+        "RDM_COMMUNITY_ACTION_EXPIRE"
+    ] = "geo_rdm_records.base.requests.ExpireAction"
 
     #
     # Search (Facets)
