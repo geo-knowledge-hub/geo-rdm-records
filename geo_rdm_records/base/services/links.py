@@ -14,6 +14,10 @@ from invenio_records_resources.services.base.links import (
 )
 
 from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
+from geo_rdm_records.modules.marketplace.records.api import (
+    GEOMarketplaceItem,
+    GEOMarketplaceItemDraft,
+)
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     GEOPackageRecord,
@@ -31,6 +35,10 @@ class LinksRegistryType:
         "packages": (
             GEOPackageDraft,
             GEOPackageRecord,
+        ),
+        "marketplace-items": (
+            GEOMarketplaceItemDraft,
+            GEOMarketplaceItem,
         ),
     }
 

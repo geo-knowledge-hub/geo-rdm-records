@@ -23,14 +23,26 @@ def test_alembic(base_app, database):
 
     # Check that this package's SQLAlchemy models have been properly registered
     tables = [x.name for x in db.get_tables_for_bind()]
-    assert "geo_package_parents_metadata" in tables
-    assert "geo_package_parents_community" in tables
-    assert "geo_package_records_metadata" in tables
-    assert "geo_package_records_files" in tables
-    assert "geo_package_drafts_metadata" in tables
-    assert "geo_package_drafts_files" in tables
-    assert "geo_package_versions_state" in tables
-    # assert "rdm_versions_state" in tables
+
+    assert all(
+        [
+            x in tables
+            for x in [
+                "geo_package_parents_metadata",
+                "geo_package_parents_community",
+                "geo_package_records_metadata",
+                "geo_package_records_files",
+                "geo_package_drafts_metadata",
+                "geo_package_drafts_files",
+                "geo_package_versions_state",
+                "geo_marketplace_parents_metadata",
+                "geo_marketplace_parents_community",
+                "geo_marketplace_items_metadata",
+                "geo_marketplace_items_files",
+                "geo_marketplace_drafts_metadata",
+            ]
+        ]
+    )
 
     # Check that Alembic agrees that there's no further tables to create.
     assert not ext.alembic.compare_metadata()

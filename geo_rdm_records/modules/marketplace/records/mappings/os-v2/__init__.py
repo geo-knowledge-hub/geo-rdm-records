@@ -5,4 +5,4 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""Bibliographic Record Resource for the Members API."""
+"""GEO RDM Records Records mappings for Elasticsearch 7."""
