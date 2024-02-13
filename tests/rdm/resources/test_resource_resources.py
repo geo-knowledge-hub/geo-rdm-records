@@ -11,7 +11,7 @@ import json
 
 import pytest
 
-from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
+from geo_rdm_records.modules.rdm.records.api import GEODraft, GEORecord
 
 
 @pytest.fixture()

@@ -12,8 +12,8 @@ from invenio_access.permissions import system_process
 from invenio_records_permissions.generators import SystemProcess
 
 from geo_rdm_records.base.services.generators import IfPackage
-from geo_rdm_records.customizations.records.api import GEORecord
 from geo_rdm_records.modules.packages.records.api import GEOPackageRecord
+from geo_rdm_records.modules.rdm.records.api import GEORecord
 
 
 #

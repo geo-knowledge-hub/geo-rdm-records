@@ -13,7 +13,7 @@ from invenio_rdm_records.records.systemfields.draft_status import DraftStatus
 from invenio_requests import current_requests_service
 from sqlalchemy.orm.exc import NoResultFound
 
-from geo_rdm_records.customizations.services.review.errors import (
+from geo_rdm_records.modules.rdm.services.review.errors import (
     ReviewInconsistentResourceRestrictions,
 )
 from geo_rdm_records.proxies import current_geo_packages_service

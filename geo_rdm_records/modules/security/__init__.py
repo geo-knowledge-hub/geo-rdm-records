@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2022 Geo Secretariat.
+# Copyright (C) 2022-2024 GEO Secretariat.
 #
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
-#
 
--e git+https://github.com/geo-knowledge-hub/invenio-geographic-identifiers@b-0.3#egg=invenio-geographic-identifiers
+"""GEO RDM Records security module."""

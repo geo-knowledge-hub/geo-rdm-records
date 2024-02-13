@@ -22,7 +22,7 @@ from geo_rdm_records.base.services.config import (
 from geo_rdm_records.base.services.links import LinksRegistryType
 from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
 from geo_rdm_records.base.services.results import MutableRecordList, ResultRegistryType
-from geo_rdm_records.customizations.services.schemas import (
+from geo_rdm_records.modules.rdm.services.schemas import (
     GEOParentSchema,
     GEORecordSchema,
 )
