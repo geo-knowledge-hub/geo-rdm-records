@@ -11,6 +11,7 @@ from flask_babelex import lazy_gettext as _
 from invenio_rdm_records.services import facets as rdm_facets
 
 from geo_rdm_records.base.services import facets as geo_facets
+from geo_rdm_records.modules.security.permissions import views_permissions_factory
 
 # UI Configurations
 # ===================
@@ -33,6 +34,9 @@ GEO_RDM_PACKAGES_RESOURCES_SEARCH = {
     "sort": ["bestmatch", "newest", "oldest", "version"],
 }
 """Search configuration to Search package resources."""
+
+GEO_RDM_PACKAGES_VIEW_PERMISSIONS_FACTORY = views_permissions_factory
+"""View permissions factory."""
 
 # API Configurations
 # ===================
