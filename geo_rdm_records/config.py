@@ -64,7 +64,7 @@ RDM_RECORD_SERVICE = "geo_rdm_records.modules.rdm.services.service.GEORDMRecordS
 
 RDM_REVIEW_SERVICE = "geo_rdm_records.modules.rdm.services.review.service.ReviewService"
 
-RDM_IIIF_SERVICE = "geo_rdm_records.modules.rdm.services.iiif.service.IIIFService"
+RDM_IIIF_SERVICE = "geo_rdm_records.modules.iiif.service.IIIFService"
 
 # Configuration
 RDM_RECORD_SERVICE_CFG = (
