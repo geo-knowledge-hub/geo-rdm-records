@@ -10,24 +10,36 @@
 from invenio_rdm_records.proxies import current_rdm_records_service
 from invenio_rdm_records.services.services import IIIFService as BaseIIIFService
 
-from geo_rdm_records.proxies import current_geo_packages_service
+from geo_rdm_records.proxies import (
+    current_geo_packages_service,
+    current_marketplace_service,
+)
 
 
 class IIIFService(BaseIIIFService):
     """IIIF service."""
 
-    modes = {"record": ["record", "draft"], "package": ["package", "package-draft"]}
+    modes = {
+        "record": ["record", "draft"],
+        "package": ["package", "package-draft"],
+        "marketplace": ["marketplace-item", "marketplace-item-draft"],
+    }
     """Service operation mode."""
 
     modes_service = {
         "record": current_rdm_records_service,
         "package": current_geo_packages_service,
+        "marketplace": current_marketplace_service,
     }
     """Service per mode."""
 
     modes_type = {
         "record": {"record": ["record"], "draft": ["draft"]},
         "package": {"record": ["package"], "draft": ["package-draft"]},
+        "marketplace": {
+            "record": ["marketplace-item"],
+            "draft": ["marketplace-item-draft"],
+        },
     }
     """Types handled in each operation mode."""
 
