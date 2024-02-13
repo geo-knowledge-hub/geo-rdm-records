@@ -47,12 +47,12 @@ GEO_RDM_PACKAGES_VIEW_PERMISSIONS_FACTORY = views_permissions_factory
 
 # Rest Resource
 RDM_RECORD_RESOURCE = (
-    "geo_rdm_records.customizations.resources.resource.GEORDMRecordResource"
+    "geo_rdm_records.modules.rdm.resources.resource.GEORDMRecordResource"
 )
 
 # Configuration
 RDM_RECORD_RESOURCE_CFG = (
-    "geo_rdm_records.customizations.resources.config.GEORecordResourceConfig"
+    "geo_rdm_records.modules.rdm.resources.config.GEORecordResourceConfig"
 )
 
 #
@@ -60,27 +60,23 @@ RDM_RECORD_RESOURCE_CFG = (
 #
 
 # Services
-RDM_RECORD_SERVICE = (
-    "geo_rdm_records.customizations.services.service.GEORDMRecordService"
-)
+RDM_RECORD_SERVICE = "geo_rdm_records.modules.rdm.services.service.GEORDMRecordService"
 
-RDM_REVIEW_SERVICE = (
-    "geo_rdm_records.customizations.services.review.service.ReviewService"
-)
+RDM_REVIEW_SERVICE = "geo_rdm_records.modules.rdm.services.review.service.ReviewService"
 
-RDM_IIIF_SERVICE = "geo_rdm_records.customizations.services.iiif.service.IIIFService"
+RDM_IIIF_SERVICE = "geo_rdm_records.modules.rdm.services.iiif.service.IIIFService"
 
 # Configuration
 RDM_RECORD_SERVICE_CFG = (
-    "geo_rdm_records.customizations.services.config.GEORecordServiceConfig"
+    "geo_rdm_records.modules.rdm.services.config.GEORecordServiceConfig"
 )
 
 RDM_FILE_SERVICE_CFG = (
-    "geo_rdm_records.customizations.services.config.GEOFileRecordServiceConfig"
+    "geo_rdm_records.modules.rdm.services.config.GEOFileRecordServiceConfig"
 )
 
 RDM_FILE_DRAFT_SERVICE_CFG = (
-    "geo_rdm_records.customizations.services.config.GEOFileDraftServiceConfig"
+    "geo_rdm_records.modules.rdm.services.config.GEOFileDraftServiceConfig"
 )
 
 # Permissions
@@ -207,7 +203,7 @@ GEO_RDM_CHECKER_OUTDATED_CRITERIA = 6 * 365 / 12
 # =======
 # See https://github.com/inveniosoftware/invenio-oaiserver/blob/master/invenio_oaiserver/config.py
 
-OAISERVER_RECORD_CLS = "geo_rdm_records.customizations.records.api:GEORecord"
+OAISERVER_RECORD_CLS = "geo_rdm_records.modules.rdm.records.api:GEORecord"
 """Record retrieval class (With support for both Packages and Records)."""
 
 OAISERVER_RECORD_INDEX = ("geordmrecords-records", "geordmpackages-records")

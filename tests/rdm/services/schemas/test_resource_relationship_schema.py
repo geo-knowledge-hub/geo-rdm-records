@@ -9,7 +9,7 @@
 
 import pytest
 
-from geo_rdm_records.customizations.services.schemas import ParentRelationshipSchema
+from geo_rdm_records.modules.rdm.services.schemas import ParentRelationshipSchema
 
 
 #

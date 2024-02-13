@@ -35,7 +35,7 @@ from invenio_records_resources.services.records.links import pagination_links
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.schemas import ParentSchema
-from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
+from geo_rdm_records.modules.rdm.records.api import GEODraft, GEORecord
 
 from ..records.api import GEOPackageDraft, GEOPackageRecord
 from .components.context import PackageContextComponent

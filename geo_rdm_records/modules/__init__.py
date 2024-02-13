@@ -12,7 +12,7 @@ from importlib import import_module
 from geo_rdm_records.class_factory import ClassFactory
 
 MODULES = [
-    "geo_rdm_records.customizations",
+    "geo_rdm_records.modules.rdm",
     "geo_rdm_records.modules.packages",
 ]
 

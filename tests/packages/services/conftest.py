@@ -12,7 +12,7 @@ from flask_principal import Identity
 from invenio_access.permissions import any_user
 from invenio_rdm_records.proxies import current_rdm_records_service
 
-from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
+from geo_rdm_records.modules.rdm.records.api import GEODraft, GEORecord
 
 
 #

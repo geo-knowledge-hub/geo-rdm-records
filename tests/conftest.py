@@ -40,11 +40,11 @@ from invenio_vocabularies.records.api import Vocabulary
 
 from geo_rdm_records import config
 from geo_rdm_records.base.services import facets as geo_facets
-from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     GEOPackageRecord,
 )
+from geo_rdm_records.modules.rdm.records.api import GEODraft, GEORecord
 
 
 #
@@ -147,31 +147,31 @@ def app_config(app_config):
     # GEO RDM Records Configurations
     app_config[
         "RDM_RECORD_RESOURCE"
-    ] = "geo_rdm_records.customizations.resources.resource.GEORDMRecordResource"
+    ] = "geo_rdm_records.modules.rdm.resources.resource.GEORDMRecordResource"
 
     app_config[
         "RDM_RECORD_RESOURCE_CFG"
-    ] = "geo_rdm_records.customizations.resources.config.GEORecordResourceConfig"
+    ] = "geo_rdm_records.modules.rdm.resources.config.GEORecordResourceConfig"
 
     app_config[
         "RDM_RECORD_SERVICE"
-    ] = "geo_rdm_records.customizations.services.service.GEORDMRecordService"
+    ] = "geo_rdm_records.modules.rdm.services.service.GEORDMRecordService"
 
     app_config[
         "RDM_RECORD_SERVICE_CFG"
-    ] = "geo_rdm_records.customizations.services.config.GEORecordServiceConfig"
+    ] = "geo_rdm_records.modules.rdm.services.config.GEORecordServiceConfig"
 
     app_config[
         "RDM_FILE_SERVICE_CFG"
-    ] = "geo_rdm_records.customizations.services.config.GEOFileRecordServiceConfig"
+    ] = "geo_rdm_records.modules.rdm.services.config.GEOFileRecordServiceConfig"
 
     app_config[
         "RDM_FILE_DRAFT_SERVICE_CFG"
-    ] = "geo_rdm_records.customizations.services.config.GEOFileDraftServiceConfig"
+    ] = "geo_rdm_records.modules.rdm.services.config.GEOFileDraftServiceConfig"
 
     app_config[
         "RDM_REVIEW_SERVICE"
-    ] = "geo_rdm_records.customizations.services.review.service.ReviewService"
+    ] = "geo_rdm_records.modules.rdm.services.review.service.ReviewService"
 
     app_config[
         "GEO_RDM_RECORDS_PERMISSION_POLICY"

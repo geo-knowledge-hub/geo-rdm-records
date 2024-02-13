@@ -9,7 +9,6 @@
 
 from copy import copy
 
-from geo_rdm_records.customizations.records.api import GEODraft
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     PackageRelationship,
@@ -18,6 +17,7 @@ from geo_rdm_records.modules.packages.services.components.resources import (
     PackageResourceAccessComponent,
     PackageResourceCommunityComponent,
 )
+from geo_rdm_records.modules.rdm.records.api import GEODraft
 
 
 def test_package_resource_access_component(running_app, minimal_record, es_clear):

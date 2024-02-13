@@ -13,11 +13,11 @@ from invenio_rdm_records.records.api import RDMDraft, RDMRecord
 from invenio_records_resources.services.uow import RecordCommitOp, RecordIndexOp
 from invenio_requests.customizations import actions
 
-from geo_rdm_records.customizations import GEODraft, GEORecord
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     GEOPackageRecord,
 )
+from geo_rdm_records.modules.rdm import GEODraft, GEORecord
 from geo_rdm_records.proxies import current_geo_packages_service
 
 
