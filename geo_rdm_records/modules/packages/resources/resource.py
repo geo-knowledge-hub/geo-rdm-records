@@ -62,7 +62,7 @@ class GEOPackageRecordResource(BaseRecordResource):
                 "POST",
                 p(routes["requests-action-submit"]),
                 self.requests_action_submit,
-            )
+            ),
             # route("PUT", p(routes["item-draft-resources"]), self.resource_update_draft)
         ]
 

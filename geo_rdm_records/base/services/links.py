@@ -13,11 +13,15 @@ from invenio_records_resources.services.base.links import (
     LinksTemplate as BaseLinksTemplate,
 )
 
-from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
+from geo_rdm_records.modules.marketplace.records.api import (
+    GEOMarketplaceItem,
+    GEOMarketplaceItemDraft,
+)
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     GEOPackageRecord,
 )
+from geo_rdm_records.modules.rdm.records.api import GEODraft, GEORecord
 
 
 class LinksRegistryType:
@@ -31,6 +35,10 @@ class LinksRegistryType:
         "packages": (
             GEOPackageDraft,
             GEOPackageRecord,
+        ),
+        "marketplace-items": (
+            GEOMarketplaceItemDraft,
+            GEOMarketplaceItem,
         ),
     }
 

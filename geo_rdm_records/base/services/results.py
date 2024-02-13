@@ -11,11 +11,11 @@ from invenio_records_resources.services.records.results import (
     RecordList as BaseRecordList,
 )
 
-from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     GEOPackageRecord,
 )
+from geo_rdm_records.modules.rdm.records.api import GEODraft, GEORecord
 
 
 class ResultRegistryType:

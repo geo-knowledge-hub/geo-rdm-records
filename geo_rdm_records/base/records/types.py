@@ -16,3 +16,6 @@ class GEORecordTypes:
 
     package = "package"
     """Package type. This type record can be associated with multiple `Resources`"""
+
+    marketplace_item = "marketplace-item"
+    """Marketplace Item type."""

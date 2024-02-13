@@ -25,7 +25,7 @@ def _extract_links(record_document):
     url_pattern = r'https?://[^\s<>"\',]+|www\.[^\s<>"\',]+'
 
     # Find all non-overlapping matches of the pattern in the string
-    return re.findall(url_pattern, record_document)
+    return py_.map(re.findall(url_pattern, record_document), lambda x: x.strip(")."))
 
 
 def extract_links_from_record(record):

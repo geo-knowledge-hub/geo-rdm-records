@@ -13,6 +13,14 @@ from invenio_records_resources.resources.files import FileResource
 from invenio_records_resources.services import FileService
 
 from . import config
+from .modules.marketplace.resources.config import GEOMarketplaceItemResourceConfig
+from .modules.marketplace.resources.resource import GEOMarketplaceItemResource
+from .modules.marketplace.services.config import (
+    GEOMarketplaceItemDraftFileServiceConfig,
+    GEOMarketplaceItemFileServiceConfig,
+    GEOMarketplaceServiceConfig,
+)
+from .modules.marketplace.services.service import GEOMarketplaceItemService
 from .modules.packages.resources.config import (
     GEOPackageDraftFilesResourceConfig,
     GEOPackageParentRecordLinksResourceConfig,
@@ -54,7 +62,7 @@ class GEORDMRecords(object):
         """Flask application initialization."""
         self.init_config(app)
 
-        # Packages API and Members API
+        # Packages API
         self.init_services(app)
         self.init_resource(app)
 
@@ -71,12 +79,18 @@ class GEORDMRecords(object):
         """Customized service configs."""
 
         class ServiceConfigs:
+            # Package-related configurations
             record = GEOPackageRecordServiceConfig.build(app)
             file = GEOPackageFileRecordServiceConfig.build(app)
             file_draft = GEOPackageDraftFileServiceConfig.build(app)
             search = SearchRecordServiceConfig.build(app)
             requests = GEOPackageRequestServiceConfig.build(app)
             assistance_requests = RequestNotificationServiceConfig.build(app)
+
+            # Marketplace-related configurations
+            marketplace_item = GEOMarketplaceServiceConfig.build(app)
+            marketplace_file = GEOMarketplaceItemFileServiceConfig.build(app)
+            marketplace_file_draft = GEOMarketplaceItemDraftFileServiceConfig.build(app)
 
         return ServiceConfigs
 
@@ -103,6 +117,13 @@ class GEORDMRecords(object):
         # Assistance requests service
         self.service_requests_notification = RequestNotificationService(
             config=service_configs.assistance_requests
+        )
+
+        # Marketplace item
+        self.service_marketplace = GEOMarketplaceItemService(
+            config=service_configs.marketplace_item,
+            files_service=service_configs.marketplace_item,
+            draft_files_service=service_configs.marketplace_file_draft,
         )
 
     def init_resource(self, app):
@@ -138,4 +159,10 @@ class GEORDMRecords(object):
         # Context
         self.packages_context_resource = GEOPackageContextResource(
             service=self.service, config=GEOPackageParentRelationshipConfig
+        )
+
+        # Marketplace
+        self.marketplace_resource = GEOMarketplaceItemResource(
+            service=self.service_marketplace,
+            config=GEOMarketplaceItemResourceConfig.build(app),
         )

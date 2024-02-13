@@ -26,12 +26,13 @@ def init(state):
     rr_ext.registry.register(ext.service, service_id="records_package")
     rr_ext.registry.register(ext.service.files, service_id="files_package")
     rr_ext.registry.register(ext.service.draft_files, service_id="files_package_draft")
+    rr_ext.registry.register(ext.service_marketplace, service_id="marketplace_items")
 
     # indexers
     idx_ext.registry.register(ext.service.indexer, indexer_id="records_packages")
-    # idx_ext.registry.register(
-    #     ext.service.members.indexer, indexer_id="members_packages"
-    # )
+    idx_ext.registry.register(
+        ext.service_marketplace.indexer, indexer_id="marketplace_items"
+    )
 
 
 def create_packages_api_blueprint(app):
@@ -68,3 +69,9 @@ def create_packages_context_api_blueprint(app):
     """Create package context blueprint."""
     ext = app.extensions["geo-rdm-records"]
     return ext.packages_context_resource.as_blueprint()
+
+
+def create_marketplace_api_blueprint(app):
+    """Create Marketplace blueprint."""
+    ext = app.extensions["geo-rdm-records"]
+    return ext.marketplace_resource.as_blueprint()

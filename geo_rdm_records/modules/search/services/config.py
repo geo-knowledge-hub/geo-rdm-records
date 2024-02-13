@@ -23,11 +23,11 @@ from geo_rdm_records.base.services.links import LinksRegistryType
 from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
 from geo_rdm_records.base.services.results import MutableRecordList, ResultRegistryType
 from geo_rdm_records.base.services.schemas import ParentSchema
-from geo_rdm_records.customizations.records.api import GEODraft, GEORecord
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     GEOPackageRecord,
 )
+from geo_rdm_records.modules.rdm.records.api import GEODraft, GEORecord
 
 from .schemas import GEORecordSchema
 

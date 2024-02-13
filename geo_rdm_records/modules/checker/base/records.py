@@ -10,8 +10,8 @@
 from invenio_access.permissions import system_identity
 from invenio_rdm_records.proxies import current_rdm_records_service
 
-from geo_rdm_records.customizations.records.api import GEORecord
 from geo_rdm_records.modules.packages.records.api import GEOPackageRecord
+from geo_rdm_records.modules.rdm.records.api import GEORecord
 from geo_rdm_records.proxies import current_geo_packages_service
 
 

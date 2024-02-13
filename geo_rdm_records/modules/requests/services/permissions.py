@@ -7,8 +7,9 @@
 
 """Permissions for GEO RDM Records (Requests API)."""
 
-from geo_config.security.generators import GeoSecretariat
 from invenio_records_permissions.policies.records import RecordPermissionPolicy
+
+from geo_rdm_records.modules.security.generators import GeoSecretariat
 
 
 class RequestNotificationPermissionPolicy(RecordPermissionPolicy):
