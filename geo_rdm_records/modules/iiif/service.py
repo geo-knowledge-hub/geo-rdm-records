@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2022 Geo Secretariat.
+# Copyright (C) 2022-2024 GEO Secretariat.
 #
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -14,12 +14,7 @@ from geo_rdm_records.proxies import current_geo_packages_service
 
 
 class IIIFService(BaseIIIFService):
-    """IIIF service.
-
-    ToDo:
-        We are just starting with this component. In a near future we will
-        revise this approach to improve the way we delivery IIIF APIs.
-    """
+    """IIIF service."""
 
     modes = {"record": ["record", "draft"], "package": ["package", "package-draft"]}
     """Service operation mode."""
@@ -48,7 +43,7 @@ class IIIFService(BaseIIIFService):
         mode_types = self.modes_type[mode]
 
         for mode_type in mode_types:
-            if mode in mode_types[mode_type]:
+            if type_ in mode_types[mode_type]:
                 return mode_type
 
     def _get_service(self, type_):
@@ -59,7 +54,7 @@ class IIIFService(BaseIIIFService):
     def file_service(self, type_):
         """Get the correct instance of the file service, draft vs record."""
         service = self._get_service(type_)
-        mode_type = self._get_mode(type_)
+        mode_type = self._get_mode_type(type_)
 
         return service.files if mode_type == "record" else service.draft_files
 
@@ -69,11 +64,14 @@ class IIIFService(BaseIIIFService):
 
         # Defining the operation mode of the service.
         service = self._get_service(type_)
-        mode_type = self._get_mode(type_)
+        mode_type = self._get_mode_type(type_)
 
         read = service.read if mode_type == "record" else service.read_draft
         record = read(identity=identity, id_=id_)
+
         file_service = self.file_service(type_)
         files = file_service.list_files(identity=identity, id_=id_)
+
         record.files = files
+
         return record
