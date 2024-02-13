@@ -21,9 +21,14 @@ from invenio_rdm_records.services.components import (
     PIDsComponent,
     ReviewComponent,
 )
-from invenio_rdm_records.services.config import is_draft, is_draft_and_has_review
+from invenio_rdm_records.services.config import (
+    is_draft,
+    is_draft_and_has_review,
+    is_iiif_compatible,
+)
 from invenio_records_resources.services import ConditionalLink
 from invenio_records_resources.services.base.config import FromConfig
+from invenio_records_resources.services.files.links import FileLink
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.links import LinksRegistryType
@@ -92,17 +97,18 @@ class GEOMarketplaceServiceConfig(BaseGEOServiceConfig):
             else_=RecordLink("{+ui}/uploads/marketplace/items/{id}"),
         ),
         # IIIF
-        # ToDo: Review
-        # "self_iiif_manifest": ConditionalLink(
-        #     cond=is_record,
-        #     if_=RecordLink("{+api}/iiif/marketplace/items:{id}/manifest"),
-        #     else_=RecordLink("{+api}/iiif/package-draft:{id}/manifest"),
-        # ),
-        # "self_iiif_sequence": ConditionalLink(
-        #     cond=is_record,
-        #     if_=RecordLink("{+api}/iiif/package:{id}/sequence/default"),
-        #     else_=RecordLink("{+api}/iiif/package-draft:{id}/sequence/default"),
-        # ),
+        "self_iiif_manifest": ConditionalLink(
+            cond=is_record,
+            if_=RecordLink("{+api}/iiif/marketplace-item:{id}/manifest"),
+            else_=RecordLink("{+api}/iiif/marketplace-item-draft:{id}/manifest"),
+        ),
+        "self_iiif_sequence": ConditionalLink(
+            cond=is_record,
+            if_=RecordLink("{+api}/iiif/marketplace-item:{id}/sequence/default"),
+            else_=RecordLink(
+                "{+api}/iiif/marketplace-item-draft:{id}/sequence/default"
+            ),
+        ),
         # Files
         "files": ConditionalLink(
             cond=is_record,
@@ -143,10 +149,80 @@ class GEOMarketplaceServiceConfig(BaseGEOServiceConfig):
 class GEOMarketplaceItemFileServiceConfig(rdm_config.RDMFileRecordServiceConfig):
     """GEO Marketplace Item file service config."""
 
+    # Configurations
+    service_id = "files_marketplace"
+
+    # Record class
     record_cls = GEOMarketplaceItem
+
+    # Permission policy
+    permission_policy_cls = FromConfig(
+        "GEO_MARKETPLACE_ITEMS_PERMISSION_POLICY",
+        default=BaseGEOPermissionPolicy,  # ToDo: Review permissions for Marketplace
+        import_string=True,
+    )
+
+    file_links_item = {
+        "self": FileLink("{+api}/marketplace/items/{id}/files/{key}"),
+        "content": FileLink("{+api}/marketplace/items/{id}/files/{key}/content"),
+        # FIXME: filename instead
+        "iiif_canvas": FileLink(
+            "{+api}/iiif/marketplace-item:{id}/canvas/{key}", when=is_iiif_compatible
+        ),
+        "iiif_base": FileLink(
+            "{+api}/iiif/marketplace-item:{id}:{key}", when=is_iiif_compatible
+        ),
+        "iiif_info": FileLink(
+            "{+api}/iiif/marketplace-item:{id}:{key}/info.json", when=is_iiif_compatible
+        ),
+        "iiif_api": FileLink(
+            "{+api}/iiif/marketplace-item:{id}:{key}/{region=full}"
+            "/{size=full}/{rotation=0}/{quality=default}.{format=png}",
+            when=is_iiif_compatible,
+        ),
+    }
 
 
 class GEOMarketplaceItemDraftFileServiceConfig(rdm_config.RDMFileDraftServiceConfig):
     """GEO Marketplace Item (Draft) file service config."""
 
+    # Configurations
+    service_id = "files_marketplace_draft"
+
+    # Record class
     record_cls = GEOMarketplaceItemDraft
+
+    # Permission policy
+    permission_action_prefix = "draft_"
+    permission_policy_cls = FromConfig(
+        "GEO_MARKETPLACE_ITEMS_PERMISSION_POLICY",
+        default=BaseGEOPermissionPolicy,  # ToDo: Review permissions for Marketplace
+        import_string=True,
+    )
+
+    file_links_list = {
+        "self": RecordLink("{+api}/marketplace/items/{id}/draft/files"),
+    }
+
+    file_links_item = {
+        "self": FileLink("{+api}/marketplace/items/{id}/draft/files/{key}"),
+        "content": FileLink("{+api}/marketplace/items/{id}/draft/files/{key}/content"),
+        "commit": FileLink("{+api}/marketplace/items/{id}/draft/files/{key}/commit"),
+        # FIXME: filename instead
+        "iiif_canvas": FileLink(
+            "{+api}/iiif/marketplace-item-draft:{id}/canvas/{key}",
+            when=is_iiif_compatible,
+        ),
+        "iiif_base": FileLink(
+            "{+api}/iiif/marketplace-item-draft:{id}:{key}", when=is_iiif_compatible
+        ),
+        "iiif_info": FileLink(
+            "{+api}/iiif/marketplace-item-draft:{id}:{key}/info.json",
+            when=is_iiif_compatible,
+        ),
+        "iiif_api": FileLink(
+            "{+api}/iiif/marketplace-item-draft:{id}:{key}/{region=full}"
+            "/{size=full}/{rotation=0}/{quality=default}.{format=png}",
+            when=is_iiif_compatible,
+        ),
+    }
