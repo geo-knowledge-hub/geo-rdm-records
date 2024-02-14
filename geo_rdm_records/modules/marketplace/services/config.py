@@ -32,13 +32,15 @@ from invenio_records_resources.services.files.links import FileLink
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.links import LinksRegistryType
-from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
 from geo_rdm_records.base.services.results import MutableRecordList, ResultRegistryType
 from geo_rdm_records.base.services.schemas import ParentSchema
 from geo_rdm_records.base.services.schemas.records import BaseGEORecordSchema
 from geo_rdm_records.modules.marketplace.records.api import (
     GEOMarketplaceItem,
     GEOMarketplaceItemDraft,
+)
+from geo_rdm_records.modules.marketplace.services.permissions import (
+    MarketplacePermissionPolicy,
 )
 from geo_rdm_records.modules.packages.services.links import RecordLink
 
@@ -64,7 +66,7 @@ class GEOMarketplaceServiceConfig(BaseGEOServiceConfig):
     # Permission policy
     permission_policy_cls = FromConfig(
         "GEO_MARKETPLACE_ITEMS_PERMISSION_POLICY",
-        default=BaseGEOPermissionPolicy,  # ToDo: Review permissions for Marketplace
+        default=MarketplacePermissionPolicy,  # ToDo: Review permissions for Marketplace
         import_string=True,
     )
 
@@ -158,7 +160,7 @@ class GEOMarketplaceItemFileServiceConfig(rdm_config.RDMFileRecordServiceConfig)
     # Permission policy
     permission_policy_cls = FromConfig(
         "GEO_MARKETPLACE_ITEMS_PERMISSION_POLICY",
-        default=BaseGEOPermissionPolicy,  # ToDo: Review permissions for Marketplace
+        default=MarketplacePermissionPolicy,  # ToDo: Review permissions for Marketplace
         import_string=True,
     )
 
@@ -196,7 +198,7 @@ class GEOMarketplaceItemDraftFileServiceConfig(rdm_config.RDMFileDraftServiceCon
     permission_action_prefix = "draft_"
     permission_policy_cls = FromConfig(
         "GEO_MARKETPLACE_ITEMS_PERMISSION_POLICY",
-        default=BaseGEOPermissionPolicy,  # ToDo: Review permissions for Marketplace
+        default=MarketplacePermissionPolicy,  # ToDo: Review permissions for Marketplace
         import_string=True,
     )
 
