@@ -23,6 +23,10 @@ from geo_rdm_records.base.services.links import LinksRegistryType
 from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
 from geo_rdm_records.base.services.results import MutableRecordList, ResultRegistryType
 from geo_rdm_records.base.services.schemas import ParentSchema
+from geo_rdm_records.modules.marketplace.records.api import (
+    GEOMarketplaceItem,
+    GEOMarketplaceItemDraft,
+)
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     GEOPackageRecord,
@@ -42,9 +46,14 @@ class SearchRecordServiceConfig(BaseGEOServiceConfig):
     indices = [
         GEORecord.index.search_alias,
         GEOPackageRecord.index.search_alias,
+        GEOMarketplaceItem.index.search_alias,
     ]
 
-    indices_draft = [GEODraft.index.search_alias, GEOPackageDraft.index.search_alias]
+    indices_draft = [
+        GEODraft.index.search_alias,
+        GEOPackageDraft.index.search_alias,
+        GEOMarketplaceItemDraft.index.search_alias,
+    ]
 
     # Schemas
     schema = GEORecordSchema
@@ -64,6 +73,7 @@ class SearchRecordServiceConfig(BaseGEOServiceConfig):
     # Links
     links_registry_type = LinksRegistryType
 
+    # ToDo: Review links
     links_item = {
         "self": ConditionalLink(
             cond=is_record,

@@ -15,6 +15,19 @@ from geo_rdm_records.base.services.links import MutableLinksTemplate
 class GEOMarketplaceItemService(BaseRecordService):
     """GEO Marketplace Item Service."""
 
+    def __init__(
+        self,
+        config,
+        files_service=None,
+        draft_files_service=None,
+        secret_links_service=None,
+        review_service=None,
+    ):
+        """Initializer."""
+        super().__init__(config, files_service, draft_files_service)
+        self._secret_links = secret_links_service
+        self._review = review_service
+
     #
     # Properties
     #

@@ -7,6 +7,7 @@
 
 """GEO Marketplace Resource."""
 
+from flask import abort
 from invenio_rdm_records.resources.resources import (
     RDMRecordResource as BaseRecordResource,
 )
@@ -14,3 +15,14 @@ from invenio_rdm_records.resources.resources import (
 
 class GEOMarketplaceItemResource(BaseRecordResource):
     """GEO Marketplace Item resource."""
+
+    #
+    # PIDs
+    #
+    def pids_reserve(self):
+        """Reserve a PID."""
+        abort(403)
+
+    def pids_discard(self):
+        """Discard a previously reserved PID."""
+        abort(403)
