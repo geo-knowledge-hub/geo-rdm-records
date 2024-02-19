@@ -122,8 +122,8 @@ class GEORDMRecords(object):
         # Marketplace item
         self.service_marketplace = GEOMarketplaceItemService(
             config=service_configs.marketplace_item,
-            files_service=service_configs.marketplace_item,
-            draft_files_service=service_configs.marketplace_file_draft,
+            files_service=FileService(service_configs.marketplace_item),
+            draft_files_service=FileService(service_configs.marketplace_file_draft),
         )
 
     def init_resource(self, app):
