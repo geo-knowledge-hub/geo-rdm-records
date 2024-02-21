@@ -11,6 +11,8 @@ from .api import (
     blueprint,
     create_draft_files_api_blueprint,
     create_marketplace_api_blueprint,
+    create_marketplace_draft_files_api_blueprint,
+    create_marketplace_files_api_blueprint,
     create_packages_api_blueprint,
     create_packages_context_api_blueprint,
     create_packages_files_api_blueprint,
@@ -29,6 +31,8 @@ __all__ = (
     "create_search_records_api_blueprint",
     "create_packages_context_api_blueprint",
     "create_marketplace_api_blueprint",
+    "create_marketplace_files_api_blueprint",
+    "create_marketplace_draft_files_api_blueprint",
     # UI
     "create_ui_blueprint",
 )

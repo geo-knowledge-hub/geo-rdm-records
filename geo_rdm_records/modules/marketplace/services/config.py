@@ -29,6 +29,7 @@ from invenio_rdm_records.services.config import (
 from invenio_records_resources.services import ConditionalLink
 from invenio_records_resources.services.base.config import FromConfig
 from invenio_records_resources.services.files.links import FileLink
+from invenio_records_resources.services.records.links import RecordLink
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.links import LinksRegistryType
@@ -42,7 +43,6 @@ from geo_rdm_records.modules.marketplace.records.api import (
 from geo_rdm_records.modules.marketplace.services.permissions import (
     MarketplacePermissionPolicy,
 )
-from geo_rdm_records.modules.packages.services.links import RecordLink
 
 
 class GEOMarketplaceServiceConfig(BaseGEOServiceConfig):
@@ -128,9 +128,7 @@ class GEOMarketplaceServiceConfig(BaseGEOServiceConfig):
         ),
         "draft": RecordLink("{+api}/marketplace/items/{id}/draft", when=is_record),
         "record": RecordLink("{+api}/marketplace/items/{id}", when=is_draft),
-        # TODO: record_html temporarily needed for DOI registration, until
-        # problems with self_doi has been fixed
-        # "record_html": RecordLink("{+ui}/marketplace/items/{id}", when=is_draft),
+        "record_html": RecordLink("{+ui}/marketplace/items/{id}", when=is_draft),
         "publish": RecordLink(
             "{+api}/marketplace/items/{id}/draft/actions/publish", when=is_draft
         ),

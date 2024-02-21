@@ -22,11 +22,19 @@ def init(state):
     idx_ext = app.extensions["invenio-indexer"]
     ext = app.extensions["geo-rdm-records"]
 
-    # services
+    # services - packages
     rr_ext.registry.register(ext.service, service_id="records_package")
     rr_ext.registry.register(ext.service.files, service_id="files_package")
     rr_ext.registry.register(ext.service.draft_files, service_id="files_package_draft")
+
+    # services - marketplace
     rr_ext.registry.register(ext.service_marketplace, service_id="marketplace_items")
+    rr_ext.registry.register(
+        ext.service_marketplace.files, service_id="files_marketplace"
+    )
+    rr_ext.registry.register(
+        ext.service_marketplace.draft_files, service_id="files_marketplace_draft"
+    )
 
     # indexers
     idx_ext.registry.register(ext.service.indexer, indexer_id="records_packages")
@@ -75,3 +83,15 @@ def create_marketplace_api_blueprint(app):
     """Create Marketplace blueprint."""
     ext = app.extensions["geo-rdm-records"]
     return ext.marketplace_resource.as_blueprint()
+
+
+def create_marketplace_files_api_blueprint(app):
+    """Create marketplace files api blueprint."""
+    ext = app.extensions["geo-rdm-records"]
+    return ext.marketplace_files_resource.as_blueprint()
+
+
+def create_marketplace_draft_files_api_blueprint(app):
+    """Create marketplace draft files blueprint."""
+    ext = app.extensions["geo-rdm-records"]
+    return ext.marketplace_draft_files_resource.as_blueprint()
