@@ -13,7 +13,11 @@ from invenio_records_resources.resources.files import FileResource
 from invenio_records_resources.services import FileService
 
 from . import config
-from .modules.marketplace.resources.config import GEOMarketplaceItemResourceConfig
+from .modules.marketplace.resources.config import (
+    GEOMarketplaceItemDraftResourceConfig,
+    GEOMarketplaceItemFilesResourceConfig,
+    GEOMarketplaceItemResourceConfig,
+)
 from .modules.marketplace.resources.resource import GEOMarketplaceItemResource
 from .modules.marketplace.services.config import (
     GEOMarketplaceItemDraftFileServiceConfig,
@@ -122,7 +126,7 @@ class GEORDMRecords(object):
         # Marketplace item
         self.service_marketplace = GEOMarketplaceItemService(
             config=service_configs.marketplace_item,
-            files_service=FileService(service_configs.marketplace_item),
+            files_service=FileService(service_configs.marketplace_file),
             draft_files_service=FileService(service_configs.marketplace_file_draft),
         )
 
@@ -165,4 +169,16 @@ class GEORDMRecords(object):
         self.marketplace_resource = GEOMarketplaceItemResource(
             service=self.service_marketplace,
             config=GEOMarketplaceItemResourceConfig.build(app),
+        )
+
+        # Marketplace - Files
+        self.marketplace_files_resource = FileResource(
+            service=self.service_marketplace.files,
+            config=GEOMarketplaceItemFilesResourceConfig.build(app),
+        )
+
+        # Marketplace - Draft files
+        self.marketplace_draft_files_resource = FileResource(
+            service=self.service_marketplace.draft_files,
+            config=GEOMarketplaceItemDraftResourceConfig.build(app),
         )

@@ -32,3 +32,29 @@ class GEOMarketplaceItemResourceConfig(BaseGEOResourceConfig):
 
     # Response handlers
     response_handlers = record_serializers
+
+
+#
+# Marketplace Item files
+#
+class GEOMarketplaceItemFilesResourceConfig(
+    rdm_resources_config.RDMRecordFilesResourceConfig
+):
+    """Files for marketplace items."""
+
+    allow_upload = False
+
+    blueprint_name = "marketplace-item-files"
+    url_prefix = "/marketplace/items/<pid_value>"
+
+
+#
+# Marketplace Item Draft files
+#
+class GEOMarketplaceItemDraftResourceConfig(
+    rdm_resources_config.RDMDraftFilesResourceConfig
+):
+    """Files for marketplace items (draft)."""
+
+    blueprint_name = "marketplace-items-draft-files"
+    url_prefix = "/marketplace/items/<pid_value>/draft"
