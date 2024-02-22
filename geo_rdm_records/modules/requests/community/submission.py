@@ -13,12 +13,19 @@ from invenio_rdm_records.records.api import RDMDraft, RDMRecord
 from invenio_records_resources.services.uow import RecordCommitOp, RecordIndexOp
 from invenio_requests.customizations import actions
 
+from geo_rdm_records.modules.marketplace.records.api import (
+    GEOMarketplaceItem,
+    GEOMarketplaceItemDraft,
+)
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     GEOPackageRecord,
 )
 from geo_rdm_records.modules.rdm import GEODraft, GEORecord
-from geo_rdm_records.proxies import current_geo_packages_service
+from geo_rdm_records.proxies import (
+    current_geo_packages_service,
+    current_marketplace_service,
+)
 
 
 class ServiceHandler:
@@ -42,6 +49,10 @@ class ServiceHandler:
         {
             "classes": (GEOPackageDraft, GEOPackageRecord),
             "service": current_geo_packages_service,
+        },
+        {
+            "classes": (GEOMarketplaceItem, GEOMarketplaceItemDraft),
+            "service": current_marketplace_service,
         },
     ]
     """Definition of the services available to handle actions."""

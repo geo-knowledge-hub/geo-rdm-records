@@ -5,11 +5,4 @@
 # geo-rdm-records is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""GEO RDM Records Requests."""
-
-from .resolver import BaseRecordProxy, BaseRecordResolver
-
-__all__ = (
-    "BaseRecordProxy",
-    "BaseRecordResolver",
-)
+"""Community requests configurations."""

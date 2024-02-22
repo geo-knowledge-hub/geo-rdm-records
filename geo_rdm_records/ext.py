@@ -12,6 +12,13 @@ from invenio_rdm_records.services.review.service import ReviewService
 from invenio_records_resources.resources.files import FileResource
 from invenio_records_resources.services import FileService
 
+from geo_rdm_records.modules.requests.notification.services.config import (
+    RequestNotificationServiceConfig,
+)
+from geo_rdm_records.modules.requests.notification.services.service import (
+    RequestNotificationService,
+)
+
 from . import config
 from .modules.marketplace.resources.config import (
     GEOMarketplaceItemDraftResourceConfig,
@@ -46,8 +53,6 @@ from .modules.packages.services.config import (
 from .modules.packages.services.request.service import PackageRequestsService
 from .modules.packages.services.secret_links import SecretLinkService
 from .modules.packages.services.service import GEOPackageRecordService
-from .modules.requests.services.config import RequestNotificationServiceConfig
-from .modules.requests.services.service import RequestNotificationService
 from .modules.search.resources.config import SearchRecordResourceConfig
 from .modules.search.resources.resource import SearchRecordResource
 from .modules.search.services.config import SearchRecordServiceConfig
@@ -104,7 +109,7 @@ class GEORDMRecords(object):
 
         # Services
         self.service = GEOPackageRecordService(
-            service_configs.record,
+            config=service_configs.record,
             files_service=FileService(service_configs.file),
             draft_files_service=FileService(service_configs.file_draft),
             secret_links_service=SecretLinkService(service_configs.record),
@@ -128,6 +133,7 @@ class GEORDMRecords(object):
             config=service_configs.marketplace_item,
             files_service=FileService(service_configs.marketplace_file),
             draft_files_service=FileService(service_configs.marketplace_file_draft),
+            review_service=ReviewService(service_configs.marketplace_item),
         )
 
     def init_resource(self, app):

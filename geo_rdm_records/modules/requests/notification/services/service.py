@@ -10,7 +10,7 @@
 from invenio_records_resources.services.base import Service
 from invenio_records_resources.services.uow import TaskOp, unit_of_work
 
-from geo_rdm_records.modules.requests.tasks import notify_request
+from geo_rdm_records.modules.requests.notification.tasks import notify_request
 
 
 class RequestNotificationService(Service):
