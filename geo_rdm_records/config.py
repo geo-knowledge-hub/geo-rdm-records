@@ -11,6 +11,7 @@ from flask_babelex import lazy_gettext as _
 from invenio_rdm_records.services import facets as rdm_facets
 
 from geo_rdm_records.base.services import facets as geo_facets
+from geo_rdm_records.modules.requests.community.config import CommunitySubmissionConfig
 from geo_rdm_records.modules.security.permissions import views_permissions_factory
 
 # UI Configurations
@@ -163,6 +164,11 @@ RDM_SEARCH_PACKAGE_RESOURCE_DRAFTS = {
     "facets": ["access_status", "is_published", "resource_type", "base_type"],
     "sort": ["bestmatch", "updated-desc", "updated-asc", "newest", "oldest", "version"],
 }
+
+#
+# Review
+#
+RDM_COMMUNITY_SUBMISSION_OVERRIDE_CONFIG = CommunitySubmissionConfig
 
 #
 # Requests
