@@ -56,10 +56,6 @@ class GEOMarketplaceServiceConfig(BaseGEOServiceConfig):
     schema = BaseGEORecordSchema
     schema_parent = ParentSchema
 
-    # Results
-    result_list_cls = MutableRecordList
-    results_registry_type = ResultRegistryType
-
     # Links
     links_registry_type = LinksRegistryType
 

@@ -11,6 +11,10 @@ from invenio_records_resources.services.records.results import (
     RecordList as BaseRecordList,
 )
 
+from geo_rdm_records.modules.marketplace.records.api import (
+    GEOMarketplaceItem,
+    GEOMarketplaceItemDraft,
+)
 from geo_rdm_records.modules.packages.records.api import (
     GEOPackageDraft,
     GEOPackageRecord,
@@ -27,6 +31,9 @@ class ResultRegistryType:
             record=GEOPackageRecord,
         ),
         "records": dict(draft=GEODraft, record=GEORecord),
+        "marketplace-items": dict(
+            draft=GEOMarketplaceItemDraft, record=GEOMarketplaceItem
+        ),
     }
 
     @classmethod
