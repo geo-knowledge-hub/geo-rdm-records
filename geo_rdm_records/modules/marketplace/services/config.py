@@ -18,7 +18,6 @@ from invenio_rdm_records.services.components import (
     AccessComponent,
     CustomFieldsComponent,
     MetadataComponent,
-    PIDsComponent,
     ReviewComponent,
 )
 from invenio_rdm_records.services.config import (
@@ -33,7 +32,6 @@ from invenio_records_resources.services.records.links import RecordLink
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.links import LinksRegistryType
-from geo_rdm_records.base.services.results import MutableRecordList, ResultRegistryType
 from geo_rdm_records.base.services.schemas import ParentSchema
 from geo_rdm_records.base.services.schemas.records import BaseGEORecordSchema
 from geo_rdm_records.modules.marketplace.records.api import (
@@ -43,6 +41,7 @@ from geo_rdm_records.modules.marketplace.records.api import (
 from geo_rdm_records.modules.marketplace.services.permissions import (
     MarketplacePermissionPolicy,
 )
+from geo_rdm_records.modules.packages.records.api import GEOPackageRecord
 
 
 class GEOMarketplaceServiceConfig(BaseGEOServiceConfig):
@@ -58,6 +57,12 @@ class GEOMarketplaceServiceConfig(BaseGEOServiceConfig):
 
     # Links
     links_registry_type = LinksRegistryType
+
+    # Indices used to suggest related content
+    indices_more_like_this = [
+        GEOPackageRecord.index.search_alias,
+        GEOMarketplaceItem.index.search_alias,
+    ]
 
     # Permission policy
     permission_policy_cls = FromConfig(
