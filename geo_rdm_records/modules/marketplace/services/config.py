@@ -18,7 +18,6 @@ from invenio_rdm_records.services.components import (
     AccessComponent,
     CustomFieldsComponent,
     MetadataComponent,
-    PIDsComponent,
     ReviewComponent,
 )
 from invenio_rdm_records.services.config import (
@@ -33,9 +32,7 @@ from invenio_records_resources.services.records.links import RecordLink
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.links import LinksRegistryType
-from geo_rdm_records.base.services.results import MutableRecordList, ResultRegistryType
 from geo_rdm_records.base.services.schemas import ParentSchema
-from geo_rdm_records.base.services.schemas.records import BaseGEORecordSchema
 from geo_rdm_records.modules.marketplace.records.api import (
     GEOMarketplaceItem,
     GEOMarketplaceItemDraft,
@@ -43,6 +40,10 @@ from geo_rdm_records.modules.marketplace.records.api import (
 from geo_rdm_records.modules.marketplace.services.permissions import (
     MarketplacePermissionPolicy,
 )
+from geo_rdm_records.modules.marketplace.services.schemas import (
+    GEOMarketplaceItemSchema,
+)
+from geo_rdm_records.modules.packages.records.api import GEOPackageRecord
 
 
 class GEOMarketplaceServiceConfig(BaseGEOServiceConfig):
@@ -53,16 +54,33 @@ class GEOMarketplaceServiceConfig(BaseGEOServiceConfig):
     draft_cls = GEOMarketplaceItemDraft
 
     # Schemas
-    schema = BaseGEORecordSchema
+    schema = GEOMarketplaceItemSchema
     schema_parent = ParentSchema
 
     # Links
     links_registry_type = LinksRegistryType
 
+    # Indices used to suggest related content
+    indices_more_like_this = [
+        GEOPackageRecord.index.search_alias,
+        GEOMarketplaceItem.index.search_alias,
+    ]
+
+    # Fields used to suggest related content
+    fields_more_like_this = [
+        "metadata.title",
+        "metadata.description",
+        "metadata.subjects.subject",
+        "metadata.subjects.subject.keyword",
+        "metadata.additional_titles.title",
+        "metadata.additional_descriptions.description",
+        "metadata.related_identifiers.description",
+    ]
+
     # Permission policy
     permission_policy_cls = FromConfig(
         "GEO_MARKETPLACE_ITEMS_PERMISSION_POLICY",
-        default=MarketplacePermissionPolicy,  # ToDo: Review permissions for Marketplace
+        default=MarketplacePermissionPolicy,
         import_string=True,
     )
 

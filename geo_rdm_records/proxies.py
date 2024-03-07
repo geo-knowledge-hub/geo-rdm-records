@@ -26,3 +26,4 @@ current_requests_notification_service = LocalProxy(
 current_marketplace_service = LocalProxy(
     lambda: current_app.extensions["geo-rdm-records"].service_marketplace
 )
+"""Helper proxy to get the current Marketplace API service."""
