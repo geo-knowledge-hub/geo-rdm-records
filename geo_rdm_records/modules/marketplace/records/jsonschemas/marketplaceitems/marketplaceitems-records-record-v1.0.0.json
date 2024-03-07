@@ -28,6 +28,14 @@
       "description": "Resource metadata.",
       "additionalProperties": false,
       "properties": {
+        "marketplace": {
+          "launch_url": {
+            "type": "string"
+          },
+          "vendor_contact": {
+            "type": "string"
+          }
+        },
         "target_audiences": {
           "type": "array",
           "items": {

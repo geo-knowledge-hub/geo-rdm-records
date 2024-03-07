@@ -278,6 +278,17 @@
               }
             }
           },
+          "marketplace": {
+            "type": "object",
+            "properties": {
+              "launch_url": {
+                "type": "text"
+              },
+              "vendor_contact": {
+                "type": "text"
+              }
+            }
+          },
           "target_audiences": {
             "type": "object",
             "properties": {

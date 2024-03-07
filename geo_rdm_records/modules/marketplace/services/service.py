@@ -64,17 +64,9 @@ class GEOMarketplaceItemService(BaseRecordService, BaseSearchMultiIndexService):
             must=[
                 {
                     "more_like_this": {
-                        "fields": [
-                            "metadata.title",
-                            "metadata.description",
-                            "metadata.subjects.subject",
-                            "metadata.subjects.subject.keyword",
-                            "metadata.additional_titles.title",
-                            "metadata.additional_descriptions.description",
-                            "metadata.related_identifiers.description",
-                        ],
+                        "fields": self.config.fields_more_like_this,
                         "like": {"_id": record.id},
-                        "min_term_freq": 10,
+                        "min_term_freq": 5,
                         "max_query_terms": 50,
                     }
                 }
