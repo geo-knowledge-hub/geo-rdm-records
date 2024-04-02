@@ -20,6 +20,9 @@ def _extract_links(record_document):
 
     Returns:
         list: List containing all links found in the record document.
+
+    Note:
+        Only http-based links are extracted.
     """
     # Regex pattern for extracting URLs
     url_pattern = r'https?://[^\s<>"\',]+|www\.[^\s<>"\',]+'
