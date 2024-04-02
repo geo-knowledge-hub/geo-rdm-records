@@ -7,6 +7,8 @@
 
 """Checker module."""
 
+from urllib.parse import urlparse
+
 from .metadata import extract_links_from_record
 from .network import is_link_available
 
@@ -22,10 +24,41 @@ def _check_links(record_links, **kwargs):
     Returns:
         list: List with the links' status.
     """
-    return [
-        dict(link=link, is_available=is_link_available(link, **kwargs))
-        for link in record_links
-    ]
+    valid_schemes = ["http", "https"]
+    record_links_status = []
+
+    for link in record_links:
+        link_tested = False
+        link_is_available = False
+
+        link_parse = urlparse(link)
+
+        # currently, only http-https are tested
+        if link_parse.scheme in valid_schemes:
+            link_tested = True
+            link_is_available = is_link_available(link, **kwargs)
+
+        # testing `www` websites with no scheme
+        elif link.startswith("www"):
+            for valid_scheme in valid_schemes:
+                if not link_is_available:
+                    try:
+                        link_with_scheme = urlparse(f"{valid_scheme}://{link}")
+                        link_with_scheme = link_with_scheme.geturl()
+
+                        link_is_available = is_link_available(
+                            link_with_scheme, **kwargs
+                        )
+
+                        link_tested = True
+                    except:  # noqa
+                        pass
+
+        record_links_status.append(
+            dict(link=link, is_available=link_is_available, is_tested=link_tested)
+        )
+
+    return record_links_status
 
 
 def checker_validate_links(records, **kwargs):

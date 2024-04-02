@@ -9,7 +9,6 @@
 
 from datetime import timedelta
 
-import requests
 from requests_cache import CachedSession
 from retry_requests import retry
 
@@ -33,14 +32,16 @@ def is_link_available(
 
     Note:
         By default, the following cases are used to define a link as unavailable:
-            - Case 1: Delay to answer longer than 5 seconds;
+            - Case 1: Delay to answer longer than 10 seconds;
             - Case 2: No access to the server or a dropped connection;
-            - Case 3: An HTTP Answer of 500, 502, or 504.
+            - Case 3: An HTTP error (validated with `requests.Response.raise_for_status`)
 
         To change the value of ``Case 1``, you can use the Request config (``requests_config``). Also,
         to change the value of ``Case 2`` and ``Case 3``, you can use the Retry config (``retry_config``).
+
+        In the current version, only http(s) links are validated.
     """
-    is_available = True
+    is_available = False
 
     cache_config = {} if cache_config is None else cache_config
     retry_config = {} if retry_config is None else retry_config
@@ -57,11 +58,17 @@ def is_link_available(
 
     session = retry(session, **retry_config)
 
-    try:
-        session.head(url, **requests_config).raise_for_status()
-        # nothing to do
-    except requests.RequestException as e:
-        # If there is any request-related error, the link is not available
-        is_available = False
+    for request_method in [session.head, session.get]:
+        # avoid requests using another method for a link that is already validated
+        if is_available:
+            continue
+
+        try:
+            request_method(url, **requests_config).raise_for_status()
+            is_available = True
+
+        except:  # noqa
+            # If there is any request-related error, the link is not available
+            is_available = False
 
     return is_available
