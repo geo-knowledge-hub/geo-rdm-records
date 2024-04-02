@@ -190,7 +190,14 @@ GEO_RDM_NOTIFICATION_DEFAULT_RECEIVER_EMAILS = []
 GEO_RDM_CHECKER_LINKS_RETRY_CONFIG = {"retries": 5, "backoff_factor": 0.3}
 """Retry configurations (based on retry-requests library)."""
 
-GEO_RDM_CHECKER_LINKS_REQUEST_CONFIG = {"timeout": 10}
+GEO_RDM_CHECKER_LINKS_REQUEST_CONFIG = {
+    "timeout": 10,
+    "verify": False,
+    "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/109.0.0.0 Safari/537.36"
+    },
+}
 """Request configuration (based on requests (get method) library."""
 
 GEO_RDM_CHECKER_LINKS_REPORT_TITLE = _(
