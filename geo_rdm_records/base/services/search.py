@@ -10,7 +10,9 @@
 from invenio_drafts_resources.services.records.service import (
     RecordService as BaseRecordService,
 )
+from invenio_rdm_records.services import RDMRecordService as BaseRDMRecordService
 from invenio_records_permissions.api import permission_filter
+from invenio_records_resources.services import LinksTemplate
 from invenio_search import current_search_client
 
 
@@ -134,3 +136,58 @@ class BaseSearchMultiIndexService(BaseRecordService):
             if hasattr(component, action):
                 search = getattr(component, action)(identity, search, params)
         return search
+
+
+class BaseRelatedRecordsSearchService(
+    BaseRDMRecordService, BaseSearchMultiIndexService
+):
+    """Search service with `more like this` support."""
+
+    #
+    # High-level API
+    #
+    def search_more_like_this(self, identity, _id, **extras):
+        """Search content related to a record (more like this query)."""
+        record = self.record_cls.pid.resolve(_id)
+
+        self.require_permission(identity, "search")
+        self.require_permission(identity, "read", record=record)
+
+        search = self.create_search(
+            identity,
+            self.record_cls,
+            self.config.search,
+            permission_action="read",
+            preference=None,
+            indices=self.config.indices_more_like_this,
+        )
+
+        # Search for the latest version of the package,
+        # avoiding duplications and old versions
+        search = search.query(
+            "bool",
+            must=[
+                {
+                    "more_like_this": {
+                        "fields": self.config.fields_more_like_this,
+                        "like": {"_id": record.id},
+                        "min_term_freq": 5,
+                        "max_query_terms": 50,
+                    }
+                }
+            ],
+            filter=[{"term": {"versions.is_latest": True}}],
+        )
+
+        search = search.extra(**extras)
+        search_result = search.execute()
+
+        return self.result_list(
+            self,
+            identity,
+            search_result,
+            links_tpl=LinksTemplate(self.config.links_search),
+            links_item_tpl=self.links_item_tpl,
+            expandable_fields=self.expandable_fields,
+            expand=True,
+        )

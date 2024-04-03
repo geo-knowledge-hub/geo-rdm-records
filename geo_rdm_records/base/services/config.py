@@ -84,3 +84,24 @@ class BaseGEOServiceConfig(rdm_config.RDMRecordServiceConfig):
         "RDM_FACETS",
         search_option_cls=GEOSearchVersionsOptions,
     )
+
+    # Indices used to suggest related content
+    indices_more_like_this = []
+
+    # Fields used to suggest related content
+    fields_more_like_this = [
+        "parent.communities.ids",
+        "metadata.title",
+        "metadata.description",
+        "metadata.subjects.subject",
+        "metadata.subjects.subject.keyword",
+        "metadata.subjects.subject.subject",
+        "metadata.engagement_priorities.title",
+        "metadata.additional_titles.title",
+        "metadata.additional_descriptions.description",
+        "metadata.related_identifiers.description",
+        "metadata.resource_type.id",
+        "metadata.target_audiences.id",
+        "metadata.related_identifiers.title",
+        "metadata.related_identifiers.description",
+    ]
