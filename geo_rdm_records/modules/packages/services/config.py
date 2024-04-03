@@ -35,6 +35,7 @@ from invenio_records_resources.services.records.links import pagination_links
 
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.schemas import ParentSchema
+from geo_rdm_records.modules.marketplace.records.api import GEOMarketplaceItem
 from geo_rdm_records.modules.rdm.records.api import GEODraft, GEORecord
 
 from ..records.api import GEOPackageDraft, GEOPackageRecord
@@ -96,6 +97,12 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
         PIDsComponent,
         RelationsComponent,
         ReviewComponent,
+    ]
+
+    # Indices used to suggest related content
+    indices_more_like_this = [
+        GEOPackageRecord.index.search_alias,
+        GEOMarketplaceItem.index.search_alias,
     ]
 
     # Links

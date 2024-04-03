@@ -22,6 +22,7 @@ from geo_rdm_records.base.services.config import (
 from geo_rdm_records.base.services.links import LinksRegistryType
 from geo_rdm_records.base.services.permissions import BaseGEOPermissionPolicy
 from geo_rdm_records.base.services.results import MutableRecordList, ResultRegistryType
+from geo_rdm_records.modules.marketplace.records.api import GEOMarketplaceItem
 from geo_rdm_records.modules.rdm.services.schemas import (
     GEOParentSchema,
     GEORecordSchema,
@@ -51,6 +52,12 @@ class GEORecordServiceConfig(BaseGEOServiceConfig):
 
     # Links
     links_registry_type = LinksRegistryType
+
+    # Indices used to suggest related content
+    indices_more_like_this = [
+        GEORecord.index.search_alias,
+        GEOMarketplaceItem.index.search_alias,
+    ]
 
     # Permission policy
     permission_policy_cls = FromConfig(
