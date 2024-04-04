@@ -10,9 +10,6 @@
 import enum
 
 from invenio_rdm_records.proxies import current_rdm_records_service
-from invenio_rdm_records.services.services import (
-    RDMRecordService as BaseRDMRecordService,
-)
 from invenio_records_resources.services import ServiceSchemaWrapper
 from invenio_records_resources.services.uow import (
     RecordCommitOp,
@@ -22,6 +19,8 @@ from invenio_records_resources.services.uow import (
 )
 from marshmallow import ValidationError
 from sqlalchemy.orm.exc import NoResultFound
+
+from geo_rdm_records.base.services.search import BaseRelatedRecordsSearchService
 
 from ..errors import InvalidPackageError, InvalidPackageResourceError
 from ..records.api import PackageRelationship
@@ -64,7 +63,7 @@ class PackageServiceAction(enum.Enum):
 #
 # Service class
 #
-class GEOPackageRecordService(BaseRDMRecordService):
+class GEOPackageRecordService(BaseRelatedRecordsSearchService):
     """GEO Package record service."""
 
     def __init__(
