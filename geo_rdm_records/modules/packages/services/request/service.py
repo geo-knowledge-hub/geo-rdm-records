@@ -28,7 +28,7 @@ def has_assistance_requests(record, ctx):
     return any(
         map(
             lambda x: x["type"] in PackageRequestsService.request_type,
-            record.assistance_requests,
+            record.assistance_requests or [],
         )
     )
 
