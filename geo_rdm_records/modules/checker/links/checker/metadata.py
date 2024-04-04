@@ -30,7 +30,7 @@ def _extract_links(record_document):
     # Find all non-overlapping matches of the pattern in the string
     return py_.map(
         re.findall(url_pattern, record_document),
-        lambda x: x.strip(").").strip("&nbsp;"),
+        lambda x: x.strip(").").replace("&nbsp;", ""),
     )
 
 
