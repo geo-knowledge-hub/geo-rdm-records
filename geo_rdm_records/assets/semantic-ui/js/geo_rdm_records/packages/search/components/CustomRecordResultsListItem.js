@@ -21,6 +21,31 @@ import { extractProgrammeActivityAcronym } from "../../../utils";
 
 
 /**
+ * Extract Record badge.
+ *
+ * @param {string} recordType String containing the type of record.
+ */
+export const extractRecordBadge = (recordType) => {
+  let recordBadge = {
+    name: "Open",
+    color: "primary",
+    icon: "lock open"
+  };
+
+  // Currently, we only have "Marketplace Item" as closed records
+  if (recordType === "marketplace-item") {
+    recordBadge = {
+      name: "Marketplace",
+      color: "primary",
+      icon: "building"
+    }
+  }
+
+  return recordBadge;
+}
+
+
+/**
  * Generate record links based on parent type.
  *
  * @param {string} recordId Record Identifier (PID)
@@ -47,6 +72,7 @@ export const recordTypeLinksFactory = (recordId, recordType) => {
  * Custom result item.
  */
 export const CustomRecordResultsListItem = ({ result }) => {
+  const recordBadge = extractRecordBadge(result.parent.type);
   const recordLinks = recordTypeLinksFactory(result.id, result.parent.type);
 
   const accessStatusId = _get(result, "ui.access_status.id", "open");
@@ -92,21 +118,26 @@ export const CustomRecordResultsListItem = ({ result }) => {
     <Item>
       <Item.Content>
         <Item.Extra className="labels-actions">
+          <Label size="tiny" color={recordBadge.color}>
+            <i className={`icon ${recordBadge.icon}`}></i>{recordBadge.name}
+          </Label>
+          <Label size="tiny" color={"gray"}>
+            {publicationDate} ({version})
+          </Label>
+          <Label size="tiny" color={"gray"}>
+            {resourceType}
+          </Label>
           {programmeActivityAcronym && (
-            <Label size="tiny" color="programme-activity-label">
+            <Label size="tiny" color={"gray"}>
               {programmeActivityAcronym}
             </Label>
           )}
-          <Label size="tiny" className="primary">
-            {publicationDate} ({version})
-          </Label>
-          <Label size="tiny" className="neutral">
-            {resourceType}
-          </Label>
-          <Label size="tiny" className={`access-status ${accessStatusId}`}>
-            {accessStatusIcon && <i className={`icon ${accessStatusIcon}`} />}
-            {accessStatus}
-          </Label>
+          {accessStatusId === "restricted" && (
+            <Label size="tiny" className={`access-status ${accessStatusId}`}>
+              {accessStatusIcon && <i className={`icon ${accessStatusIcon}`} />}
+              {accessStatus}
+            </Label>
+          )}
         </Item.Extra>
         <Item.Header as="h2">
           <a href={viewLink}>{title}</a>
