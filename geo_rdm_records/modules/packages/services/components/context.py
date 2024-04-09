@@ -19,6 +19,11 @@ class PackageContextComponent(ServiceComponent):
         # for the package.
         record.parent.relationship.managed_by = package.parent
 
+        # Include owners
+        # Note: Added to handle cases where a package has multiple
+        # users accessing it.
+        record.parent["access"] = package.parent["access"]
+
     def context_dissociate_resource(
         self, identity, package=None, record=None, **kwargs
     ):
@@ -26,6 +31,9 @@ class PackageContextComponent(ServiceComponent):
         if record.parent.relationship.managed_by:
             # avoiding errors
             del record.parent.relationship.managed_by
+
+        # Note: As only drafts can be associated with a package, it is assumed
+        # that removing owners is not required in the dissociation operation.
 
     def context_update_access(self, identity, data=None, record=None, errors=None):
         """Update draft handler."""
