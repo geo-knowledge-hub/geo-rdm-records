@@ -48,7 +48,8 @@ class BaseSearchMultiIndexService(BaseRecordService):
         search = search_opts.search_cls(
             using=current_search_client,
             default_filter=default_filter,
-            index=index or indices,  # enabling multiple indices search
+            index=indices
+            or record_cls.index.search_alias,  # enabling multiple indices search
         )
 
         search = (
@@ -76,7 +77,6 @@ class BaseSearchMultiIndexService(BaseRecordService):
         extra_filter=None,
         permission_action="read",
         indices=None,
-        index=None,
     ):
         """Factory for creating a Search DSL instance."""
         search = self.create_search(
@@ -87,7 +87,6 @@ class BaseSearchMultiIndexService(BaseRecordService):
             preference=preference,
             extra_filter=extra_filter,
             indices=indices,
-            index=index,
         )
 
         # Run search args evaluator
@@ -128,7 +127,6 @@ class BaseSearchMultiIndexService(BaseRecordService):
             extra_filter=extra_filter,
             permission_action=permission_action,
             indices=indices,
-            index=index,
         )
 
         # Run components
