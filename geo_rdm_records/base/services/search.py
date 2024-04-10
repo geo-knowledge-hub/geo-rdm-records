@@ -11,13 +11,29 @@ from invenio_drafts_resources.services.records.service import (
     RecordService as BaseRecordService,
 )
 from invenio_rdm_records.services import RDMRecordService as BaseRDMRecordService
+from invenio_rdm_records.services.results import ParentCommunitiesExpandableField
 from invenio_records_permissions.api import permission_filter
 from invenio_records_resources.services import LinksTemplate
+from invenio_requests.services.results import EntityResolverExpandableField
 from invenio_search import current_search_client
 
 
 class BaseSearchMultiIndexService(BaseRecordService):
     """Search records across multiple indices."""
+
+    #
+    # Properties
+    #
+    @property
+    def expandable_fields(self):
+        """Get expandable fields.
+
+        Expand community field to return community details.
+        """
+        return [
+            EntityResolverExpandableField("parent.review.receiver"),
+            ParentCommunitiesExpandableField("parent.communities.default"),
+        ]
 
     #
     # Auxiliary methods
