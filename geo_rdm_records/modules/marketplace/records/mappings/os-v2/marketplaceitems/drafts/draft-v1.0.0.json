@@ -326,6 +326,23 @@
               },
               "vendor_contact": {
                 "type": "text"
+              },
+              "pricing": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "text"
+                  },
+                  "description": {
+                    "type": "text"
+                  },
+                  "url": {
+                    "type": "text"
+                  },
+                  "value": {
+                    "type": "text"
+                  }
+                }
               }
             }
           },
