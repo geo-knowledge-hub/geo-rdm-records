@@ -34,6 +34,32 @@
           },
           "vendor_contact": {
             "type": "string"
+          },
+          "pricing": {
+            "description": "Pricing plans associated with the marketplace item",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "title": {
+                  "description": "Title of the pricing plan",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Description of the pricing plan",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "Pricing plan page",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Pricing plan value",
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "target_audiences": {
