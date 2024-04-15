@@ -17,26 +17,12 @@ from geo_rdm_records.base.services.schemas.records import BaseGEORecordSchema
 #
 # Metadata
 #
-class PricingPlanSchema(Schema):
-    """Schema for the marketplace pricing plans."""
-
-    title = SanitizedUnicode(required=True, validate=validate.Length(min=1))
-
-    description = SanitizedUnicode(required=True, validate=validate.Length(min=1))
-
-    url = SanitizedUnicode(required=True, validate=validate.URL())
-
-    value = SanitizedUnicode(required=True, validate=validate.Length(min=1))
-
-
 class MarketplaceFields(Schema):
     """Fields for marketplace object."""
 
     launch_url = SanitizedUnicode(required=True, validate=validate.URL())
 
     vendor_contact = SanitizedUnicode(required=True, validate=validate.Email())
-
-    pricing = fields.List(fields.Nested(PricingPlanSchema), required=False)
 
 
 class MetadataSchema(BaseMetadataSchema):

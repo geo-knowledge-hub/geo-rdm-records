@@ -8,8 +8,23 @@
 """GEO RDM Records Facets definitions."""
 
 from flask_babelex import gettext as _
-from invenio_records_resources.services.records.facets import TermsFacet
+from invenio_records_resources.services.records.facets import (
+    NestedTermsFacet,
+    TermsFacet,
+)
 from invenio_vocabularies.services.facets import VocabularyLabels
+
+#
+# GEO Work Programme Activities Facet
+#
+record_category = TermsFacet(
+    field="parent.category",
+    label=_("Category"),
+    value_labels={
+        "open": "Open",
+        "marketplace": "Marketplace",
+    },
+)
 
 #
 # GEO Work Programme Activities Facet
@@ -44,5 +59,16 @@ engagement_priority = TermsFacet(
 base_type = TermsFacet(
     field="metadata.resource_type.props.basetype",
     label=_("Base resource type"),
+    value_labels=VocabularyLabels("resourcetypes"),
+)
+
+#
+# Record type (or Resource type)
+#
+record_type = NestedTermsFacet(
+    field="metadata.resource_type.props.type",
+    subfield="metadata.resource_type.props.subtype",
+    splitchar="::",
+    label=_("Record Type"),
     value_labels=VocabularyLabels("resourcetypes"),
 )

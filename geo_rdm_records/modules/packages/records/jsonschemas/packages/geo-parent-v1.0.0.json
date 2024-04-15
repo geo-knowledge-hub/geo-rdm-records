@@ -103,6 +103,9 @@
       "type": "string",
       "description": "Type of the entity represented by the Record in the System.",
       "additionalProperties": false
+    },
+    "category": {
+      "type": "string"
     }
   }
 }

@@ -93,6 +93,10 @@ GEO_RDM_PACKAGE_PERMISSION_POLICY = (
 # Search configuration
 #
 RDM_FACETS = {
+    "category": {
+        "facet": geo_facets.record_category,
+        "ui": {"field": "parent.category"},
+    },
     "base_type": {
         "facet": geo_facets.base_type,
         "ui": {
@@ -118,7 +122,7 @@ RDM_FACETS = {
         },
     },
     "resource_type": {
-        "facet": rdm_facets.resource_type,
+        "facet": geo_facets.record_type,
         "ui": {
             "field": "resource_type.type",
             "childAgg": {
