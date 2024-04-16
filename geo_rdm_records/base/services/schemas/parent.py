@@ -17,3 +17,5 @@ class ParentSchema(BaseParentSchema):
     """Parent schema for the GEO RDM Records."""
 
     type = fields.String(dump_only=True)
+
+    category = fields.String(dump_only=True)

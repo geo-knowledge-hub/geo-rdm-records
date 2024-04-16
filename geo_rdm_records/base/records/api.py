@@ -13,3 +13,6 @@ class GEOBaseRecord:
 
     type = None
     """Type of the entity represented by the Record in the System."""
+
+    category = None
+    """Category of the Record in the System."""
