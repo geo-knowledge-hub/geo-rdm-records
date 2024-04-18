@@ -24,6 +24,7 @@ from invenio_records_resources.records.systemfields import FilesField, IndexFiel
 from invenio_requests.records.api import Request
 
 from geo_rdm_records.base.records.api import GEOBaseRecord
+from geo_rdm_records.base.records.categories import GEORecordCategories
 from geo_rdm_records.base.records.systemfields.common import BaseGEORecordsFieldsMixin
 from geo_rdm_records.base.records.types import GEORecordTypes
 
@@ -70,6 +71,8 @@ class GEOPackageParent(GEOBaseRecord, BaseRecordParent):
     communities = CommunitiesField(GEOPackageParentCommunity)
 
     type = ConstantField("type", GEORecordTypes.package)
+
+    category = ConstantField("category", GEORecordCategories.open)
 
 
 #

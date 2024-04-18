@@ -237,6 +237,9 @@
           "type": {
             "type": "keyword"
           },
+          "category": {
+            "type": "keyword"
+          },
           "relationship": {
             "type": "object",
             "properties": {

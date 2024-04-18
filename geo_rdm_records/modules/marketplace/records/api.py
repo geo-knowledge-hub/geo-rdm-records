@@ -21,6 +21,7 @@ from invenio_records_resources.records.api import FileRecord
 from invenio_records_resources.records.systemfields import FilesField, IndexField
 
 from geo_rdm_records.base.records.api import GEOBaseRecord
+from geo_rdm_records.base.records.categories import GEORecordCategories
 from geo_rdm_records.base.records.systemfields.common import BaseGEORecordsFieldsMixin
 from geo_rdm_records.base.records.types import GEORecordTypes
 
@@ -49,6 +50,8 @@ class GEOMarketplaceItemParent(GEOBaseRecord, BaseRecordParent):
     communities = CommunitiesField(GEOMarketplaceItemParentCommunityMetadata)
 
     type = ConstantField("type", GEORecordTypes.marketplace_item)
+
+    category = ConstantField("category", GEORecordCategories.marketplace)
 
 
 #
