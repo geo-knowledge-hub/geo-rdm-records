@@ -512,6 +512,40 @@
           "items": {"$ref": "local://packages/geo-definitions-v1.0.0.json#/resource"}
         }
       }
+    },
+    "harvester": {
+      "type": "object",
+      "description": "Field with properties of harvester used in the record",
+      "additionalProperties": false,
+      "properties": {
+        "software": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            },
+            "repository": {
+              "type": "string"
+            }
+          }
+        },
+        "origin": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   }
 }
