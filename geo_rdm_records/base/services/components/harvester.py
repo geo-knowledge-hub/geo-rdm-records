@@ -16,8 +16,8 @@ class HarvesterComponent(ServiceComponent):
 
     def create(self, identity, data=None, record=None, **kwargs):
         """Inject parsed metadata to the record."""
-        record["harvester"] = data.get("harvester", {})
+        record.parent["harvester"] = data.get("harvester", {})
 
     def publish(self, identity, draft=None, record=None, **kwargs):
         """Update draft relationship."""
-        record["harvester"] = draft.get("harvester", {})
+        record.parent["harvester"] = draft.parent.get("harvester", {})

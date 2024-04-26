@@ -212,6 +212,36 @@
                 }
               }
             }
+          },
+          "harvester": {
+            "type": "object",
+            "properties": {
+              "software": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "text"
+                  },
+                  "version": {
+                    "type": "text"
+                  },
+                  "repository": {
+                    "type": "text"
+                  }
+                }
+              },
+              "origin": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "text"
+                  },
+                  "url": {
+                    "type": "text"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -878,36 +908,6 @@
             "properties": {
               "id": {
                 "type": "keyword"
-              }
-            }
-          }
-        }
-      },
-      "harvester": {
-        "type": "object",
-        "properties": {
-          "software": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "text"
-              },
-              "version": {
-                "type": "text"
-              },
-              "repository": {
-                "type": "text"
-              }
-            }
-          },
-          "origin": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "text"
-              },
-              "url": {
-                "type": "text"
               }
             }
           }

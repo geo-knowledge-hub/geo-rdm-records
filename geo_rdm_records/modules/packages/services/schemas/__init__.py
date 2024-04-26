@@ -48,4 +48,4 @@ class GEOPackageRecordSchema(BaseRecordSchema):
 
     assistance_requests = fields.List(fields.Nested(RequestSchema), dump_only=True)
 
-    harvester = NestedAttribute(HarvesterSchema, required=False)
+    harvester = NestedAttribute(HarvesterSchema, load_only=True, required=False)

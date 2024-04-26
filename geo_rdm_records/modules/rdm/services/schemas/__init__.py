@@ -36,4 +36,4 @@ class GEORecordSchema(BaseRecordSchema):
 
     metadata = NestedAttribute(MetadataSchema)
 
-    harvester = NestedAttribute(HarvesterSchema, required=False)
+    harvester = NestedAttribute(HarvesterSchema, load_only=True, required=False)
