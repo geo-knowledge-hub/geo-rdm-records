@@ -11,6 +11,9 @@ from invenio_rdm_records.services.schemas.parent import (
     RDMParentSchema as BaseParentSchema,
 )
 from marshmallow import fields
+from marshmallow_utils.fields import NestedAttribute
+
+from .harvester import HarvesterSchema
 
 
 class ParentSchema(BaseParentSchema):
@@ -19,3 +22,5 @@ class ParentSchema(BaseParentSchema):
     type = fields.String(dump_only=True)
 
     category = fields.String(dump_only=True)
+
+    harvester = NestedAttribute(HarvesterSchema, required=False)

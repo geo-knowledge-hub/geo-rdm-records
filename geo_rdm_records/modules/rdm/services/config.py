@@ -7,13 +7,26 @@
 
 """GEO RDM Records Services configuration."""
 
+from invenio_drafts_resources.services.records.components import (
+    DraftFilesComponent,
+    PIDComponent,
+    RelationsComponent,
+)
 from invenio_rdm_records.services import config as rdm_config
+from invenio_rdm_records.services.components import (
+    AccessComponent,
+    CustomFieldsComponent,
+    MetadataComponent,
+    PIDsComponent,
+    ReviewComponent,
+)
 from invenio_records_resources.services.base.config import (
     FromConfig,
     FromConfigSearchOptions,
 )
 from invenio_records_resources.services.records.links import pagination_links
 
+from geo_rdm_records.base.services.components import HarvesterComponent
 from geo_rdm_records.base.services.config import (
     BaseGEOServiceConfig,
     GEOSearchDraftsOptions,
@@ -70,7 +83,18 @@ class GEORecordServiceConfig(BaseGEOServiceConfig):
     components = [
         ResourceRelationshipComponent,
         PackageResourceCommunitiesComponent,
-    ] + rdm_config.RDMRecordServiceConfig.components
+        MetadataComponent,
+        CustomFieldsComponent,
+        AccessComponent,
+        DraftFilesComponent,
+        # for the internal `pid` field
+        PIDComponent,
+        # for the `pids` field (external PIDs)
+        PIDsComponent,
+        RelationsComponent,
+        ReviewComponent,
+        HarvesterComponent,
+    ]
 
     #
     # Packages API extension
