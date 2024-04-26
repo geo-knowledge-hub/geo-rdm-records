@@ -8,5 +8,10 @@
 """Base services components for the GEO RDM Records."""
 
 from .constraints import BaseComponentConstraint, ConstrainedComponent
+from .harvester import HarvesterComponent
 
-__all__ = ("BaseComponentConstraint", "ConstrainedComponent")
+__all__ = (
+    "BaseComponentConstraint",
+    "ConstrainedComponent",
+    "HarvesterComponent",
+)

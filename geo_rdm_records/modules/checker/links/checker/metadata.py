@@ -43,7 +43,13 @@ def extract_links_from_record(record):
     Returns:
         list: List containing all links found in the record document.
     """
-    record_metadata_as_string = str(record.dumps())
+    record_dump = record.dumps()
+
+    #  Remove `parent` as it refers only to internal configurations
+    record_dump["parent"] = {}
+
+    # Prepare dump to be analyzed
+    record_metadata_as_string = str(record_dump)
 
     # Extracting links
     record_links = _extract_links(record_metadata_as_string)

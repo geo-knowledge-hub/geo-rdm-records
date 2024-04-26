@@ -688,14 +688,12 @@
                                     <tr>
                                       <td
                                         colspan="2"
-                                        style="padding: 5px 10px 0 10px"
+                                        style="padding: 10px"
                                       >
                                         <div
                                           style="
-                                                padding-bottom: 5px;
                                                 float: left;
-                                                width: 100%;
-                                                margin-bottom: 8px;
+                                                width: 80%;
                                               "
                                         >
                                           <h1
@@ -713,6 +711,18 @@
                                               safe }}
                                           </h1>
                                         </div>
+                                        {% if package.package.parent.harvester.origin.url %}
+                                        <div style="text-align: center; font-size: 12px">
+                                          <a style="
+                                              text-decoration: none;
+                                              padding: 5px;
+                                              border: 1px solid #c5c5c5;
+                                              border-radius: 5px;
+                                            " href="{{ package.package.parent.harvester.origin.url }}" target="_blank">
+                                            Harvest origin
+                                          </a>
+                                        </div>
+                                        {% endif %}
                                       </td>
                                     </tr>
                                     </tbody>
@@ -999,14 +1009,12 @@
                                     <tr>
                                       <td
                                         colspan="2"
-                                        style="padding: 5px 10px 0 10px"
+                                        style="padding: 10px"
                                       >
                                         <div
                                           style="
-                                                padding-bottom: 5px;
                                                 float: left;
-                                                width: 100%;
-                                                margin-bottom: 8px;
+                                                width: 80%;
                                               "
                                         >
                                           <h1
@@ -1023,6 +1031,18 @@
                                                 safe }}
                                           </h1>
                                         </div>
+                                        {% if resource.parent.harvester.origin.url %}
+                                          <div style="text-align: center; font-size: 12px">
+                                            <a style="
+                                              text-decoration: none;
+                                              padding: 5px;
+                                              border: 1px solid #c5c5c5;
+                                              border-radius: 5px;
+                                            " href="{{ resource.parent.harvester.origin.url }}" target="_blank">
+                                              Harvest origin
+                                            </a>
+                                          </div>
+                                        {% endif %}
                                       </td>
                                     </tr>
                                     </tbody>

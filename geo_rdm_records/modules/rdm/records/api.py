@@ -13,7 +13,7 @@ from invenio_rdm_records.records.api import CommonFieldsMixin as BaseCommonField
 from invenio_rdm_records.records.api import RDMParent as BaseRecordParent
 from invenio_rdm_records.records.systemfields import HasDraftCheckField
 from invenio_rdm_records.records.systemfields.draft_status import DraftStatus
-from invenio_records.systemfields import ConstantField
+from invenio_records.systemfields import ConstantField, DictField
 from invenio_records_resources.records.api import FileRecord
 from invenio_records_resources.records.systemfields import FilesField, IndexField
 
@@ -44,6 +44,8 @@ class GEOParent(GEOBaseRecord, BaseRecordParent):
     schema = ConstantField("$schema", "local://records/geo-parent-v1.0.0.json")
 
     relationship = RecordParentRelationshipField(key="relationship")
+
+    harvester = DictField("harvester")
 
 
 class CommonFieldsMixin(BaseGEORecordsFieldsMixin, BaseCommonFieldsMixin):

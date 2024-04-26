@@ -18,7 +18,7 @@ from invenio_rdm_records.records.systemfields import (
     RecordAccessField,
 )
 from invenio_rdm_records.records.systemfields.draft_status import DraftStatus
-from invenio_records.systemfields import ConstantField
+from invenio_records.systemfields import ConstantField, DictField
 from invenio_records_resources.records.api import FileRecord
 from invenio_records_resources.records.systemfields import FilesField, IndexField
 from invenio_requests.records.api import Request
@@ -74,6 +74,8 @@ class GEOPackageParent(GEOBaseRecord, BaseRecordParent):
 
     category = ConstantField("category", GEORecordCategories.open)
 
+    harvester = DictField("harvester")
+
 
 #
 # Record and Draft APIs.
@@ -121,7 +123,6 @@ class GEOPackageDraft(CommonFieldsMixin, Draft):
     status = DraftStatus()
 
     relationship = PackageRelationshipField(key="relationship")
-
     assistance_requests = AssistanceRequests(
         Request, keys=["type", "receiver", "status"]
     )
@@ -160,7 +161,6 @@ class GEOPackageRecord(CommonFieldsMixin, Record):
     status = DraftStatus()
 
     relationship = PackageRelationshipField(key="relationship")
-
     assistance_requests = AssistanceRequests(
         Request, keys=["type", "receiver", "status"]
     )

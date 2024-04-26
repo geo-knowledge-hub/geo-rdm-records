@@ -12,6 +12,7 @@ from invenio_rdm_records.services.schemas.metadata import VocabularySchema
 from marshmallow import fields
 from marshmallow_utils.fields import NestedAttribute
 
+from geo_rdm_records.base.services.schemas import HarvesterSchema
 from geo_rdm_records.base.services.schemas import MetadataSchema as BaseMetadataSchema
 from geo_rdm_records.base.services.schemas import ParentSchema
 from geo_rdm_records.base.services.schemas.validator import ResourceType
@@ -46,3 +47,5 @@ class GEOPackageRecordSchema(BaseRecordSchema):
     metadata = NestedAttribute(MetadataSchema)
 
     assistance_requests = fields.List(fields.Nested(RequestSchema), dump_only=True)
+
+    harvester = NestedAttribute(HarvesterSchema, load_only=True, required=False)

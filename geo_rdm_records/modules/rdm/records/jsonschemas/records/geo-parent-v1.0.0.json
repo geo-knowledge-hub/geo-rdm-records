@@ -98,6 +98,41 @@
       "type": "string",
       "description": "Category of the Record in the System",
       "additionalProperties": false
+    },
+
+    "harvester": {
+      "type": "object",
+      "description": "Field with properties of harvester used in the record",
+      "additionalProperties": false,
+      "properties": {
+        "software": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            },
+            "repository": {
+              "type": "string"
+            }
+          }
+        },
+        "origin": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   }
 }
