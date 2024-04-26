@@ -7,6 +7,7 @@
 
 """GEO RDM Records Services schemas."""
 
+from .harvester import HarvesterSchema
 from .location import FeatureSchema
 from .metadata import MetadataSchema
 from .parent import ParentSchema
@@ -17,4 +18,5 @@ __all__ = (
     "MetadataSchema",
     "ParentSchema",
     "RelationshipElementSchema",
+    "HarvesterSchema",
 )
