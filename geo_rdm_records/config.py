@@ -121,8 +121,12 @@ RDM_FACETS = {
             "field": "languages",
         },
     },
-    "resource_type": {
+    "record_type": {
         "facet": geo_facets.record_type,
+        "ui": {"field": "parent.type"},
+    },
+    "resource_type": {
+        "facet": geo_facets.resource_type,
         "ui": {
             "field": "resource_type.type",
             "childAgg": {

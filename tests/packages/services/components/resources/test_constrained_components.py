@@ -123,7 +123,7 @@ def test_package_relationship_constraint(
     anyuser_identity,
     draft_resource_record,
     published_resource_record,
-    minimal_record,
+    minimal_package,
     es_clear,
 ):
     """Test the Package Relationship constraint."""
@@ -144,7 +144,7 @@ def test_package_relationship_constraint(
     # 2. Resources linked to a package must have the relationship ``Related``
 
     # 2.1. Valid case
-    package = GEOPackageDraft.create(minimal_record)
+    package = GEOPackageDraft.create(minimal_package)
     package.commit()
     db.session.commit()
 
@@ -160,7 +160,7 @@ def test_package_relationship_constraint(
         )
 
     # 2.2. Invalid case
-    package2 = GEOPackageDraft.create(minimal_record)
+    package2 = GEOPackageDraft.create(minimal_package)
     package2.commit()
     db.session.commit()
 
@@ -179,7 +179,7 @@ def test_published_package_constraint(
     running_app,
     draft_resource_record,
     published_resource_record,
-    minimal_record,
+    minimal_package,
     es_clear,
 ):
     """Test the Published Package constraint."""

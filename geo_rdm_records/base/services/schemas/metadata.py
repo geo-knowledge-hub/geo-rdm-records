@@ -69,6 +69,13 @@ class MetadataSchema(BaseMetadataSchema):
     contributors = fields.List(fields.Nested(ContributorSchema))
     related_identifiers = fields.List(fields.Nested(RelatedIdentifierSchema))
 
+    resource_type = fields.Nested(
+        VocabularySchema,
+        # In the GEO Knowledge Hub, the unique case where `resource type` is unavailable
+        # is in the package record.
+        dump_default={"id": "knowledge", "title": {"en": "Knowledge Package"}},
+    )
+
     #
     # Locations
     #
