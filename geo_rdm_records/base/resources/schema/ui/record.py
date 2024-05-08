@@ -36,6 +36,14 @@ class UIRecordSchema(UIRecordSchemaBase):
         attribute="metadata.related_identifiers",
     )
 
+    resource_type = fields.Nested(
+        VocabularyL10Schema,
+        # In the GEO Knowledge Hub, the unique case where `resource type` is unavailable
+        # is in the package record.
+        attribute="metadata.resource_type",
+        dump_default={"id": "knowledge", "title": {"en": "Knowledge Package"}},
+    )
+
     #
     # Custom fields
     #

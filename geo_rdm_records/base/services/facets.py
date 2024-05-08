@@ -15,14 +15,27 @@ from invenio_records_resources.services.records.facets import (
 from invenio_vocabularies.services.facets import VocabularyLabels
 
 #
-# GEO Work Programme Activities Facet
+# Record category
 #
 record_category = TermsFacet(
     field="parent.category",
     label=_("Category"),
     value_labels={
         "open": "Open",
-        "marketplace": "Marketplace",
+        "marketplace": "Commercial",
+    },
+)
+
+#
+# Record type
+#
+record_type = TermsFacet(
+    field="parent.type",
+    label=_("Record Type"),
+    value_labels={
+        "package": "Knowledge Package",
+        "resource": "Knowledge Resource",
+        "marketplace-item": "Marketplace Item",
     },
 )
 
@@ -63,12 +76,12 @@ base_type = TermsFacet(
 )
 
 #
-# Record type (or Resource type)
+# Resource type
 #
-record_type = NestedTermsFacet(
+resource_type = NestedTermsFacet(
     field="metadata.resource_type.props.type",
     subfield="metadata.resource_type.props.subtype",
     splitchar="::",
-    label=_("Record Type"),
+    label=_("Resource Type"),
     value_labels=VocabularyLabels("resourcetypes"),
 )

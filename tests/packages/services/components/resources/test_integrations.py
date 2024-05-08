@@ -20,12 +20,14 @@ from geo_rdm_records.modules.packages.services.components.resources import (
 from geo_rdm_records.modules.rdm.records.api import GEODraft
 
 
-def test_package_resource_access_component(running_app, minimal_record, es_clear):
+def test_package_resource_access_component(
+    running_app, minimal_package, minimal_record, es_clear
+):
     """Test the ``access`` component for package resources."""
     # 1. Creating a restricted package (`record` and `files`)
     package_access = dict(record="restricted", files="restricted")
 
-    package_metadata = copy(minimal_record)
+    package_metadata = copy(minimal_package)
     package_metadata.update({"access": package_access})
 
     package_draft = GEOPackageDraft.create(package_metadata)
@@ -49,11 +51,11 @@ def test_package_resource_access_component(running_app, minimal_record, es_clear
 
 
 def test_package_resource_community_component(
-    running_app, minimal_record, community_record, es_clear
+    running_app, minimal_package, minimal_record, community_record, es_clear
 ):
     """Test the ``community`` component for package resources."""
     # 1. Creating a package
-    package_metadata = copy(minimal_record)
+    package_metadata = copy(minimal_package)
 
     package_draft = GEOPackageDraft.create(package_metadata)
     package_draft.commit()

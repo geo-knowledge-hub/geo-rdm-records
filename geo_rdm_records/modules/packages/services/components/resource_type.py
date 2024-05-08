@@ -17,7 +17,9 @@ class PackageResourceTypeComponent(ServiceComponent):
     def _fix_resource_type(self, obj):
         """Fix the resource type of the package."""
         metadata = obj.get("metadata", {})
-        dict_set(metadata, "resource_type", {"id": "knowledge"})
+
+        if "resource_type" in metadata:
+            del metadata["resource_type"]
 
         return metadata
 
@@ -34,6 +36,8 @@ class PackageResourceTypeComponent(ServiceComponent):
     def publish(self, identity, draft=None, record=None, **kwargs):
         """Update draft metadata."""
         metadata_fixed = self._fix_resource_type(draft)
+
+        draft.metadata = metadata_fixed
         record.metadata = metadata_fixed
 
     def edit(self, identity, draft=None, record=None, **kwargs):
