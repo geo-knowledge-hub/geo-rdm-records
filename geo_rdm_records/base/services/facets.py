@@ -35,7 +35,7 @@ record_type = TermsFacet(
     value_labels={
         "package": "Knowledge Package",
         "resource": "Knowledge Resource",
-        "marketplace-item": "Marketplace Item",
+        "marketplace-item": "Commercial Item",
     },
 )
 
