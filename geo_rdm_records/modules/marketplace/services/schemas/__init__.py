@@ -28,7 +28,7 @@ class MarketplaceFields(Schema):
 class MetadataSchema(BaseMetadataSchema):
     """Metadata schema for marketplace items."""
 
-    marketplace = fields.Nested(MarketplaceFields)
+    marketplace = fields.Nested(MarketplaceFields, required=True)
 
 
 #
