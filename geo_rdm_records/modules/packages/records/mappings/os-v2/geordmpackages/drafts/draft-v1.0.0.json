@@ -311,9 +311,6 @@
                   },
                   "version": {
                     "type": "text"
-                  },
-                  "repository": {
-                    "type": "text"
                   }
                 }
               },
@@ -323,7 +320,7 @@
                   "name": {
                     "type": "text"
                   },
-                  "url": {
+                  "id": {
                     "type": "text"
                   }
                 }

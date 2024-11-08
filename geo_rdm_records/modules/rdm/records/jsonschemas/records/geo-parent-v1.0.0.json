@@ -114,9 +114,6 @@
             },
             "version": {
               "type": "string"
-            },
-            "repository": {
-              "type": "string"
             }
           }
         },
@@ -127,7 +124,7 @@
             "name": {
               "type": "string"
             },
-            "url": {
+            "id": {
               "type": "string"
             }
           }
