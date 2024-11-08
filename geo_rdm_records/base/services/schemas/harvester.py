@@ -18,15 +18,13 @@ class HarvesterSoftwareSchema(Schema):
 
     version = SanitizedUnicode(required=True)
 
-    repository = fields.URL(required=True)
-
 
 class HarvesterOriginSchema(Schema):
     """Harvester origin schema."""
 
     name = SanitizedUnicode(required=True)
 
-    url = fields.URL(required=True)
+    id = SanitizedUnicode(required=True)
 
 
 class HarvesterSchema(Schema):
