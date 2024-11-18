@@ -26,7 +26,10 @@ from invenio_records_resources.services.base.config import (
 )
 from invenio_records_resources.services.records.links import pagination_links
 
-from geo_rdm_records.base.services.components import HarvesterComponent
+from geo_rdm_records.base.services.components import (
+    GEOThemeComponent,
+    HarvesterComponent,
+)
 from geo_rdm_records.base.services.config import (
     BaseGEOServiceConfig,
     GEOSearchDraftsOptions,
@@ -94,6 +97,7 @@ class GEORecordServiceConfig(BaseGEOServiceConfig):
         RelationsComponent,
         ReviewComponent,
         HarvesterComponent,
+        GEOThemeComponent,
     ]
 
     #

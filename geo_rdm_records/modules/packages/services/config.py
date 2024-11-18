@@ -33,7 +33,10 @@ from invenio_records_resources.services.base.links import Link
 from invenio_records_resources.services.files.links import FileLink
 from invenio_records_resources.services.records.links import pagination_links
 
-from geo_rdm_records.base.services.components import HarvesterComponent
+from geo_rdm_records.base.services.components import (
+    GEOThemeComponent,
+    HarvesterComponent,
+)
 from geo_rdm_records.base.services.config import BaseGEOServiceConfig
 from geo_rdm_records.base.services.schemas import ParentSchema
 from geo_rdm_records.modules.marketplace.records.api import GEOMarketplaceItem
@@ -99,6 +102,7 @@ class GEOPackageRecordServiceConfig(BaseGEOServiceConfig):
         RelationsComponent,
         ReviewComponent,
         HarvesterComponent,
+        GEOThemeComponent,
     ]
 
     # Indices used to suggest related content

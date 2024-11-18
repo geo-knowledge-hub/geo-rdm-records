@@ -9,9 +9,11 @@
 
 from .constraints import BaseComponentConstraint, ConstrainedComponent
 from .harvester import HarvesterComponent
+from .themes import GEOThemeComponent
 
 __all__ = (
     "BaseComponentConstraint",
     "ConstrainedComponent",
     "HarvesterComponent",
+    "GEOThemeComponent",
 )
