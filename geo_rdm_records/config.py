@@ -219,6 +219,8 @@ GEO_RDM_CHECKER_OUTDATED_REPORT_TITLE = _("GEO Knowledge Hub - Your records stat
 GEO_RDM_CHECKER_OUTDATED_CRITERIA = 6 * 365 / 12
 """Criteria used to set if a record is outdated."""
 
+GEO_RDM_CHECKER_ALLOWED_EMAILS = []
+"""Owners that can receive emails from checker (If empty, all owner are allowed)."""
 
 # OAI-PMH
 # =======
