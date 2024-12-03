@@ -34,7 +34,14 @@ def _check_owner_can_receive_report(owner_profile):
     is_active = owner_profile["active"]
     is_email_confirmed = owner_profile["confirmed"]
 
-    return is_active and is_email_confirmed
+    # Extra property: The owner is eligible to receive emails from Checkers.
+    is_authorized = True
+    authorized_owners = current_app.config.get("GEO_RDM_CHECKER_ALLOWED_EMAILS", [])
+
+    if authorized_owners:
+        is_authorized = owner_profile["email"] in authorized_owners
+
+    return is_active and is_email_confirmed and is_authorized
 
 
 def _build_report_message(
