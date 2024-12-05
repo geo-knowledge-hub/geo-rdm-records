@@ -21,18 +21,10 @@ class RequestNotificationService(Service):
     """
 
     @unit_of_work()
-    def notify_creation(self, identity, request, uow):
-        """Create an assistance request."""
-        self.require_permission(identity, "notify")
-
-        # Preparing data to create the notification task
-        record = request.topic.resolve()
-
-        request_id = str(request.id)
-        record_id = str(record.pid.pid_value)
-
+    def notify(self, identity, message, uow):
+        """Request notification."""
         # Sending e-mail notification
-        uow.register(TaskOp(notify_request, request_id, record_id))
+        uow.register(TaskOp(notify_request, message))
 
         # ToDo: Improve this return to provide more
         #       details of the operation performed.

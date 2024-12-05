@@ -287,7 +287,12 @@ def app_config(app_config):
     app_config["GEO_RDM_RECORDS_REQUESTS_DEFAULT_RECEIVER"] = 1
 
     # Notifications
-    app_config["GEO_RDM_NOTIFICATION_DEFAULT_RECEIVER_EMAILS"] = []
+    app_config["MAIL_SUPPRESS_SEND"] = True
+    app_config["MAIL_DEFAULT_SENDER"] = "info@inveniosoftware.org"
+
+    app_config["GEO_RDM_NOTIFICATION_DEFAULT_RECEIVER_EMAILS"] = [
+        "info@inveniosoftware.org"
+    ]
 
     return app_config
 

@@ -80,7 +80,7 @@ class PackageRequestsService(RecordService):
 
             if request.type.type_id in self.request_type:
                 # ToDo: Assumes that only one request is available per user.
-                #       Remove this on version 1.7.0 with the InvenioRDM requests endpoint.
+                #       Remove this on version 1.8.0 with the InvenioRDM requests endpoint.
                 is_request_creator = request.created_by.resolve().id == identity.id
                 is_cancelled = request.status == "cancelled"
                 is_valid = request.status not in exclude
