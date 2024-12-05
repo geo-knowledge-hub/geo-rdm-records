@@ -7,16 +7,89 @@
 
 """GEO RDM Records Package requests definition."""
 
+from flask import current_app
 from flask_babelex import lazy_gettext as _
 from invenio_requests.customizations import RequestType, actions
+from sqlalchemy.exc import NoResultFound
 
-from geo_rdm_records.proxies import current_requests_notification_service
+from geo_rdm_records.modules.requests.notification.handler import (
+    BaseNotificationHandler,
+)
+from geo_rdm_records.proxies import current_geo_packages_service
+
+
+#
+# Notification handling
+#
+class NotificationHandler(BaseNotificationHandler, actions.RequestAction):
+    """Notification handler class for training requests."""
+
+    notification_template = (
+        "geo_rdm_records/email/training/request-package-training.html",
+    )
+    """Notification template."""
+
+    def _build_message(self, identity, **kwargs):
+        """Message factory.
+
+        Args:
+            identity (flask_principal.Identity): Entity identity.
+
+            **kwargs: Extra arguments
+
+        Returns:
+            dict: message metadata.
+        """
+        request_id = str(self.request.id)
+
+        # Preparing package data to the notification
+        package = self.request.topic.resolve()
+        package_id = package["id"]
+
+        record = current_geo_packages_service.read(identity, package_id).to_dict()
+
+        package_title = record["metadata"]["title"]
+        package_url = record["links"]["self_html"]
+
+        # Preparing request data
+        # Generating request ui address as the requests service doesn't generate it
+        # ToDo: This should be a temporary solution
+        _ui_url = current_app.config["SITE_UI_URL"]
+        request_url = f"{_ui_url}/me/requests/{request_id}"
+
+        notification_emails = current_app.config[
+            "GEO_RDM_NOTIFICATION_DEFAULT_RECEIVER_EMAILS"
+        ]
+
+        if notification_emails:
+            return dict(
+                subject="[GEO Knowledge Hub] New Training Session request",
+                template_html=self.notification_template,
+                recipients=notification_emails,
+                ctx=dict(
+                    record_title=package_title,
+                    record_url=package_url,
+                    request=request_id,
+                    request_url=request_url,
+                ),
+            )
+
+    #
+    # High-level API
+    #
+    def notify(self, identity, uow, **kwargs):
+        """Notify users with a given message."""
+        try:
+            message = self._build_message(identity)
+            super().notify(identity, message, uow)
+        except NoResultFound:
+            pass  # any notification is sent
 
 
 #
 # Actions
 #
-class SubmitAction(actions.SubmitAction):
+class SubmitAction(NotificationHandler, actions.SubmitAction):
     """Submit action."""
 
     def execute(self, identity, uow):
@@ -25,21 +98,21 @@ class SubmitAction(actions.SubmitAction):
         # Create a custom title for the request
         record_title = record["metadata"]["title"]
         request_title = f"Training request: {record_title}"
+
         # Defining the custom title for the request
         self.request["title"] = request_title
+
+        # Use the Assistance requests service to manage the training session.
+        self.notify(identity, uow=uow)
+
         super().execute(identity, uow)
 
 
-class AcceptAction(actions.AcceptAction):
+class AcceptAction(NotificationHandler, actions.AcceptAction):
     """Accept action."""
 
     def execute(self, identity, uow):
         """Accept feed post creation."""
-        # Use the Assistance requests service to manage the training session.
-        current_requests_notification_service.notify_creation(
-            identity, self.request, uow=uow
-        )
-
         # Finish operation.
         super().execute(identity, uow)
 
