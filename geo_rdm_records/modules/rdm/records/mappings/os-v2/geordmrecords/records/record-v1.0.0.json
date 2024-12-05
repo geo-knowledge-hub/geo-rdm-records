@@ -571,8 +571,8 @@
                       }
                     }
                   },
-                  "type": {
-                    "type": "keyword"
+                  "icon": {
+                    "type": "text"
                   },
                   "disclaimer": {
                     "type": "text"
