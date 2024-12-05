@@ -570,6 +570,12 @@
                         "type": "keyword"
                       }
                     }
+                  },
+                  "type": {
+                    "type": "keyword"
+                  },
+                  "disclaimer": {
+                    "type": "text"
                   }
                 }
               },

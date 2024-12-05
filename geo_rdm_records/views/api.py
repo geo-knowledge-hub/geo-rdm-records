@@ -9,7 +9,7 @@
 
 from flask import Blueprint
 
-blueprint = Blueprint("geo_rdm_records_ext", __name__)
+blueprint = Blueprint("geo_rdm_records_ext", __name__, template_folder="../templates")
 
 
 @blueprint.record_once
