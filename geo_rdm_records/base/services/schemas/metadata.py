@@ -25,6 +25,7 @@ from invenio_rdm_records.services.schemas.metadata import VocabularySchema
 from marshmallow import fields, validate
 from marshmallow_utils.fields import SanitizedHTML, SanitizedUnicode
 
+from .funding import FundingSchema
 from .location import FeatureSchema
 
 
@@ -75,6 +76,8 @@ class MetadataSchema(BaseMetadataSchema):
         # is in the package record.
         dump_default={"id": "knowledge", "title": {"en": "Knowledge Package"}},
     )
+
+    funding = fields.List(fields.Nested(FundingSchema))
 
     #
     # Locations
