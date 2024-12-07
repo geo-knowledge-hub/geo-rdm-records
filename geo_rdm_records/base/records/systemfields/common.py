@@ -19,6 +19,8 @@ from invenio_vocabularies.contrib.funders.api import Funder
 from invenio_vocabularies.contrib.subjects.api import Subject
 from invenio_vocabularies.records.api import Vocabulary
 
+from geo_rdm_records.base.records.systemfields.relations import AwardRelation
+
 
 class BaseGEORecordsFieldsMixin:
     """Common system fields between records and drafts."""
@@ -69,10 +71,10 @@ class BaseGEORecordsFieldsMixin:
             pid_field=Funder.pid,
             cache_key="funders",
         ),
-        funding_award=PIDListRelation(
+        funding_award=AwardRelation(
             "metadata.funding",
             relation_field="award",
-            keys=["title", "number", "identifiers"],
+            keys=["title", "number", "identifiers", "icon", "disclaimer"],
             pid_field=Award.pid,
             cache_key="awards",
         ),
