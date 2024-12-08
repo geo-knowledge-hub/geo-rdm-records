@@ -348,6 +348,12 @@
                     "items": {
                       "$ref": "local://definitions-v1.0.0.json#/identifiers_with_scheme"
                     }
+                  },
+                  "icon": {
+                    "type": "string"
+                  },
+                  "disclaimer": {
+                    "type": "string"
                   }
                 }
               }
