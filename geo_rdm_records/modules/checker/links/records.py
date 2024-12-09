@@ -7,6 +7,9 @@
 
 """Records manipulation utility module."""
 
+from flask import current_app
+from pydash import py_
+
 from geo_rdm_records.base.records.types import GEORecordTypes
 from geo_rdm_records.modules.checker.base import stats as checker_stats
 from geo_rdm_records.modules.checker.base.metadata import expand_record_metadata
@@ -64,6 +67,29 @@ def _serialize_record(record):
     return EmailRecordJSONSerializer().dump_obj(record)
 
 
+def _enrich_harvester(record):
+    """Include more information about harvester in a given record.
+
+    Args:
+        record (dict): Record (Package or resource) with metadata to be serialized.
+
+    Returns:
+        dict: Record with harvester data enriched.
+    """
+    # extra information of harvester
+    harvest_id_prop = "parent.harvester.origin.name"
+    harvest_sources_settings = current_app.config.get("GKH_SOURCES_CONFIG", {})
+
+    if py_.has(record, harvest_id_prop) and harvest_sources_settings:
+        harvest_id = py_.get(record, harvest_id_prop)
+        harvest_url = py_.get(harvest_sources_settings, f"{harvest_id}.url")
+
+        if harvest_url:
+            py_.set(record, "parent.harvester.origin.url", harvest_url)
+
+    return record
+
+
 def _enrich_resource(resource):
     """Enrich a link status object from a resource.
 
@@ -72,6 +98,7 @@ def _enrich_resource(resource):
     Returns:
         dict: Record enriched.
     """
+    resource = _enrich_harvester(resource)
     resource_obj = _serialize_record(resource)
 
     nlinks = _calculate_links(resource)
@@ -96,6 +123,7 @@ def _enrich_package(package):
         dict: Record enriched.
     """
     # processing the package
+    package["package"] = _enrich_harvester(package["package"])
     package_obj = _serialize_record(package["package"])
 
     nlinks = _calculate_links(package["package"])
