@@ -122,7 +122,9 @@ class SubmissionNotificationHandler(
         # remove duplicates
         return py_.uniq_by(community_user_emails, "email")
 
-    def _build_messages(self, identity=None, notification_type=None, **kwargs):
+    def _build_messages(
+        self, identity=None, notification_type=None, is_draft=False, **kwargs
+    ):
         """Message factory.
 
         Args:
@@ -135,7 +137,6 @@ class SubmissionNotificationHandler(
         Returns:
             list: List with messages metadata.
         """
-        """Build notification message."""
         # ToDo: Inject this configuration using the service configuration.
         _ui_url = current_app.config["SITE_UI_URL"]
 
@@ -145,7 +146,7 @@ class SubmissionNotificationHandler(
 
         # define method
         read_method_fnc = service.read
-        if record.is_draft:
+        if is_draft:
             read_method_fnc = service.read_draft
 
         # get information from the record
@@ -198,11 +199,14 @@ class SubmissionNotificationHandler(
     #
     # High-level API
     #
-    def notify(self, identity, uow, notification_type, **kwargs):
+    def notify(self, identity, uow, notification_type, is_draft=False, **kwargs):
         """Notify users with a given message."""
         try:
             messages = self._build_messages(
-                identity, notification_type=notification_type
+                identity,
+                notification_type=notification_type,
+                is_draft=is_draft,
+                **kwargs,
             )
             super().notify(identity, messages, uow)
         except NoResultFound:
@@ -239,7 +243,9 @@ class SubmitAction(SubmissionNotificationHandler, actions.SubmitAction):
         self.request["title"] = draft.metadata["title"]
 
         # Send notification
-        self.notify(identity, uow, notification_type=self.notification_name)
+        self.notify(
+            identity, uow, notification_type=self.notification_name, is_draft=True
+        )
 
         # execute!
         super().execute(identity, uow)
@@ -291,7 +297,9 @@ class AcceptAction(SubmissionNotificationHandler, actions.AcceptAction):
         service.publish(identity, draft.pid.pid_value, uow=uow)
 
         # Send notification
-        self.notify(identity, uow, notification_type=self.notification_name)
+        self.notify(
+            identity, uow, notification_type=self.notification_name, is_draft=False
+        )
 
         super().execute(identity, uow)
 
@@ -332,7 +340,9 @@ class DeclineAction(SubmissionNotificationHandler, actions.DeclineAction):
         uow.register(RecordIndexOp(draft, indexer=service.indexer))
 
         # Send notification
-        self.notify(identity, uow, notification_type=self.notification_name)
+        self.notify(
+            identity, uow, notification_type=self.notification_name, is_draft=True
+        )
 
 
 class CancelAction(SubmissionNotificationHandler, actions.CancelAction):
@@ -364,7 +374,9 @@ class CancelAction(SubmissionNotificationHandler, actions.CancelAction):
         super().execute(identity, uow)
 
         # Send notification
-        self.notify(identity, uow, notification_type=self.notification_name)
+        self.notify(
+            identity, uow, notification_type=self.notification_name, is_draft=True
+        )
 
 
 class ExpireAction(SubmissionNotificationHandler, actions.CancelAction):
@@ -400,4 +412,6 @@ class ExpireAction(SubmissionNotificationHandler, actions.CancelAction):
         # update draft to reflect the new status
         uow.register(RecordIndexOp(draft, indexer=service.indexer))
 
-        self.notify(identity, uow, notification_type=self.notification_name)
+        self.notify(
+            identity, uow, notification_type=self.notification_name, is_draft=True
+        )
