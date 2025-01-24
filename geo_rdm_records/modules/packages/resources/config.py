@@ -15,13 +15,25 @@ from invenio_rdm_records.resources import config as rdm_resources_config
 
 from geo_rdm_records.base.resources import BaseGEOResourceConfig
 from geo_rdm_records.base.resources.serializers import UIRecordJSONSerializer
+from geo_rdm_records.modules.packages.resources.serializers.datacite import (
+    DataCite43JSONSerializer,
+    DataCite43XMLSerializer,
+)
 
 #
 # Response handlers
 #
 record_serializers = deepcopy(rdm_resources_config.record_serializers)
 record_serializers.update(
-    {"application/vnd.inveniordm.v1+json": ResponseHandler(UIRecordJSONSerializer())}
+    {
+        "application/vnd.inveniordm.v1+json": ResponseHandler(UIRecordJSONSerializer()),
+        "application/vnd.datacite.datacite+json": ResponseHandler(
+            DataCite43JSONSerializer()
+        ),
+        "application/vnd.datacite.datacite+xml": ResponseHandler(
+            DataCite43XMLSerializer()
+        ),
+    }
 )
 
 
